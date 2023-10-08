@@ -1,5 +1,6 @@
 # don't push our secrets
 secrets.py
+10stars.yml
 
 # don't push your local venv
 venv

@@ -3,14 +3,15 @@ import flask
 import json
 from flask_cors import CORS
 import mysql.connector
+import secrets
 
-# database connecttion
+# database connection
 mydb = mysql.connector.connect(
-  host="localhost",
-  port=0,
-  user="root",
-  password="",
-  database = "test10star"
+  host = "localhost",
+  port = secrets.port,
+  user = "root",
+  password = secrets.password,
+  database = "10stars"
 )
 
 print('established connection to database...')
@@ -48,5 +49,6 @@ def users():
     }
     return flask.Response(response=json.dumps(return_data), status=201)
 
+# runs connection to frontend
 if __name__ == "__main__":
     app.run("localhost", 6969)

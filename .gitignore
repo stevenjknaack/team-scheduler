@@ -1,0 +1,9 @@
+# don't push our secrets
+secrets.py
+
+# don't push your local venv
+venv
+
+# don't push intermidiate files
+*.pyc
+__pycache__

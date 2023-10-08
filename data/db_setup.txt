@@ -1,6 +1,6 @@
-create database test10star;
+create database 10stars;
 
-use database test10star;
+use 10stars;
 
 CREATE TABLE user (
 	username varchar(50),

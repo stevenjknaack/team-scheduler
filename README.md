@@ -42,7 +42,7 @@
   0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 
     ensure you're in a directory with 10stars.yml 
   1. run "docker ps" and see if it is up and running, continue if not
-  2. create sql server "10stars.yml docker compose -f 10stars.yml -p 10stars up -d"
+  2. create sql server 10stars.yml "docker compose -f 10stars.yml -p 10stars up -d"
   3. connect to it "mysql -h localhost -P 63306 --protocol=TCP -u root -p"
   4. copy and paste contents of db_setup.txt, press enter, should be no errors
   5. quit terminal

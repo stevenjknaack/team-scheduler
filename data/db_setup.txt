@@ -9,9 +9,10 @@ CREATE TABLE user (
 );
 
 insert into user (username, data) values ("steven", "hello world!");
-
 insert into user (username, data) values ("olive", "meow");
+insert into user (username, data) values ("norsk", "språk");
+insert into user (username, data) values ("dragon", "we love mysql");
 
 select * 
 from user
-where username = "steven";
+limit 10;

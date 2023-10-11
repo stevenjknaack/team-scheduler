@@ -32,9 +32,11 @@
   pip install flask flask-cors
 
 # helps run frontend code (not necessary with visual studio code live server) (do in venv)
+```
   npm install -g npm
   npm install --global http-server
   (If there're issues with global install, it's ok to install in the working directories.)
+  ```
 
 # download python SQL Connector (do in venv)
   python -m pip install mysql-connector-python 

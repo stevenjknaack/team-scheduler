@@ -47,7 +47,7 @@ def users():
         "status": "success",
         "message": f"{return_userdata}"
     }
-    return flask.Response(response=json.dumps(return_data), status=201) #201 for post return, 200 for get
+    return flask.Response(response=json.dumps(return_data), status=201) # code 201 for post return, 200 for get
 
 # runs connection server to frontend
 if __name__ == "__main__":

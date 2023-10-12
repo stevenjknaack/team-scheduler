@@ -129,10 +129,10 @@
     <div class="wrapper">
     <nav class="navbar">
         <div class="navbar-left">
-            <img src="logo.png" alt="Your Logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
         </div>
         <div class="navbar-right">
-            <button>My Profile</button>
+            <button>Welcome, {{ username }}!</button>
         </div>
     </nav>
     <div class="container">

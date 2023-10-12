@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ten Star Sign Up</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <img src="../image/logo.png" alt="Ten Star Logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
         <label for="name">Name</label>
         <input type="text" id="name" placeholder="Name">
 

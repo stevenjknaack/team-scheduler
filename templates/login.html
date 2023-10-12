@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login Page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+        <!-- Including jQuery from a CDN -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+<body>
+    <div class="container">
+        <form id="loginForm">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
+            <div>
+                <label for="username">Email:</label>
+                <input type="text" name="username" required placeholder="Email">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" required placeholder="Password">
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        </form>
+        <div id="error-message" style="color: red;"></div>
+        <p>New to tenstars ? <a href="signup.html">Sign Up</a></p>
+    </div>
+<script>
+    // Handle form submission
+    $('#loginForm').submit(function(event) {
+        event.preventDefault(); // Prevent the form from submitting the default way
+
+        const formData = {
+            'username': $('input[name=username]').val(),
+            'password': $('input[name=password]').val()
+        };
+
+        // Make an AJAX POST request to the backend
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:6969/login',
+            data: formData,
+            dataType: 'json',
+            encode: true
+        })
+        .done(function(data) {
+            if (data.status === 'success') {
+                window.location.href = '/profile';  // Redirect to the profile page
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            $('#error-message').text('An error occurred during the login process: ' + textStatus);
+        });
+    });
+</script>
+</body>
+</html>

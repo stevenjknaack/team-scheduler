@@ -1,38 +1,28 @@
-from flask import Flask, request
-import flask
-import json
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
 import mysql.connector
-import secrets
+import mysecrets
+import os
 
-# database connection
-mydb = mysql.connector.connect(
-  host = "localhost",
-  port = secrets.port,
-  user = "root",
-  password = secrets.password,
-  database = "10stars"
-)
-
-print('established connection to database...')
-
-# recieve and send to frontend
-app = Flask(__name__)
+app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 CORS(app)
+app.secret_key = 'mysecrets.password' 
 
-@app.route("/")
-def hello():
-    return "success"
 
-# function for dealing with request from front end for user data
-@app.route('/users', methods=["POST"])
-def users():
-    # get data (username) from front end
-    print("users endpoint reached...")
-    received_data = request.get_json()
-    print(f"received data: {received_data}")
-    message = received_data['data']
+def get_db_connection():
+    return mysql.connector.connect(
+        host="localhost",
+        port=mysecrets.port,
+        user="root",
+        password=mysecrets.password,
+        database="10stars"
+    )
 
+<<<<<<< HEAD
+@app.route('/')
+def index():
+    return render_template('login.html')
+=======
     # get data associated with user from database
     mycursor = mydb.cursor()
     mycursor.execute(f'select * from user where username = "{message}"')
@@ -48,33 +38,41 @@ def users():
         "message": f"{return_userdata}"
     }
     return flask.Response(response=json.dumps(return_data), status=201) # code 201 for post return, 200 for get
+>>>>>>> ccd7592b421460d883a513b1d650ffdd7b63b001
 
 @app.route('/login', methods=['POST'])
 def login():
-    received_data = request.get_json()
-    print(f"received data: {received_data}")
-    email = received_data['email']
-    password = received_data['password']
+    username = request.form.get('username')
+    password = request.form.get('password')
 
     # get data associated with user from database
-    mycursor = mydb.cursor()
-    mycursor.execute(f'select * from user where username = "{email}"')
-    user = mycursor.fetchone()
-    print('this is user', user)
-    print('this is user password', user[1])
-    mycursor.close()
-    if not user:
-        print('no user')
-        return flask.jsonify({'status': 'error', 'message': 'User not found'}), 401
+    db = get_db_connection()
+    cursor = db.cursor()
 
-    if user[1] != password:  # IMPORTANT: This is a simple example. In a real app, passwords should be hashed!
-        print('incorrect password')
-        return flask.jsonify({'status': 'error', 'message': 'Invalid password'}), 401
+    # Use parameterized query
+    query = "SELECT * FROM user WHERE username = %s"
+    cursor.execute(query, (username,))
+    user = cursor.fetchone()
 
-    # Login successful, handle the session or return a success message
-    print('correct password')
-    return flask.jsonify({'status': 'success', 'message': 'Logged in successfully'})
+    cursor.close()
+    db.close()
+    # Check if user exists
+    if user:
+        print('this is user', user)
+        print('this is user password', user[1])
+        if user[1] == password:
+            session['username'] = user[0]
+            return jsonify(status='success')
+        else:
+            return jsonify(status='error'), 401
+    else:
+        return jsonify(status='error', message='Username not found'), 401
 
-# runs connection server to frontend
-if __name__ == "__main__":
-    app.run("localhost", 6969)
+@app.route('/profile')
+def profile():
+    if 'username' in session:
+        return render_template('profile.html', username=session['username'])
+    return "You're not logged in", 403
+
+if __name__ == '__main__':
+    app.run(debug=True, port=6969)  # Running the app on localhost:6969

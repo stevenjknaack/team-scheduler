@@ -1,5 +1,6 @@
 # don't push our secrets
 secrets.py
+mysecrets.py
 *.yml
 
 # don't push your local venv

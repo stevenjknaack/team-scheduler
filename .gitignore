@@ -1,6 +1,6 @@
 # don't push our secrets
 secrets.py
-10stars.yml
+*.yml
 
 # don't push your local venv
 venv
@@ -8,3 +8,10 @@ venv
 # don't push intermidiate files
 *.pyc
 __pycache__
+
+# dependencies
+/node_modules
+
+# don't push scripts
+*.sh
+*.ps1

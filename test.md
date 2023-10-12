@@ -11,8 +11,8 @@
  2. navigate to backend folder
  3. activate venv if not active
  3.5. ensure secrets.py is in backend folder (DO NOT PUSH THIS TO GIT)
- 4. type 'py app.py' to launch backend (for people using python3: python3 app.py)
- 5. right click on index.html and click live server, or open index.html in your browser
+ 4. type 'py app.py' to launch backend
+ 5. right click on index.html and click live server
 
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv
@@ -32,11 +32,8 @@
   pip install flask flask-cors
 
 # helps run frontend code (not necessary with visual studio code live server) (do in venv)
-```
   npm install -g npm
   npm install --global http-server
-  (If there're issues with global install, it's ok to install in the working directories.)
-  ```
 
 # download python SQL Connector (do in venv)
   python -m pip install mysql-connector-python 

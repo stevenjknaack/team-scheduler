@@ -9,6 +9,9 @@ venv
 *.pyc
 __pycache__
 
+# dependencies
+/node_modules
+
 # don't push scripts
 *.sh
 *.ps1

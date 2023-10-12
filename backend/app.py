@@ -18,27 +18,10 @@ def get_db_connection():
         database="10stars"
     )
 
-<<<<<<< HEAD
 @app.route('/')
 def index():
     return render_template('login.html')
-=======
-    # get data associated with user from database
-    mycursor = mydb.cursor()
-    mycursor.execute(f'select * from user where username = "{message}"')
-    myresult = mycursor.fetchall()
-    
-    return_userdata = 'no data registered'
-    if len(myresult) > 0 :
-        return_userdata = myresult[0][1]
 
-    # return data retrieved from database
-    return_data = {
-        "status": "success",
-        "message": f"{return_userdata}"
-    }
-    return flask.Response(response=json.dumps(return_data), status=201) # code 201 for post return, 200 for get
->>>>>>> ccd7592b421460d883a513b1d650ffdd7b63b001
 
 @app.route('/login', methods=['POST'])
 def login():

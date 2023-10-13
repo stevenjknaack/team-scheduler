@@ -54,7 +54,7 @@ def login():
 def profile():
     if 'username' in session:
         return render_template('profile.html', username=session['username'])
-    return "You're not logged in", 403
+    return index()
 
 @app.route('/signup')
 def signup() :

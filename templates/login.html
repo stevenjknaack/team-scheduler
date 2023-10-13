@@ -8,25 +8,25 @@
         <!-- Including jQuery from a CDN -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
-<body>
-    <div class="container">
-        <form id="loginForm">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
-            <div>
-                <label for="username">Email:</label>
-                <input type="text" name="username" required placeholder="Email">
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" name="password" required placeholder="Password">
-            </div>
-            <div>
-                <button type="submit">Login</button>
-            </div>
-        </form>
-        <div id="error-message" style="color: red;"></div>
-        <p>New to tenstars ? <a href="./signup">Sign Up</a></p>
-    </div>
-    <script src="{{ url_for('static', filename='scripts/login.js') }}"></script>
-</body>
+    <body>
+        <div class="container">
+            <form id="loginForm">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
+                <div>
+                    <label for="username">Email:</label>
+                    <input type="text" name="username" required placeholder="Email">
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" required placeholder="Password">
+                </div>
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+            <div id="error-message" style="color: red;"></div>
+            <p>New to tenstars ? <a href="./signup">Sign Up</a></p>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/login.js') }}"></script>
+    </body>
 </html>

@@ -1,51 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ten Star User Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
-</head>
-    <div class="wrapper">
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ten Star User Profile</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+    </head>
+    <body>
+        <div class="wrapper">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
+            </div>
+            <div class="navbar-right">
+                <button>Welcome, {{ username }}!</button>
+            </div>
+        </nav>
+        <div class="container">
+            <h1>EVENTS</h1>
+            <div class="event">
+                <h2>CS506 LEC1 MEETING</h2>
+                <p>Duration 1hr</p>
+                <p>12 participants</p>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="event">
+                <h2>CS506 LEC1 MEETING</h2>
+                <p>Duration 1hr</p>
+                <p>12 participants</p>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="event waiting">
+                <h2>LAB 3 MEETING</h2>
+                <p>Duration 30 min</p>
+                <p>5 participants</p>
+                <p>waiting for: 2</p>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
-        <div class="navbar-right">
-            <button>Welcome, {{ username }}!</button>
-        </div>
-    </nav>
-    <div class="container">
-        <h1>EVENTS</h1>
-        <div class="event">
-            <h2>CS506 LEC1 MEETING</h2>
-            <p>Duration 1hr</p>
-            <p>12 participants</p>
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="event">
-            <h2>CS506 LEC1 MEETING</h2>
-            <p>Duration 1hr</p>
-            <p>12 participants</p>
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="event waiting">
-            <h2>LAB 3 MEETING</h2>
-            <p>Duration 30 min</p>
-            <p>5 participants</p>
-            <p>waiting for: 2</p>
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
-        </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>

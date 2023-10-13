@@ -1,3 +1,5 @@
+"""Backend for application"""
+
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
 import mysql.connector
@@ -9,21 +11,26 @@ CORS(app)
 app.secret_key = 'mysecrets.password' 
 
 def get_db_connection():
+    """Returns connection object to database"""
     return mysql.connector.connect(
-        host="localhost",
-        port=mysecrets.port,
-        user="root",
-        password=mysecrets.password,
-        database="10stars"
+        host = "localhost",
+        port = mysecrets.port,
+        user = "root",
+        password = mysecrets.password,
+        database = "10stars"
     )
 
 @app.route('/')
 def index():
+    """Home page"""
+    if 'username' in session :
+        return profile()
     return render_template('login.html')
 
-
+#TODO change /login to /login_attempt or something to distinguish from login.html
 @app.route('/login', methods=['POST'])
 def login():
+
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -58,6 +65,8 @@ def profile():
 
 @app.route('/signup')
 def signup() :
+    if 'username' in session :
+        return profile()
     return render_template('signup.html')
 
 if __name__ == '__main__':

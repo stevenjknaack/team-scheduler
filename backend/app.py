@@ -8,7 +8,6 @@ app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__f
 CORS(app)
 app.secret_key = 'mysecrets.password' 
 
-
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
@@ -56,6 +55,10 @@ def profile():
     if 'username' in session:
         return render_template('profile.html', username=session['username'])
     return "You're not logged in", 403
+
+@app.route('/signup')
+def signup() :
+    return render_template('signup.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=6969)  # Running the app on localhost:6969

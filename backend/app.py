@@ -24,13 +24,12 @@ def get_db_connection():
 def index():
     """Home page"""
     if 'username' in session :
-        return profile()
+        return redirect(url_for('profile'))
     return render_template('login.html')
 
 #TODO change /login to /login_attempt or something to distinguish from login.html
 @app.route('/login', methods=['POST'])
 def login():
-
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -59,14 +58,14 @@ def login():
 
 @app.route('/profile')
 def profile():
-    if 'username' in session:
-        return render_template('profile.html', username=session['username'])
-    return index()
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    return render_template('profile.html', username=session['username'])
 
 @app.route('/signup')
 def signup() :
     if 'username' in session :
-        return profile()
+        return redirect(url_for('profile'))
     return render_template('signup.html')
 
 if __name__ == '__main__':

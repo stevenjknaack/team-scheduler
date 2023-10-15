@@ -68,5 +68,11 @@ def signup() :
         return redirect(url_for('profile'))
     return render_template('signup.html')
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if 'username' in session:
+        session.pop('username', None)
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     app.run(debug=True, port=6969)  # Running the app on localhost:6969

@@ -13,8 +13,8 @@
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
             </div>
             <div class="navbar-right">
-                <button>Welcome, {{ username }}!</button>
-                <form action="{{ url_for('logout') }}" method="post">
+                <button id="welcomeButton">Welcome, {{ username }}!</button>
+                <form action="{{ url_for('logout') }}" method="post" id="logoutForm" style="display: none;">
                     <button type="submit" class="btn btn-danger">Logout</button>
                 </form>
             </div>
@@ -50,5 +50,13 @@
                 </label>
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+            $(document).ready(function () {
+                $("#welcomeButton").on("click", function () {
+                    $("#logoutForm").toggle();
+                });
+            });
+            </script>
     </body>
 </html>

@@ -17,4 +17,5 @@ __pycache__
 *.sh
 *.ps1
 
+# don't push unneeded data files
 .DS_Store

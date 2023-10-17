@@ -3,16 +3,16 @@
 # setup (see below for help)
  0. open terminal in vs code
  1. navigate to backend folder and create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
- 2. install flask, http-server, python connector
+ 2. install flask, python connector and cryptographic dependencies
 
 # to start app
  0. open local terminal, login "ssh -L localhost:63306:localhost:63306 <username>@cs506-team-10.cs.wisc.edu"
  1. open visual studio terminal
  2. navigate to backend folder
  3. activate venv if not active
- 3.5. ensure secrets.py is in backend folder (DO NOT PUSH THIS TO GIT)
+ 3.5. ensure mysecrets.py is in backend folder (DO NOT PUSH THIS TO GIT)
  4. type 'py app.py' to launch backend (for people using python3: python3 app.py)
- 5. right click on index.html and click live server, or open index.html in your browser
+ 5. open up "localhost:6969" in a browser
 
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv
@@ -31,15 +31,11 @@
   pip install -U Flask
   pip install flask flask-cors
 
-# helps run frontend code (not necessary with visual studio code live server) (do in venv)
-```
-  npm install -g npm
-  npm install --global http-server
-  (If there're issues with global install, it's ok to install in the working directories.)
-  ```
-
 # download python SQL Connector (do in venv)
   python -m pip install mysql-connector-python 
+
+# install cryptographic dependencies
+  pip install pyopenssl
 
 # if there's an error connecting to the database, it may need to be created again
   0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 

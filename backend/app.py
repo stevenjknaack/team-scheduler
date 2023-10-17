@@ -1,3 +1,5 @@
+"""Backend for application"""
+
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
 import mysql.connector
@@ -9,18 +11,21 @@ app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__f
 CORS(app)
 app.secret_key = 'mysecrets.password' 
 
-
 def get_db_connection():
+    """Returns connection object to database"""
     return mysql.connector.connect(
-        host="localhost",
-        port=mysecrets.port,
-        user="root",
-        password=mysecrets.password,
-        database="10stars"
+        host = "localhost",
+        port = mysecrets.port,
+        user = "root",
+        password = mysecrets.password,
+        database = "10stars"
     )
 
 @app.route('/')
 def index():
+    """Home page"""
+    if 'username' in session :
+        return redirect(url_for('profile'))
     return render_template('login.html')
 
 
@@ -59,9 +64,21 @@ def login():
 
 @app.route('/profile')
 def profile():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    return render_template('profile.html', username=session['username'])
+
+@app.route('/signup')
+def signup() :
+    if 'username' in session :
+        return redirect(url_for('profile'))
+    return render_template('signup.html')
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
     if 'username' in session:
-        return render_template('profile.html', username=session['username'])
-    return "You're not logged in", 403
+        session.pop('username', None)
+    return redirect(url_for('index'))
 
 @app.route('/signup',  methods=['POST', 'GET'])
 def signup():

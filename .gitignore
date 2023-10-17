@@ -1,5 +1,6 @@
 # don't push our secrets
 secrets.py
+mysecrets.py
 *.yml
 
 # don't push your local venv
@@ -15,3 +16,6 @@ __pycache__
 # don't push scripts
 *.sh
 *.ps1
+
+# don't push unneeded data files
+.DS_Store

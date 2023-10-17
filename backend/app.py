@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from flask_cors import CORS
 import mysql.connector
 import mysecrets
+import bcrypt
 import os
 
 app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -27,34 +28,39 @@ def index():
         return redirect(url_for('profile'))
     return render_template('login.html')
 
-#TODO change /login to /login_attempt or something to distinguish from login.html
-@app.route('/login', methods=['POST'])
+
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    # get 
 
-    # get data associated with user from database
-    db = get_db_connection()
-    cursor = db.cursor()
+    if request.method == 'GET':
+        return render_template('login.html')
+    
+    if request.method == 'POST':
+        # post 
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-    # Use parameterized query
-    query = "SELECT * FROM user WHERE username = %s"
-    cursor.execute(query, (username,))
-    user = cursor.fetchone()
+        # get data associated with user from database
+        db = get_db_connection()
+        cursor = db.cursor()
 
-    cursor.close()
-    db.close()
-    # Check if user exists
-    if user:
-        print('this is user', user)
-        print('this is user password', user[1])
-        if user[1] == password:
-            session['username'] = user[0]
-            return jsonify(status='success')
+        # Use parameterized query
+        query = "SELECT * FROM user WHERE username = %s"
+        cursor.execute(query, (username,))
+        user = cursor.fetchone()
+
+        cursor.close()
+        db.close()
+        # Check if user exists
+        if user:
+            if user[1] == password:
+                session['username'] = user[0]
+                return jsonify(status='success')
+            else:
+                return jsonify(status='error'), 401
         else:
-            return jsonify(status='error'), 401
-    else:
-        return jsonify(status='error', message='Username not found'), 401
+            return jsonify(status='error', message='Username not found'), 401
 
 @app.route('/profile')
 def profile():
@@ -73,6 +79,31 @@ def logout():
     if 'username' in session:
         session.pop('username', None)
     return redirect(url_for('index'))
+
+@app.route('/signup',  methods=['POST', 'GET'])
+def signup():
+    if request.method == 'GET':
+        return render_template('signup.html')
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Hash the password
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        query = "INSERT INTO user (username, data) VALUES (%s, %s);"
+        values = (username, password)  # Hashed password is a bytes object; decode it to string
+        cursor.execute(query, values)
+
+        db.commit()  # Don't forget to commit your changes
+
+        cursor.close()
+        db.close()
+        return jsonify(status='success')
+        #return render_template('login.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=6969)  # Running the app on localhost:6969

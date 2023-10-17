@@ -41,7 +41,7 @@ def login():
         cursor = db.cursor()
 
         # Use parameterized query
-        query = "SELECT * FROM user WHERE username = %s"
+        query = "SELECT * FROM user_new WHERE username = %s"
         cursor.execute(query, (username,))
         user = cursor.fetchone()
 
@@ -49,7 +49,8 @@ def login():
         db.close()
         # Check if user exists
         if user:
-            if user[1] == password:
+            stored_hashed_password = user[1]
+            if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
                 session['username'] = user[0]
                 return jsonify(status='success')
             else:
@@ -76,8 +77,10 @@ def signup():
         db = get_db_connection()
         cursor = db.cursor()
 
-        query = "INSERT INTO user (username, data) VALUES (%s, %s);"
-        values = (username, password)  # Hashed password is a bytes object; decode it to string
+        query = "INSERT INTO user_new (username, data) VALUES (%s, %s);"
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        # store hashed_password in the database
+        values = (username, hashed_password)  # Hashed password is a bytes object; decode it to string
         cursor.execute(query, values)
 
         db.commit()  # Don't forget to commit your changes

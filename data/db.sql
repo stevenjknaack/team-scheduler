@@ -1,12 +1,9 @@
-CREATE TABLE `adminView` (
-  `user_id` integer,
-  `saved_event_id` integer
-);
-
 CREATE TABLE `saved_event` (
   `event_id` integer,
   `event_name` varchar(255),
+  `time_range` varchar(255),
   `event_description` text,
+  `admin_id` integer,
   `invitee_id` integer
 );
 
@@ -22,19 +19,17 @@ CREATE TABLE `invitee` (
 
 CREATE TABLE `users` (
   `id` integer PRIMARY KEY,
+  `email` varchar(255),
   `username` varchar(255),
-  `role` varchar(255),
-  `created_at` timestamp
+  `password` varchar(255)
 );
 
-ALTER TABLE `adminView` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
 ALTER TABLE `userView` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
-ALTER TABLE `saved_event` ADD FOREIGN KEY (`event_id`) REFERENCES `adminView` (`saved_event_id`);
 
 ALTER TABLE `saved_event` ADD FOREIGN KEY (`event_id`) REFERENCES `userView` (`saved_event_id`);
 
 ALTER TABLE `invitee` ADD FOREIGN KEY (`invitee_id`) REFERENCES `saved_event` (`invitee_id`);
 
 ALTER TABLE `invitee` ADD FOREIGN KEY (`invitee_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `saved_event` ADD FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`);

@@ -53,3 +53,5 @@
       https://www.w3schools.com/nodejs/nodejs_mysql.asp
   - venv help:
       https://python.land/virtual-environments/virtualenv
+  - unit testing in python/flask
+      https://realpython.com/python-testing/#testing-for-web-frameworks-like-django-and-flask

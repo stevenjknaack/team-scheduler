@@ -1,4 +1,4 @@
-CREATE TABLE `saved_event` (
+CREATE TABLE `savedEvent` (
   `event_id` integer,
   `event_name` varchar(255),
   `time_range` varchar(255),
@@ -26,10 +26,10 @@ CREATE TABLE `users` (
 
 ALTER TABLE `userView` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `saved_event` ADD FOREIGN KEY (`event_id`) REFERENCES `userView` (`saved_event_id`);
+ALTER TABLE `savedEvent` ADD FOREIGN KEY (`event_id`) REFERENCES `userView` (`saved_event_id`);
 
-ALTER TABLE `invitee` ADD FOREIGN KEY (`invitee_id`) REFERENCES `saved_event` (`invitee_id`);
+ALTER TABLE `invitee` ADD FOREIGN KEY (`invitee_id`) REFERENCES `savedEvent` (`invitee_id`);
 
 ALTER TABLE `invitee` ADD FOREIGN KEY (`invitee_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `saved_event` ADD FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`);
+ALTER TABLE `savedEvent` ADD FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`);

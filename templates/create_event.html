@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/event.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/create_event.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>Customizable Event Page</h1>
-        <form action="/saveEvent" method="post">  <!-- Adjust the action attribute to your Flask route -->
+        <form action="/create-event-request" method="post">  <!-- Adjust the action attribute to your Flask route -->
             <div class="form-group">
                 <label for="event_name">Event Name:</label>
                 <input type="text" id="event_name" name="event_name" placeholder="Enter event name" required>
@@ -134,8 +134,8 @@
             <div class="navbar-right">
                 <button type="submit" id="save" href="{{ url_for('index') }}" class="btn btn-danger">Save Event</button>
             </div>
-            <script src="{{ url_for('static', filename='scripts/event.js') }}"></script>
         </form>
     </div>
+    <script src="{{ url_for('static', filename='scripts/create_event.js') }}"></script>
 </body>
 </html>

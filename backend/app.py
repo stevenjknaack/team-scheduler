@@ -103,47 +103,49 @@ def signup_request():
     db.close()
     return jsonify(status='success')
     #return render_template('login.html')
-@app.route('/eventCreate', methods=['POST', 'GET'])
-def eventCreate():
-    if 'username' in session :
-        return render_template('event.html', username=session['username'])
-@app.route('/saveEvent', methods=['POST', 'GET'])
-def saveEvent():
-    if request.method == 'POST':
-        # Get event data from the HTML form
-        event_name = request.form.get('event_name')
-        event_description = request.form.get('event_description')
-        start_day = request.form.get('start_day')
-        start_month = request.form.get('start_month')
-        start_year = request.form.get('start_year')
-        end_day = request.form.get('end_day')
-        end_month = request.form.get('end_month')
-        end_year = request.form.get('end_year')
-        
-        # Combine the date components into a single string
-        start_date = f"{start_year}-{start_month}-{start_day}"
-        end_date = f"{end_year}-{end_month}-{end_day}"
-        print("the values are: ", start_date, end_date)
-        start_time = "9:00:00"
-        end_time = "21:00:00"
-        # Connect to the database
-        db = get_db_connection()
-        cursor = db.cursor()
 
-        # Insert the event data into the "savedEvent" table
-        query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
-        values = (event_name, start_date, end_date, start_time, end_time, event_description)
-        cursor.execute(query, values)
+@app.route('/create-event', methods=['GET'])
+def create_event():
+    if 'username' not in session :
+        return redirect(url_for('login'))
+    return render_template('create_event.html', username=session['username'])
 
-        # Commit the changes to the database
-        db.commit()
+@app.route('/create-event-request', methods=['POST'])
+def create_event_request():
+    # Get event data from the HTML form
+    event_name = request.form.get('event_name')
+    event_description = request.form.get('event_description')
+    start_day = request.form.get('start_day')
+    start_month = request.form.get('start_month')
+    start_year = request.form.get('start_year')
+    end_day = request.form.get('end_day')
+    end_month = request.form.get('end_month')
+    end_year = request.form.get('end_year')
+    
+    # Combine the date components into a single string
+    start_date = f"{start_year}-{start_month}-{start_day}"
+    end_date = f"{end_year}-{end_month}-{end_day}"
+    print("the values are: ", start_date, end_date)
+    start_time = "9:00:00"
+    end_time = "21:00:00"
 
-        # Close the cursor and the database connection
-        cursor.close()
-        db.close()
+    # Connect to the database
+    db = get_db_connection()
+    cursor = db.cursor()
 
-    # Handle GET requests (if needed)
-    return redirect(url_for('index'))
+    # Insert the event data into the "savedEvent" table
+    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
+    values = (event_name, start_date, end_date, start_time, end_time, event_description)
+    cursor.execute(query, values)
+
+    # Commit the changes to the database
+    db.commit()
+
+    # Close the cursor and the database connection
+    cursor.close()
+    db.close()
+
+    return redirect(url_for('profile'))
 
 
 if __name__ == '__main__':

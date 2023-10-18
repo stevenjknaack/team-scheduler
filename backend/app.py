@@ -26,42 +26,42 @@ def index():
     """Home page"""
     if 'username' in session :
         return redirect(url_for('profile'))
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET'])
+def login():
+    if 'username' in session :
+        return redirect(url_for('profile'))
     return render_template('login.html')
 
+@app.route('/login-request', methods=['POST'])
+def login_request():
+    # post 
+    email = request.form.get('email')
+    password = request.form.get('password')
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    # get 
+    # get data associated with user from database
+    db = get_db_connection()
+    cursor = db.cursor()
 
-    if request.method == 'GET':
-        return render_template('login.html')
-    
-    if request.method == 'POST':
-        # post 
-        username = request.form.get('username')
-        password = request.form.get('password')
+    # Use parameterized query
+    query = "SELECT * FROM user WHERE email = %s"
+    cursor.execute(query, (email,))
+    user = cursor.fetchone()
 
-        # get data associated with user from database
-        db = get_db_connection()
-        cursor = db.cursor()
-
-        # Use parameterized query
-        query = "SELECT * FROM user_new WHERE username = %s"
-        cursor.execute(query, (username,))
-        user = cursor.fetchone()
-
-        cursor.close()
-        db.close()
-        # Check if user exists
-        if user:
-            stored_hashed_password = user[1]
-            if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
-                session['username'] = user[0]
-                return jsonify(status='success')
-            else:
-                return jsonify(status='error'), 401
+    cursor.close()
+    db.close()
+    # Check if user exists
+    print(user)
+    if user:
+        stored_hashed_password = user[3]
+        if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+            session['username'] = user[2]
+            return jsonify(status='success')
         else:
-            return jsonify(status='error', message='Username not found'), 401
+            return jsonify(status='error'), 401
+    else:
+        return jsonify(status='error', message='Username not found'), 401
 
 @app.route('/profile')
 def profile():
@@ -69,6 +69,11 @@ def profile():
         return redirect(url_for('index'))
     return render_template('profile.html', username=session['username'])
 
+@app.route('/signup')
+def signup() :
+    if 'username' in session :
+        return redirect(url_for('profile'))
+    return render_template('signup.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -76,38 +81,69 @@ def logout():
         session.pop('username', None)
     return redirect(url_for('index'))
 
-@app.route('/signup')
-def signup() :
+@app.route('/signup-request',  methods=['POST'])
+def signup_request():
+    email = request.form.get('email')
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    # Hash the password
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    query = "INSERT INTO user (email, username, password) VALUES (%s, %s, %s);"
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    # store hashed_password in the database
+    values = (email, username, hashed_password)  # Hashed password is a bytes object; decode it to string
+    cursor.execute(query, values)
+
+    db.commit()  # Don't forget to commit your changes
+
+    cursor.close()
+    db.close()
+    return jsonify(status='success')
+    #return render_template('login.html')
+@app.route('/eventCreate', methods=['POST', 'GET'])
+def eventCreate():
     if 'username' in session :
-        return redirect(url_for('profile'))
-    return render_template('signup.html')
-
-
-@app.route('/signup',  methods=['POST', 'GET'])
-def signup():
-    if request.method == 'GET':
-        return render_template('signup.html')
-    
+        return render_template('event.html', username=session['username'])
+@app.route('/saveEvent', methods=['POST', 'GET'])
+def saveEvent():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        # Hash the password
+        # Get event data from the HTML form
+        event_name = request.form.get('event_name')
+        event_description = request.form.get('event_description')
+        start_day = request.form.get('start_day')
+        start_month = request.form.get('start_month')
+        start_year = request.form.get('start_year')
+        end_day = request.form.get('end_day')
+        end_month = request.form.get('end_month')
+        end_year = request.form.get('end_year')
+        
+        # Combine the date components into a single string
+        start_date = f"{start_year}-{start_month}-{start_day}"
+        end_date = f"{end_year}-{end_month}-{end_day}"
+        print("the values are: ", start_date, end_date)
+        start_time = "9:00:00"
+        end_time = "21:00:00"
+        # Connect to the database
         db = get_db_connection()
         cursor = db.cursor()
 
-        query = "INSERT INTO user_new (username, data) VALUES (%s, %s);"
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        # store hashed_password in the database
-        values = (username, hashed_password)  # Hashed password is a bytes object; decode it to string
+        # Insert the event data into the "savedEvent" table
+        query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
+        values = (event_name, start_date, end_date, start_time, end_time, event_description)
         cursor.execute(query, values)
 
-        db.commit()  # Don't forget to commit your changes
+        # Commit the changes to the database
+        db.commit()
 
+        # Close the cursor and the database connection
         cursor.close()
         db.close()
-        return jsonify(status='success')
-        #return render_template('login.html')
+
+    # Handle GET requests (if needed)
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

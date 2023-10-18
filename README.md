@@ -14,6 +14,9 @@
  4. type 'py app.py' to launch backend (for people using python3: python3 app.py)
  5. open up "localhost:6969" in a browser
 
+# to run the unit testing
+  python -m unittest discover 
+
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv
 

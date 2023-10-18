@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from flask_cors import CORS
 import mysql.connector
 import mysecrets
-import bcrypt
+#import bcrypt
 import os
 
 app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -103,25 +103,36 @@ def signup_request():
     db.close()
     return jsonify(status='success')
     #return render_template('login.html')
+@app.route('/eventCreate', methods=['POST', 'GET'])
+def eventCreate():
+    if 'username' in session :
+        return render_template('event.html', username=session['username'])
 @app.route('/saveEvent', methods=['POST', 'GET'])
 def saveEvent():
     if request.method == 'POST':
         # Get event data from the HTML form
         event_name = request.form.get('event_name')
-        event_day = request.form.get('event_day')
-        event_month = request.form.get('event_month')
-        event_year = request.form.get('event_year')
-
+        event_description = request.form.get('event_description')
+        start_day = request.form.get('start_day')
+        start_month = request.form.get('start_month')
+        start_year = request.form.get('start_year')
+        end_day = request.form.get('end_day')
+        end_month = request.form.get('end_month')
+        end_year = request.form.get('end_year')
+        
         # Combine the date components into a single string
-        time_range = event_day + ' ' + event_month + ' ' + event_year
-
+        start_date = f"{start_year}-{start_month}-{start_day}"
+        end_date = f"{end_year}-{end_month}-{end_day}"
+        print("the values are: ", start_date, end_date)
+        start_time = "9:00:00"
+        end_time = "21:00:00"
         # Connect to the database
         db = get_db_connection()
         cursor = db.cursor()
 
         # Insert the event data into the "savedEvent" table
-        query = "INSERT INTO savedEvent (event_name, time_range) VALUES (%s, %s);"
-        values = (event_name, time_range)
+        query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
+        values = (event_name, start_date, end_date, start_time, end_time, event_description)
         cursor.execute(query, values)
 
         # Commit the changes to the database
@@ -130,9 +141,6 @@ def saveEvent():
         # Close the cursor and the database connection
         cursor.close()
         db.close()
-
-        # Return a success JSON response
-        return jsonify(status='success')
 
     # Handle GET requests (if needed)
     return redirect(url_for('index'))

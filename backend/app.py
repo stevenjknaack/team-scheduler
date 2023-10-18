@@ -81,6 +81,7 @@ def logout():
         session.pop('username', None)
     return redirect(url_for('index'))
 
+<<<<<<< Updated upstream
 @app.route('/signup',  methods=['POST', 'GET'])
 def signup():
     if request.method == 'GET':
@@ -107,6 +108,14 @@ def signup():
         return jsonify(status='success')
         #return render_template('login.html')
 
+=======
+@app.route('/eventCreate', methods=['GET', 'POST'])
+def eventCreate():
+    return render_template('event.html')
+@app.route('/saveEvent', methods=['GET', 'POST'])
+def saveEvent():
+    return redirect(url_for('index'))
+>>>>>>> Stashed changes
 
 if __name__ == '__main__':
     app.run(debug=True, port=6969)  # Running the app on localhost:6969

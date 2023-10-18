@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from flask_cors import CORS
 import mysql.connector
 import mysecrets
-#import bcrypt
+import bcrypt
 import os
 
 app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))

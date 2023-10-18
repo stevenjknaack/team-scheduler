@@ -2,43 +2,10 @@
 <html>
 <head>
     <title>Customizable Event Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-        }
-        select, input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/event.css') }}">
 </head>
 <body>
     <div class="container">
@@ -167,12 +134,7 @@
             <div class="navbar-right">
                 <button type="submit" id="save" href="{{ url_for('index') }}" class="btn btn-danger">Save Event</button>
             </div>
-            <script>
-                document.getElementById("save").addEventListener("click", function() {
-                    // Use JavaScript to navigate to the profile page
-                    window.location.href = "{{ url_for('saveEvent') }}";
-                });
-            </script>
+            <script src="{{ url_for('static', filename='scripts/event.js') }}"></script>
         </form>
     </div>
 </body>

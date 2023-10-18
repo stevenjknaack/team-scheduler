@@ -69,11 +69,6 @@ def profile():
         return redirect(url_for('index'))
     return render_template('profile.html', username=session['username'])
 
-@app.route('/signup')
-def signup() :
-    if 'username' in session :
-        return redirect(url_for('profile'))
-    return render_template('signup.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

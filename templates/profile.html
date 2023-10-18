@@ -20,7 +20,7 @@
             </div>
             <!---->
             <div class="navbar-right">
-                <button id="createEvent" href="{{ url_for('eventCreate') }}" class="btn btn-danger" style="display: block;">Create Event</button>
+                <button id="createEvent" href="{{ url_for('create_event') }}" class="btn btn-danger" style="display: block;">Create Event</button>
             </div>
             <!---->
         </nav>
@@ -55,19 +55,7 @@
                 </label>
             </div>
         </div>
-        <script>
-            document.getElementById("createEvent").addEventListener("click", function() {
-                // Use JavaScript to navigate to the profile page
-                window.location.href = "{{ url_for('eventCreate') }}";
-            });
-        </script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-            $(document).ready(function () {
-                $("#welcomeButton").on("click", function () {
-                    $("#logoutForm").toggle();
-                });
-            });
-            </script>
+        <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
     </body>
 </html>

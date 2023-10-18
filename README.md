@@ -15,7 +15,9 @@
  5. open up "localhost:6969" in a browser
 
 # to run the unit testing
-  python -m unittest discover 
+  - python -m unittest discover
+  - Other possible command: (for people using python3: remove _init_.py) python3 -m unittest my_tests -v (after locating at the test folder)
+  
 
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv

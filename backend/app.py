@@ -76,6 +76,13 @@ def logout():
         session.pop('username', None)
     return redirect(url_for('index'))
 
+@app.route('/signup')
+def signup() :
+    if 'username' in session :
+        return redirect(url_for('profile'))
+    return render_template('signup.html')
+
+
 @app.route('/signup',  methods=['POST', 'GET'])
 def signup():
     if request.method == 'GET':

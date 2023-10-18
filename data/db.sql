@@ -3,7 +3,7 @@ USE `10stars`;
 
 CREATE TABLE `user` (
   `user_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `email` VARCHAR(255) UNIQUE,
+  `email` VARCHAR(255) UNIQUE NOT NULL,
   `username` VARCHAR(255),
   `password` VARCHAR(255)
 );

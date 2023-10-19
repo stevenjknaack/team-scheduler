@@ -110,6 +110,14 @@ def create_event():
         return redirect(url_for('login'))
     return render_template('create_event.html', username=session['username'])
 
+# This method collects the data inputed by the creator of an event and inserts the information
+# into the database. It works by getting the values, creating a connection to the database,
+# making a query with the collected values to the database, and once all is done it closes 
+# the connection to the database and returns to the profile page
+#
+#
+# @author: Dante Katz Andrade
+# @version 2023.10.19
 @app.route('/create-event-request', methods=['POST'])
 def create_event_request():
     # Get event data from the HTML form
@@ -125,7 +133,6 @@ def create_event_request():
     # Combine the date components into a single string
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
-    print("the values are: ", start_date, end_date)
     start_time = "9:00:00"
     end_time = "21:00:00"
 

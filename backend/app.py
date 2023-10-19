@@ -116,15 +116,15 @@ def create_event():
     if 'username' not in session :
         return redirect(url_for('login'))
     return render_template('create_event.html', username=session['username'])
-
-# This method collects the data inputed by the creator of an event and inserts the information
-# into the database. It works by getting the values, creating a connection to the database,
-# making a query with the collected values to the database, and once all is done it closes 
-# the connection to the database and returns to the profile page
-#
-#
-# @author: Dante Katz Andrade
-# @version 2023.10.19
+"""create_event_request"""
+"""
+This method collects the data inputed by the creator of an event and inserts the information
+into the database. It works by getting the values, creating a connection to the database,
+making a query with the collected values to the database, and once all is done it closes 
+the connection to the database and returns to the profile page
+@author: Dante Katz Andrade
+@version 2023.10.19
+"""
 @app.route('/create-event-request', methods=['POST'])
 def create_event_request():
     # Get event data from the HTML form

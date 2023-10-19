@@ -87,18 +87,25 @@ def signup_request():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    # Hash the password
+    # connect to the database
     db = get_db_connection()
+
+    # create a cursor
     cursor = db.cursor()
 
+
     query = "INSERT INTO user (email, username, password) VALUES (%s, %s, %s);"
+    # hashed_password 
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    # store hashed_password in the database
-    values = (email, username, hashed_password)  # Hashed password is a bytes object; decode it to string
+    values = (email, username, hashed_password) 
+
+    # use the cursor to execute the query 
     cursor.execute(query, values)
 
-    db.commit()  # Don't forget to commit your changes
+    # commit change to database
+    db.commit()  
 
+    # close cursor and database
     cursor.close()
     db.close()
     return jsonify(status='success')

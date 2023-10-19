@@ -30,32 +30,60 @@
                 <h2>CS506 LEC1 MEETING</h2>
                 <p>Duration 1hr</p>
                 <p>12 participants</p>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
+                <div class="btn-container">
+                    <button class="invite-btn">Invite</button>
+                </div>
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             <div class="event">
                 <h2>CS506 LEC1 MEETING</h2>
                 <p>Duration 1hr</p>
                 <p>12 participants</p>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
+                <div class="btn-container">
+                    <button class="invite-btn">Invite</button>
+                </div>
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             <div class="event waiting">
                 <h2>LAB 3 MEETING</h2>
                 <p>Duration 30 min</p>
                 <p>5 participants</p>
                 <p>waiting for: 2</p>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
+                <div class="btn-container">
+                    <button class="invite-btn">Invite</button>
+                </div>
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Invitation Modal -->
+        <div id="inviteModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Invite Participants</h2>
+                <input type="email" id="invite-email" placeholder="Enter email">
+                <div id="invited-participants"></div>
+                <button class="invite-submit-btn">Send Invitation</button>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
+        <script>
+            window.eventCreateUrl = "{{ url_for('eventCreate') }}";
+        </script>
     </body>
 </html>

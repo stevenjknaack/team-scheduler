@@ -55,6 +55,8 @@
   5. quit terminal
 
 # helpful links
+  - Standard Document we followed:
+      [Standard Document](https://docs.google.com/document/d/1_WsgEIjBhdkJ2me_Bu8Fjdv6UBOZOUNW/edit)
   - frontend-backend flask help: 
       https://tms-dev-blog.com/python-backend-with-javascript-frontend-how-to/#Prerequisites
   - python to mysql help:

@@ -167,7 +167,7 @@ def create_event_request():
     end_month = request.form.get('end_month')
     end_year = request.form.get('end_year')
     
-    # Combine the date components into a single string
+    # Combine the date components into a single string. Will eventually add time customization
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
     start_time = "9:00:00"
@@ -195,7 +195,6 @@ def create_event_request():
 
 @app.route('/delete-event/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
-    # Check if the user has permission to delete the event
 
     db = get_db_connection()
     cursor = db.cursor()

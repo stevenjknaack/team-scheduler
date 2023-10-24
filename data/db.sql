@@ -29,7 +29,7 @@ CREATE TABLE `user_view` (
 
 CREATE TABLE `invitee` (
   'event_id' INTEGER,
-  `email` VARCHAR(255) UNIQUE NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
   FOREIGN KEY (`email`) REFERENCES `user` (`email`)
   FOREIGN KEY ('event_id') REFERENCES 'saved_event' ('event_id')
 );

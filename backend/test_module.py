@@ -47,7 +47,12 @@ class MyTestCase(unittest.TestCase):
         }
         response = self.app.post('/login-request', data=nonexistent_user)
         self.assertEqual(response.status_code, 401)
-
+    
+    # Test create-event-request
+    def test_create_event_request(self):
+        event_creation = {
+            
+        }
 if __name__ == '__main__':
     unittest.main()
 

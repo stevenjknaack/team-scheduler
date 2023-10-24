@@ -26,12 +26,15 @@
         </nav>
         <div class="container">
             <h1>EVENTS</h1>
+            {% for event in events %}
             <div class="event">
-                <h2>CS506 LEC1 MEETING</h2>
-                <p>Duration 1hr</p>
-                <p>12 participants</p>
+                <h2>{{ event[1] }}</h2>
+                <p>Start Date: {{ event[2] }}</p>
+                <p>End Date: {{ event[3] }}</p>
+                <p>Event Description: {{ event[6] }}</p>
                 <div class="btn-container">
-                    <button class="invite-btn">Invite</button>
+                    <button class="invite-btn" data-eventid="{{ event[0] }}">Invite</button>
+                    <button class="delete-btn" data-eventid="{{ event[0] }}">Delete</button>
                 </div>
                 <div class="switch-container">
                     <label class="switch">
@@ -40,35 +43,8 @@
                     </label>
                 </div>
             </div>
-            <div class="event">
-                <h2>CS506 LEC1 MEETING</h2>
-                <p>Duration 1hr</p>
-                <p>12 participants</p>
-                <div class="btn-container">
-                    <button class="invite-btn">Invite</button>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="event waiting">
-                <h2>LAB 3 MEETING</h2>
-                <p>Duration 30 min</p>
-                <p>5 participants</p>
-                <p>waiting for: 2</p>
-                <div class="btn-container">
-                    <button class="invite-btn">Invite</button>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
+            {% endfor %}
+        </div>
         </div>
         <!-- Invitation Modal -->
         <div id="inviteModal" class="modal">

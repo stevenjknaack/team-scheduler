@@ -57,17 +57,47 @@ def login_request():
         stored_hashed_password = user[3]
         if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
             session['username'] = user[2]
+            session['user_id'] = user[0]
             return jsonify(status='success')
         else:
             return jsonify(status='error'), 401
     else:
         return jsonify(status='error', message='Username not found'), 401
 
+# Function to get events from the database
+def get_user_events(username):
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    # Fetch user ID by username
+    cursor.execute("SELECT user_id FROM user WHERE username = %s", (username,))
+    user = cursor.fetchone()
+    
+    if user is None:
+        cursor.close()
+        db.close()
+        return []  # Return an empty list if the user doesn't exist
+    
+    user_id = user[0]
+
+    # Fetch events owned by the user
+    cursor.execute("SELECT * FROM saved_event WHERE owner_id = %s", (user_id,))
+    events = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+    return events
+
 @app.route('/profile')
 def profile():
     if 'username' not in session:
         return redirect(url_for('index'))
-    return render_template('profile.html', username=session['username'])
+
+    # Get user events
+    username = session['username']
+    events = get_user_events(username)
+    return render_template('profile.html', username=username, events=events)
+
 
 @app.route('/signup')
 def signup() :
@@ -137,20 +167,22 @@ def create_event_request():
     end_month = request.form.get('end_month')
     end_year = request.form.get('end_year')
     
-    # Combine the date components into a single string
+    # Combine the date components into a single string. Will eventually add time customization
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
     start_time = "9:00:00"
     end_time = "21:00:00"
 
+    user_id = session.get('user_id')
     # Connect to the database
     db = get_db_connection()
     cursor = db.cursor()
 
     # Insert the event data into the "savedEvent" table
-    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
-    values = (event_name, start_date, end_date, start_time, end_time, event_description)
+    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description, owner_id) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    values = (event_name, start_date, end_date, start_time, end_time, event_description, user_id)
     cursor.execute(query, values)
+    print("SQL Query:", query % values)
 
     # Commit the changes to the database
     db.commit()
@@ -161,6 +193,40 @@ def create_event_request():
 
     return redirect(url_for('profile'))
 
+@app.route('/delete-event/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    # Get the owner_id of the event
+    cursor.execute("SELECT owner_id FROM saved_event WHERE event_id = %s", (event_id,))
+    owner = cursor.fetchone()
+
+    if owner is None:
+        cursor.close()
+        db.close()
+        return jsonify(status='error', message='Event not found'), 404
+
+    owner_id = owner[0]
+
+    # Check if the user is the owner of the event
+    if 'username' in session:
+        cursor.execute("SELECT user_id FROM user WHERE username = %s", (session['username'],))
+        user = cursor.fetchone()
+        if user is not None:
+            user_id = user[0]
+            if user_id == owner_id:
+                # Delete the event if user_id matches owner_id
+                cursor.execute("DELETE FROM saved_event WHERE event_id = %s", (event_id,))
+                db.commit()
+                cursor.close()
+                db.close()
+                return jsonify(status='success')
+    
+    cursor.close()
+    db.close()
+    return jsonify(status='fail')
 
 if __name__ == '__main__':
     app.run(debug=True, port=6969)  # Running the app on localhost:6969

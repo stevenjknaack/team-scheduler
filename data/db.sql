@@ -3,33 +3,27 @@ USE `10stars`;
 
 CREATE TABLE `user` (
   `email` VARCHAR(255) PRIMARY KEY,
-  `username` VARCHAR(255),
-  `password` VARCHAR(255)
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE `saved_event` (
+CREATE TABLE `event` (
   `event_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `event_name` VARCHAR(255),
+  `event_name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
   `start_date` DATE,
   `end_date` DATE,
   `start_time` TIME,
   `end_time` TIME,
-  `event_description` TEXT,
-  `owner_id` INTEGER,
-  FOREIGN KEY (`owner_id`) REFERENCES `user` (`email`)
+  `event_description` TEXT NOT NULL DEFAULT 'No description added.',
+  `creator_email` VARCHAR(255) NOT NULL,
+  FOREIGN KEY (`creator_email`) REFERENCES `user` (`email`)
 );
 
-CREATE TABLE `user_view` (
-  `user_id` INTEGER PRIMARY KEY,
-  `saved_event_id` INTEGER,
-  `user_role` VARCHAR(10),
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`email`),
-  FOREIGN KEY (`saved_event_id`) REFERENCES `saved_event` (`event_id`)
-);
-
-CREATE TABLE `invitee` (
-  'event_id' INTEGER,
-  `email` VARCHAR(255) NOT NULL,
-  FOREIGN KEY (`email`) REFERENCES `user` (`email`)
-  FOREIGN KEY ('event_id') REFERENCES 'saved_event' ('event_id')
+CREATE TABLE `participates_in` (
+  `user_email` VARCHAR(255) NOT NULL,
+  `event_id` INTEGER NOT NULL,
+  `user_role` INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_email`, `event_id`),
+  FOREIGN KEY (`user_email`) REFERENCES `user` (`email`),
+  FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`)
 );

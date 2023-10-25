@@ -17,7 +17,6 @@
 # to run the unit testing
   - python -m unittest discover
   - Other possible command: (for people using python3: remove _init_.py) python3 -m unittest my_tests -v (after locating at the test folder)
-  
 
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv
@@ -45,6 +44,9 @@
 # install bcrypt
   pip install bcrypt
 
+# install environmental variables
+  pip install python-dotenv
+
 # if there's an error connecting to the database, it may need to be created again
   0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 
     ensure you're in a directory with 10stars.yml 
@@ -55,6 +57,8 @@
   5. quit terminal
 
 # helpful links
+  - Standard Document we followed:
+      [Standard Document](https://docs.google.com/document/d/1_WsgEIjBhdkJ2me_Bu8Fjdv6UBOZOUNW/edit)
   - frontend-backend flask help: 
       https://tms-dev-blog.com/python-backend-with-javascript-frontend-how-to/#Prerequisites
   - python to mysql help:

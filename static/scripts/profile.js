@@ -81,3 +81,30 @@ inviteSubmitBtn.addEventListener("click", function() {
         alert("Failed to send invitations.");
     });
 });
+
+// Event listener for the delete button
+document.querySelectorAll(".delete-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+        var eventId = this.getAttribute("data-eventid");
+        deleteEvent(eventId);
+    });
+});
+
+// Function to delete an event
+function deleteEvent(eventId) {
+    // Send a request to the server to delete the event
+    fetch("/delete-event/" + eventId, {
+        method: "DELETE",
+    })
+        .then(function(response) {
+            if (response.ok) {
+                // Reload the page to reflect the changes
+                location.reload();
+            } else {
+                console.log("Failed to delete the event.");
+            }
+        })
+        .catch(function(error) {
+            console.error("Error:", error);
+        });
+}

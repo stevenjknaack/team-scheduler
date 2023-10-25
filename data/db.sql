@@ -2,34 +2,41 @@ CREATE DATABASE `10stars`;
 USE `10stars`;
 
 CREATE TABLE `user` (
-  `user_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `email` VARCHAR(255) UNIQUE NOT NULL,
-  `username` VARCHAR(255),
-  `password` VARCHAR(255)
+  `email` VARCHAR(255) PRIMARY KEY,
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE `saved_event` (
+CREATE UNIQUE INDEX `user_email_index`
+ON `user` (`email`); 
+
+CREATE TABLE `event` (
   `event_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `event_name` VARCHAR(255),
+  `event_name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
   `start_date` DATE,
   `end_date` DATE,
   `start_time` TIME,
   `end_time` TIME,
-  `event_description` TEXT,
-  `owner_id` INTEGER,
-  FOREIGN KEY (`owner_id`) REFERENCES `user` (`user_id`)
+  `event_description` TEXT
 );
 
-CREATE TABLE `user_view` (
-  `user_id` INTEGER PRIMARY KEY,
-  `saved_event_id` INTEGER,
-  `user_role` VARCHAR(10),
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  FOREIGN KEY (`saved_event_id`) REFERENCES `saved_event` (`event_id`)
+CREATE UNIQUE INDEX `event_id_index`
+ON `event` (`event_id`); 
+
+CREATE TABLE `participates_in` (
+  `user_email` VARCHAR(255) NOT NULL,
+  `event_id` INTEGER NOT NULL,
+  `user_role` INTEGER NOT NULL DEFAULT 0,
+  CHECK (0 <= `user_role` AND `user_role` <= 3),
+  PRIMARY KEY (`user_email`, `event_id`),
+  FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
+  ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`)
+  ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `invitee` (
-  `invitee_id` INTEGER,
-  `queue_number` INTEGER,
-  FOREIGN KEY (`invitee_id`) REFERENCES `user` (`user_id`)
-);
+CREATE INDEX `participates_in_user_email_index`
+ON `participates_in` (`user_email`); 
+
+CREATE INDEX `participates_in_event_id_index`
+ON `participates_in` (`event_id`); 

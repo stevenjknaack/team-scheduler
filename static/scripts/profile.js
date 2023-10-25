@@ -70,12 +70,37 @@ emailInput.addEventListener("keyup", function(event) {
 });
 
 inviteSubmitBtn.addEventListener("click", function() {
-    const emails = [];
+    const emailsArray = [];
     for (let i = 0; i < invitedParticipants.children.length; i++) {
-        emails.push(invitedParticipants.children[i].innerText);
+        emailsArray.push(invitedParticipants.children[i].innerText);
     }
-    console.log(emails);
+    console.log(emailsArray);
     modal.style.display = "none";
+    // ... existing code to get the list of emails ...
+
+    // Convert the array of emails to JSON
+    const payload = {
+        emails: emailsArray
+    };
+
+    // Sending a POST request using fetch API
+    fetch("/send-invitations", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);  // This will print the response from the backend
+        // You can also add some feedback to the user, such as an alert or a message.
+        alert("Invitations sent successfully!");
+    })
+    .catch(error => {
+        console.error("There was an error sending the invitations:", error);
+        alert("Failed to send invitations.");
+    });
 });
 
 // Event listener for the delete button

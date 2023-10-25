@@ -10,6 +10,8 @@ CREATE TABLE `user` (
 CREATE UNIQUE INDEX `user_email_index`
 ON `user` (`email`); 
 
+-- insert proposed_tables here
+
 CREATE TABLE `event` (
   `event_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
   `event_name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
@@ -17,7 +19,13 @@ CREATE TABLE `event` (
   `end_date` DATE,
   `start_time` TIME,
   `end_time` TIME,
-  `event_description` TEXT
+  `event_description` TEXT,
+  /*`group_id` INTEGER,
+  `team_id` INTEGER,
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
+  ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
+  ON UPDATE CASCADE ON DELETE CASCADE*/
 );
 
 CREATE UNIQUE INDEX `event_id_index`

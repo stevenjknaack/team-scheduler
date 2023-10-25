@@ -139,6 +139,22 @@ input:checked + .slider:before {
   background-color: #777;
 }
 
+/* Styles for the Edit button */
+.edit-btn {
+  background-color: #555;
+  color: white;
+
+  padding: 10px 18px;  /* Increase padding for a larger button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #777;
+}
+
 
 /* The Modal */
 .modal {
@@ -170,8 +186,23 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
+.edit-close-btn {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .close-btn:hover,
 .close-btn:focus {
+  color: rgb(26, 255, 0); /* Green color on hover */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.edit-close-btn:hover,
+.edit-close-btn:focus {
   color: rgb(26, 255, 0); /* Green color on hover */
   text-decoration: none;
   cursor: pointer;
@@ -189,6 +220,21 @@ input:checked + .slider:before {
 }
 
 .invite-submit-btn:hover {
+  background-color: #777;
+}
+
+.save-change-btn {
+  background-color: #555;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.save-change-btn:hover {
   background-color: #777;
 }
 

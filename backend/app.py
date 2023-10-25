@@ -228,5 +228,29 @@ def delete_event(event_id):
     db.close()
     return jsonify(status='fail')
 
+@app.route('/get-event/<int:event_id>', methods=['GET'])
+def get_event(event_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    # Fetch event details using event_id
+    cursor.execute("SELECT * FROM saved_event WHERE event_id = %s", (event_id,))
+    event = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if event:
+        # return event details as a json object
+        event_details = {
+            "event_name": event[1],
+            "start_date": event[2].strftime('%Y-%m-%d'),  # Format the date as a string if it's a date object
+            "end_date": event[3].strftime('%Y-%m-%d'),
+            "event_description": event[6]
+        }
+        return jsonify(event_details)
+    else:
+        return jsonify(status='error', message='Event not found'), 404
+
 if __name__ == '__main__':
     app.run(debug=True, port=6969)  # Running the app on localhost:6969

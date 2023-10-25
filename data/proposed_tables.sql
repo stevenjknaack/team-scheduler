@@ -1,6 +1,6 @@
 use `10stars`;
 
-CREATE TABLE `group` ( -- add 'group_name' optional column to event table for group level event
+CREATE TABLE `group` ( 
   `group_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
   `group_name` VARCHAR(50) NOT NULL DEFAULT 'Unnamed Group',
   `group_description` TEXT
@@ -18,7 +18,7 @@ CREATE TABLE `in_group` (
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `team` ( -- add 'team_name' optional column to event table for team level event 
+CREATE TABLE `team` (
   `team_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
   `team_name` VARCHAR(50),
   `group_id` INTEGER NOT NULL,

@@ -10,7 +10,7 @@
  1. open visual studio terminal
  2. navigate to backend folder
  3. activate venv if not active
- 3.5. ensure mysecrets.py is in backend folder (DO NOT PUSH THIS TO GIT)
+ 3.5. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
  4. type 'py app.py' to launch backend (for people using python3: python3 app.py)
  5. open up "localhost:6969" in a browser
 

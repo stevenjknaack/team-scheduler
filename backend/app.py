@@ -6,7 +6,8 @@ import mysql.connector
 import bcrypt
 import os
 from dotenv import load_dotenv
-load_dotenv()
+
+load_dotenv() # add variables to the environment
 
 app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 CORS(app)

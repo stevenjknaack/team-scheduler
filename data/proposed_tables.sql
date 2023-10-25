@@ -13,9 +13,9 @@ CREATE TABLE `in_group` (
   CHECK (0 <= `group_role` AND `group_role` <= 3),
   PRIMARY KEY (`user_email`, `group_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
-  ON [UPDATE, DELETE] [CASCADE, CASCADE],
+  ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
-  ON [UPDATE, DELETE] [CASCADE, CASCADE]
+  ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `team` ( -- add 'team_name' optional column to event table for team level event 
@@ -24,15 +24,15 @@ CREATE TABLE `team` ( -- add 'team_name' optional column to event table for team
   `group_id` INTEGER NOT NULL,
   `team_description` TEXT,
   FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
-  ON [UPDATE, DELETE] [CASCADE, CASCADE]
+  ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `in_team` (
   `user_email` VARCHAR(255) NOT NULL,
   `team_id` INTEGER NOT NULL,
-  PRIMARY KEY (`user_email`, `group_id`),
+  PRIMARY KEY (`user_email`, `team_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
-  ON [UPDATE, DELETE] [CASCADE, CASCADE],
+  ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
-  ON [UPDATE, DELETE] [CASCADE, CASCADE]
+  ON UPDATE CASCADE ON DELETE CASCADE
 );

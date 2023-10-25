@@ -148,7 +148,7 @@ def create_event_request():
     cursor = db.cursor()
 
     # Insert the event data into the "savedEvent" table
-    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
+    query = " INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description) VALUES (%s, %s, %s, %s, %s, %s);"
     values = (event_name, start_date, end_date, start_time, end_time, event_description)
     cursor.execute(query, values)
 
@@ -160,6 +160,41 @@ def create_event_request():
     db.close()
 
     return redirect(url_for('profile'))
+
+@app.route('/send-invitations', methods=['POST'])
+def send_invitations():
+    # Get JSON data sent from the frontend
+    data = request.get_json()
+
+    # Extract email addresses
+    emails = data.get('emails', [])
+
+    # placeholder
+    event_id = 5
+
+    # connect to database
+    db = get_db_connection()
+
+    # create a cursor 
+    cursor = db.cursor()
+
+    for email in emails:
+        query = "INSERT INTO participates_in (user_email, event_id, user_role) VALUES (%s, %s, %s)"
+        values = (email, event_id, 0)
+        cursor.execute(query, values)
+        db.commit()
+    
+    # close cursor and database
+
+    cursor.close()
+    db.close()
+
+    # TODO: Process the emails, e.g., send invitation emails, save to the database, etc.
+    # For now, let's just print them for demonstration purposes
+    print(emails)
+
+    return jsonify(status='success', message='Invitations sent successfully!')
+
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ CREATE TABLE `event` (
   `end_date` DATE,
   `start_time` TIME,
   `end_time` TIME,
-  `event_description` TEXT NOT NULL DEFAULT 'No description added.',
+  `event_description` TEXT,
 );
 
 CREATE UNIQUE INDEX `event_id_index`
@@ -27,12 +27,12 @@ CREATE TABLE `participates_in` (
   `user_email` VARCHAR(255) NOT NULL,
   `event_id` INTEGER NOT NULL,
   `user_role` INTEGER NOT NULL DEFAULT 0,
+  CHECK (0 <= `user_role` AND `user_role` <= 3),
   PRIMARY KEY (`user_email`, `event_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON [UPDATE, DELETE] [CASCADE, CASCADE],
   FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`)
-  ON [UPDATE, DELETE] [CASCADE, CASCADE],
-  CHECK (0 <= `user_role` AND `user_role` <= 3)
+  ON [UPDATE, DELETE] [CASCADE, CASCADE]
 );
 
 CREATE INDEX `participates_in_user_email_index`

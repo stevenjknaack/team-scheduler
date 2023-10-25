@@ -17,7 +17,6 @@
 # to run the unit testing
   - python -m unittest discover
   - Other possible command: (for people using python3: remove _init_.py) python3 -m unittest my_tests -v (after locating at the test folder)
-  
 
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv
@@ -44,6 +43,9 @@
 
 # install bcrypt
   pip install bcrypt
+
+# install environmental variables
+  pip install python-dotenv
 
 # if there's an error connecting to the database, it may need to be created again
   0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 

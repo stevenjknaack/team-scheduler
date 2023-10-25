@@ -3,22 +3,23 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
 import mysql.connector
-import mysecrets
 import bcrypt
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 CORS(app)
-app.secret_key = 'mysecrets.password' 
+app.secret_key = os.getenv('DB_PASSWORD')
 
 def get_db_connection():
     """Returns connection object to database"""
     return mysql.connector.connect(
-        host = "localhost",
-        port = mysecrets.port,
-        user = "root",
-        password = mysecrets.password,
-        database = "10stars"
+        host = os.getenv('DB_HOST'),
+        port = os.getenv('DB_PORT'),
+        user = os.getenv('DB_USER'),
+        password = os.getenv('DB_PASSWORD'),
+        database = os.getenv('DB_NAME')
     )
 
 @app.route('/')
@@ -229,4 +230,4 @@ def delete_event(event_id):
     return jsonify(status='fail')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=6969)  # Running the app on localhost:6969
+    app.run(debug = True, port = os.getenv('FLASK_PORT'))  # Running the app on localhost:<PORT>

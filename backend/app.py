@@ -195,6 +195,41 @@ def create_event_request():
 
     return redirect(url_for('profile'))
 
+@app.route('/send-invitations', methods=['POST'])
+def send_invitations():
+    # Get JSON data sent from the frontend
+    data = request.get_json()
+
+    # Extract email addresses
+    emails = data.get('emails', [])
+
+    # placeholder
+    event_id = 5
+
+    # connect to database
+    db = get_db_connection()
+
+    # create a cursor 
+    cursor = db.cursor()
+
+    for email in emails:
+        query = "INSERT INTO participates_in (user_email, event_id, user_role) VALUES (%s, %s, %s)"
+        values = (email, event_id, 0)
+        cursor.execute(query, values)
+        db.commit()
+    
+    # close cursor and database
+
+    cursor.close()
+    db.close()
+
+    # TODO: Process the emails, e.g., send invitation emails, save to the database, etc.
+    # For now, let's just print them for demonstration purposes
+    print(emails)
+
+    return jsonify(status='success', message='Invitations sent successfully!')
+
+
 @app.route('/delete-event/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
 

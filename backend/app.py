@@ -1,4 +1,13 @@
-"""Backend for application"""
+"""
+10stars Flask App Backend
+
+:author : Georgia
+:author : Tony
+:author : Dante
+:author : Steven
+:author : Kyle
+:author : Anwita
+"""
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
@@ -124,9 +133,8 @@ def signup_request():
 
     # create a cursor
     cursor = db.cursor()
-
-
     query = "INSERT INTO user (email, username, password) VALUES (%s, %s, %s);"
+
     # hashed_password 
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     values = (email, username, hashed_password) 
@@ -141,24 +149,23 @@ def signup_request():
     cursor.close()
     db.close()
     return jsonify(status='success')
-    #return render_template('login.html')
 
 @app.route('/create-event', methods=['GET'])
 def create_event():
     if 'username' not in session :
         return redirect(url_for('login'))
     return render_template('create_event.html', username=session['username'])
-"""create_event_request"""
-"""
-This method collects the data inputed by the creator of an event and inserts the information
-into the database. It works by getting the values, creating a connection to the database,
-making a query with the collected values to the database, and once all is done it closes 
-the connection to the database and returns to the profile page
-@author: Dante Katz Andrade
-@version 2023.10.19
-"""
+
 @app.route('/create-event-request', methods=['POST'])
 def create_event_request():
+    """
+    This method collects the data inputed by the creator of an event and inserts the information
+    into the database. It works by getting the values, creating a connection to the database,
+    making a query with the collected values to the database, and once all is done it closes 
+    the connection to the database and returns to the profile page
+    @author: Dante Katz Andrade
+    @version 2023.10.19
+    """
     # Get event data from the HTML form
     event_name = request.form.get('event_name')
     event_description = request.form.get('event_description')

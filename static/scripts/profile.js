@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
 });
 
-// Pop up modal functionality
+// Invite pop up modal functionality
 var modal = document.getElementById("inviteModal");
 var btns = document.getElementsByClassName("invite-btn");
 var span = document.getElementsByClassName("close-btn")[0];
@@ -29,6 +29,27 @@ span.onclick = function() {
 window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
+    }
+}
+
+// Edit pop up modal functionality
+var editEventModal = document.getElementById("editEventModal");
+var editBtn = document.getElementsByClassName("edit-btn");
+var editClose = document.getElementsByClassName("edit-close-btn")[0];
+
+for(let i = 0; i < editBtn.length; i++) {
+    editBtn[i].onclick = function() {
+        editEventModal.style.display = "block";
+    }
+}
+
+editClose.onclick = function() {
+    editEventModal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == editEventModal) {
+        editEventModal.style.display = "none";
     }
 }
 
@@ -107,4 +128,96 @@ function deleteEvent(eventId) {
         .catch(function(error) {
             console.error("Error:", error);
         });
+}
+
+// // Event listener for the edit button
+// document.querySelectorAll(".edit-btn").forEach(function(btn) {
+//     btn.addEventListener("click", function() {
+//         // Get the event details from the current saved event 
+//         var eventId = this.getAttribute("data-eventid");
+//         var event = getEventDetails(eventId);
+//         console.log("This is the event printed: " + event);
+
+//         // Populate edit form modal fields with the saved event details
+//         document.getElementById("editEventName").value = event.name;
+//         document.getElementById("editStartDate").value = event.startDate;
+//         document.getElementById("editEndDate").value = event.endDate;
+//         document.getElementById("editEventDescription").value = event.description;
+
+//         // Display the edit event modal
+//         document.getElementById("editEventModal").style.display = "block";
+//     });
+// });
+
+// Event listener for the edit button
+document.querySelectorAll(".edit-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        // Get the event details from the current saved event
+        var eventId = this.getAttribute("data-eventid");
+
+        // Fetch the event details and handle it when the promise resolves
+        getEventDetails(eventId).then(function (event) {
+            if (event) {
+                console.log("This is the event printed: ", event);
+
+                // Populate edit form modal fields with the saved event details
+                document.getElementById("editEventName").value = event.event_name;
+                document.getElementById("editStartDate").value = event.start_date;
+                document.getElementById("editEndDate").value = event.end_date;
+                document.getElementById("editEventDescription").value = event.event_description;
+
+                // Display the edit event modal
+                document.getElementById("editEventModal").style.display = "block";
+            } else {
+                console.log("Failed to fetch event details.");
+            }
+        });
+    });
+});
+
+// Function to get the saved event details when editing
+function getEventDetails(eventId) {
+    // Make request to server to fetch event details based on eventId, return details as an object as a promise
+    return fetch("/get-event/" + eventId, {
+        method: "GET", 
+    })
+        .then(function(response) {
+            if (response.ok) {
+                // Parse response as JSON and return event details
+                return response.json();
+            } else {
+                // Error handling
+                console.log("Failed to fetch event details.");
+                return null;
+            }
+        })
+        // Error handling
+        .catch(function(error) {
+            console.error("Error:", error);
+            return null;
+        });
+}
+
+// Event listener for saving event changes
+document.getElementById("saveEventChanges").addEventListener("click", function() {
+    // Get the edited event details from the Edit Event Modal form
+    var editedEvent = {
+        name: document.getElementById("editEventName").value,
+        startDate: document.getElementById("editStartDate").value,
+        endDate: document.getElementById("editEndDate").value,
+        description: document.getElementById("editEventDescription").value
+    };
+
+    // // Save the changes to the event
+    // saveEventChanges(eventId, editedEvent);
+
+    // console.log("I am being clicked!");
+
+    // Close the Edit Event Modal form
+    document.getElementById("editEventModal").style.display = "none";
+});
+
+// Function to save event changes 
+function saveEventChanges(eventId, editedEvent) {
+
 }

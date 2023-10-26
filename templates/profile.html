@@ -33,6 +33,7 @@
                 <p>End Date: {{ event[3] }}</p>
                 <p>Event Description: {{ event[6] }}</p>
                 <div class="btn-container">
+                    <button class="edit-btn" data-eventid="{{ event[0] }}">Edit</button>
                     <button class="invite-btn" data-eventid="{{ event[0] }}">Invite</button>
                     <button class="delete-btn" data-eventid="{{ event[0] }}">Delete</button>
                 </div>
@@ -56,6 +57,20 @@
                 <button class="invite-submit-btn">Send Invitation</button>
             </div>
         </div>
+        <!-- Edit Event Modal -->
+        <div id="editEventModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="edit-close-btn">&times;</span>
+                <h2>Edit Event</h2>
+                <form id="editEventForm">
+                    <input type="text" id="editEventName" placeholder="Event Name">
+                    <input type="text" id="editStartDate" placeholder="Start Date">
+                    <input type="text" id="editEndDate" placeholder="End Date">
+                    <textarea id="editEventDescription" placeholder="Event Description"></textarea>
+                    <button type="button" id="saveEventChanges" class="save-change-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>        
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
         <script>

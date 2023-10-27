@@ -8,6 +8,7 @@
 :author : Kyle
 :author : Anwita
 """
+# conisdering combining all the similar query behavior
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
@@ -20,7 +21,7 @@ load_dotenv() # add variables to the environment
 
 app = Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 CORS(app)
-app.secret_key = os.getenv('DB_PASSWORD')
+app.secret_key = os.getenv('DB_PASSWORD') # redundant with line31
 
 def get_db_connection():
     """Returns connection object to database"""
@@ -39,7 +40,7 @@ def index():
         return redirect(url_for('profile'))
     return redirect(url_for('login'))
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET']) # redundant with above
 def login():
     if 'username' in session :
         return redirect(url_for('profile'))
@@ -51,8 +52,8 @@ def login_request():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    # get data associated with user from database
-    db = get_db_connection()
+    # get data associated with user from database # change the comments
+    db = get_db_connection() 
     cursor = db.cursor()
 
     # Use parameterized query
@@ -63,8 +64,8 @@ def login_request():
     cursor.close()
     db.close()
     # Check if user exists
-    print(user)
-    if user:
+    print(user)  # comment out
+    if user: # also encry on the frontend
         stored_hashed_password = user[3]
         if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
             session['username'] = user[2]
@@ -87,7 +88,7 @@ def get_user_events(username):
     if user is None:
         cursor.close()
         db.close()
-        return []  # Return an empty list if the user doesn't exist
+        return []  # Return an empty list if the user doesn't exist # consider redirect to the login, redundant
     
     user_id = user[0]
 
@@ -99,7 +100,7 @@ def get_user_events(username):
     db.close()
     return events
 
-@app.route('/profile')
+@app.route('/profile') # check later
 def profile():
     if 'username' not in session:
         return redirect(url_for('index'))
@@ -135,7 +136,7 @@ def signup_request():
     cursor = db.cursor()
     query = "INSERT INTO user (email, username, password) VALUES (%s, %s, %s);"
 
-    # hashed_password 
+    # hashed_password  # make sure also encry at the frontend
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     values = (email, username, hashed_password) 
 
@@ -191,7 +192,7 @@ def create_event_request():
     query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description, owner_id) VALUES (%s, %s, %s, %s, %s, %s, %s);"
     values = (event_name, start_date, end_date, start_time, end_time, event_description, user_id)
     cursor.execute(query, values)
-    print("SQL Query:", query % values)
+    print("SQL Query:", query % values) # consider removing debug comment
 
     # Commit the changes to the database
     db.commit()

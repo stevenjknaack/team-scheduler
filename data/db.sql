@@ -19,8 +19,7 @@ CREATE TABLE `group` (
 CREATE TABLE `in_group` (
   `user_email` VARCHAR(255) NOT NULL,
   `group_id` INTEGER NOT NULL,
-  `group_role` INTEGER NOT NULL DEFAULT 0,
-  CHECK (0 <= `group_role` AND `group_role` <= 3),
+  `role` ENUM('invitee', 'participant', 'admin', 'owner') NOT NULL DEFAULT 'invitee',
   PRIMARY KEY (`user_email`, `group_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON UPDATE CASCADE ON DELETE CASCADE,
@@ -33,6 +32,7 @@ CREATE TABLE `team` (
   `team_name` VARCHAR(50),
   `group_id` INTEGER NOT NULL,
   `team_description` TEXT,
+  UNIQUE (`team_id`, `group_id`),
   FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -55,11 +55,12 @@ CREATE TABLE `event` (
   `start_time` TIME,
   `end_time` TIME,
   `event_description` TEXT,
-  `group_id` INTEGER,
+  `group_id` INTEGER NOT NULL,
   `team_id` INTEGER,
+  `edit_permission` ENUM('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
   FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
+  FOREIGN KEY (`team_id`, `group_id`) REFERENCES `team` (`team_id`, `group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -69,9 +70,6 @@ ON `event` (`event_id`);
 CREATE TABLE `participates_in` (
   `user_email` VARCHAR(255) NOT NULL,
   `event_id` INTEGER NOT NULL,
-  `user_role` INTEGER NOT NULL DEFAULT 0,
-  CHECK (0 <= `user_role` AND `user_role` <= 3),
-  PRIMARY KEY (`user_email`, `event_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`)
@@ -83,3 +81,6 @@ ON `participates_in` (`user_email`);
 
 CREATE INDEX `participates_in_event_id_index`
 ON `participates_in` (`event_id`); 
+
+/*CHECK ((`team_id` IS NULL AND `edit_permission` IS NULL) 
+  XOR (`team_id` IS NOT NULL AND `edit_permission` IS NOT NULL)),*/

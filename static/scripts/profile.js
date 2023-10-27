@@ -2,7 +2,7 @@
 document.getElementById("createEvent").addEventListener("click", function() {
     window.location.href = window.eventCreateUrl; 
 });
-
+3
 // Toggle the logout form
 $(document).ready(function () {
     $("#welcomeButton").on("click", function () {

@@ -50,14 +50,18 @@ CREATE TABLE `in_team` (
 CREATE TABLE `event` (
   `event_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
   `event_name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
-  `start_date` DATE,
-  `end_date` DATE,
-  `start_time` TIME,
-  `end_time` TIME,
+  `start_date` DATE NOT NULL,
+  `end_date` DATE NOT NULL,
+  `reg_start_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
+  `reg_end_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
   `event_description` TEXT,
   `group_id` INTEGER NOT NULL,
   `team_id` INTEGER,
-  `edit_permission` ENUM('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
+  `edit_permission` ENUM ('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
+  CHECK ((`reg_start_day` IS NULL AND `reg_end_day` IS NULL)
+  XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)), 
   FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`team_id`, `group_id`) REFERENCES `team` (`team_id`, `group_id`)

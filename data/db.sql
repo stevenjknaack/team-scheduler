@@ -8,7 +8,18 @@ CREATE TABLE `user` (
 );
 
 CREATE UNIQUE INDEX `user_email_index`
-ON `user` (`email`); 
+ON `user` (`email`);
+
+CREATE TABLE `availability_block` (
+  `availability_block_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `start_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') NOT NULL,
+  `end_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') NOT NULL,
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
+  `user_email` VARCHAR(255) NOT NULL, 
+  FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
+  ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 CREATE TABLE `group` ( 
   `group_id` INTEGER PRIMARY KEY AUTO_INCREMENT,

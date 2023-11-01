@@ -239,7 +239,7 @@ This Method will allow for creating a team manually, without needing time availa
 creates a team can give a name to the team and insert people manually into it by providing their email.
 Other USers who have been invited will get a notification which will allow them to accept or deny invitation.
 """
-@app.rout('/manual_create_teams', methods=['POST'])
+@app.route('/manual_create_teams', methods=['POST'])
 def create_team():
     """ Creates a team with team name and size. """
     """ Get information from group participant via email from DB"""

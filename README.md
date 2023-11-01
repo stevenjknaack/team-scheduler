@@ -3,7 +3,7 @@
 # setup (see below for help)
  0. open terminal in vs code
  1. navigate to backend folder and create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
- 2. install flask, python connector and cryptographic dependencies
+ 2. install flask, python connector, cryptographic dependencies, and environmental variables
 
 # to start app
  0. open local terminal, login "ssh -L localhost:63306:localhost:63306 <username>@cs506-team-10.cs.wisc.edu"
@@ -35,13 +35,11 @@
   pip install -U Flask
   pip install flask flask-cors
 
-# download python SQL Connector (do in venv)
+# install python SQL Connector (do in venv)
   python -m pip install mysql-connector-python 
 
 # install cryptographic dependencies
   pip install pyopenssl
-
-# install bcrypt
   pip install bcrypt
 
 # install environmental variables

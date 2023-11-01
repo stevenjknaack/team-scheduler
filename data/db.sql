@@ -68,9 +68,9 @@ CREATE TABLE `event` (
   `start_time` TIME NOT NULL,
   `end_time` TIME NOT NULL,
   `event_description` TEXT,
+  `edit_permission` ENUM ('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
   `group_id` INTEGER NOT NULL,
   `team_id` INTEGER,
-  `edit_permission` ENUM ('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
   CHECK ((`reg_start_day` IS NULL AND `reg_end_day` IS NULL)
   XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)), 
   FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)

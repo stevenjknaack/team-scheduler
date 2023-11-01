@@ -40,6 +40,7 @@ def index():
         return redirect(url_for('profile'))
     return redirect(url_for('login'))
 
+# can add @app.rout('/') here and remove the above
 @app.route('/login', methods=['GET']) # redundant with above
 def login():
     if 'username' in session :

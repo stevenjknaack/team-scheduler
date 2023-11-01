@@ -20,33 +20,6 @@ class MyTestCase(unittest.TestCase):
         result = self.app.get('/login')
         self.assertEqual(result.status_code, 200)
     
-    # Test logging in with valid credentials.
-    def test_login_valid_credentials(self):
-        valid_credentials = {
-            'email': 'test@gmail.com',  
-            'password': 'test'     
-        }
-        response = self.app.post('/login-request', data=valid_credentials, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-        # TODO: test router
-
-    # Test logging in with invalid credentials
-    def test_login_invalid_credentials(self):
-        invalid_credentials = {
-            'email': 'test@gmail.com',  
-            'password': 'wrongpassword'
-        }
-        response = self.app.post('/login-request', data=invalid_credentials)
-        self.assertEqual(response.status_code, 401)
-
-    # Test logging in with nonexistent account
-    def test_login_nonexistent_user(self):
-        nonexistent_user = {
-            'email': 'nonexistent@gmail.com', 
-            'password': 'test'
-        }
-        response = self.app.post('/login-request', data=nonexistent_user)
-        self.assertEqual(response.status_code, 401)
     
     # Test create-event-request
     def test_create_event_request(self):

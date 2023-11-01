@@ -21,7 +21,7 @@
 # installing virtual environment (recommended, not required), may need --user flag 
   py -m pip install --user virtualenv
 
-# create new venv environment (do in backend folder)
+# create new venv environment (in any subfolder but root is recommended)
   python -m venv venv
 
 # starting venv in windows with powershell/visual studio terminal 
@@ -31,18 +31,18 @@
 # starting venv on mac
   source myvenv/bin/activate
 
-# install Flask (do in venv)
+# install Flask (in venv)
   pip install -U Flask
   pip install flask flask-cors
 
-# install python SQL Connector (do in venv)
+# install python SQL Connector (in venv)
   python -m pip install mysql-connector-python 
 
-# install cryptographic dependencies
+# install cryptographic dependencies (in venv)
   pip install pyopenssl
   pip install bcrypt
 
-# install environmental variables
+# install environmental variables (in venv)
   pip install python-dotenv
 
 # if there's an error connecting to the database, it may need to be created again

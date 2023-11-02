@@ -86,7 +86,7 @@ def get_user_events(username):
     if user is None:
         cursor.close()
         db.close()
-        return render_template('login.html')  
+        return [] 
     """ Initiate a connection to the database. """
     db = get_db_connection()
     cursor = db.cursor()

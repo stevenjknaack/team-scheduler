@@ -1,7 +1,6 @@
 # don't push our secrets or environmental vars
 secrets.py
 mysecrets.py
-*.yml
 *.env
 
 # don't push your local venv

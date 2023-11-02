@@ -101,16 +101,14 @@ def get_user_events(username):
     cursor.close()
     db.close()
     return events
-
+""" 
+Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
+get_event to get the information from each event to display.
+"""
 @app.route('/profile') # check later
 def profile():
     if 'username' not in session:
         return redirect(url_for('index'))
-
-    """ 
-    Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
-    get_event to get the information from each event to display.
-    """
     username = session['username']
     events = get_user_events(username)
     return render_template('profile.html', username=username, events=events)

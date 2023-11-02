@@ -81,26 +81,38 @@ This function gets all the events created by the active user to display at the p
 """
 
 def get_user_events(username):
+
+    """ Initiate a connection to the database. """
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    """ Fetch user ID by username  """
+
+    cursor.execute("SELECT user_id FROM user WHERE username = %s", (username,))
+    user = cursor.fetchone()
+
     """ Security check so that people cannot go into the user page without logging in. It may be 
     redundant with the security check in /profile, however too much security is not a bad thing."""
+
     if user is None:
         cursor.close()
         db.close()
         return [] 
-    """ Initiate a connection to the database. """
-    db = get_db_connection()
-    cursor = db.cursor()
-    """ Fetch user ID by username  """
-    cursor.execute("SELECT user_id FROM user WHERE username = %s", (username,))
-    user = cursor.fetchone()
+
     """ Fetch events owned by the user """
+
     user_id = user[0]
     cursor.execute("SELECT * FROM saved_event WHERE owner_id = %s", (user_id,))
     events = cursor.fetchall()
+
     """ Close connection to database and return all the fetched events. """
+
     cursor.close()
     db.close()
+
     return events
+    
 """ 
 Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
 get_event to get the information from each event to display.

@@ -43,7 +43,7 @@ def index():
 @app.route('/login', methods=['GET']) # redundant with above
 def login():
     if 'username' in session :
-        return redirect(url_for('profile'))
+        return redirect(url_for('home'))
     return render_template('login.html')
 
 @app.route('/login-request', methods=['POST'])
@@ -66,9 +66,9 @@ def login_request():
     # Check if user exists
     
     if user: # also encry on the frontend
-        stored_hashed_password = user[3]
+        stored_hashed_password = user[2]
         if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
-            session['username'] = user[2]
+            session['username'] = user[1]
             session['user_id'] = user[0]
             return jsonify(status='success')
         else:
@@ -126,8 +126,12 @@ def profile():
     return render_template('profile.html', username=username, events=events)
 
 
+"""
+Gets groups and events owned by user (use get_user_events and get_user_groups) and return to JS, which then executes
+"""
 @app.route('/home')
 def home() :
+
     return render_template('home.html')
 
 @app.route('/newprofile')

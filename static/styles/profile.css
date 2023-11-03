@@ -19,6 +19,14 @@ body {
   box-shadow: 0px 3px 10px rgba(0,0,0,0.2);
 }
 
+.navbar-right {
+  /* ... existing styles ... */
+  display: flex; /* Ensures horizontal alignment of children */
+  align-items: center; /* Vertically aligns children in the middle */
+  gap: 10px; /* Creates spacing between each child item */
+}
+
+
 .navbar-left img {
   width: 200px; /* Adjust based on your logo's size */
 }
@@ -38,7 +46,7 @@ body {
 }
 
 .container {
-  width: 400px;
+  width: 60%;
   text-align: center;
   margin: 0 auto; /* This will center the container horizontally */
 }
@@ -58,7 +66,7 @@ h1 {
   background-color: #333;
   margin: 10px 0;
   padding: 15px;
-  border: 2px solid rgb(26, 255, 0);
+  border: 2px solid rgb(47, 103, 194);
   border-radius: 8px;
 }
 
@@ -211,3 +219,68 @@ input[type="email"] {
   background-color: #182135;
   font-size: 16px;
 }
+
+/* This is the container for both hosted and invited events */
+.events-columns {
+  display: flex;
+  justify-content: space-between; /* this will put some space between the two event sections if needed */
+  flex-wrap: wrap; /* this will make sure the containers move to the next row if there isn't enough space */
+}
+
+/* This is for the hosted events */
+.hosted-events {
+  flex: 1; /* this will make sure each container takes up an equal amount of space */
+  max-width: 48%; /* setting a max-width will ensure some space between the containers */
+  margin: 0 2%; /* optional, for some spacing */
+}
+
+/* This is for the invited events */
+.invited-events {
+  flex: 1;
+  max-width: 48%;
+  margin: 0 2%;
+}
+
+/* this is the notification button */ 
+
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #333;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 8px;
+  width: 250px; /* or whatever width you prefer */
+  z-index: 10;  /* ensures the dropdown appears on top */
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #555;
+}
+
+.accept-btn, .decline-btn {
+  background-color: #555;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 5px;
+}
+
+.accept-btn:hover {
+  background-color: #277;
+}
+
+.decline-btn:hover {
+  background-color: #722;
+}
+
+

@@ -8,44 +8,76 @@
     </head>
     <body>
         <div class="wrapper">
-        <nav class="navbar">
-            <div class="navbar-left">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
-            </div>
-            <div class="navbar-right">
-                <button id="welcomeButton">Welcome, {{ username }}!</button>
-                <form action="{{ url_for('logout') }}" method="post" id="logoutForm" style="display: none;">
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>
-            </div>
-            <!---->
-            <div class="navbar-right">
-                <button id="createEvent" href="{{ url_for('create_event') }}" class="btn btn-danger" style="display: block;">Create Event</button>
-            </div>
-            <!---->
-        </nav>
-        <div class="container">
-            <h1>EVENTS</h1>
-            {% for event in events %}
-            <div class="event">
-                <h2>{{ event[1] }}</h2>
-                <p>Start Date: {{ event[2] }}</p>
-                <p>End Date: {{ event[3] }}</p>
-                <p>Event Description: {{ event[6] }}</p>
-                <div class="btn-container">
-                    <button class="invite-btn" data-eventid="{{ event[0] }}">Invite</button>
-                    <button class="delete-btn" data-eventid="{{ event[0] }}">Delete</button>
+            <nav class="navbar">
+                <div class="navbar-left">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
                 </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
+                <div class="navbar-right">
+                    <button id="welcomeButton" style="display: block;">Welcome, {{ username }}!</button>
+                    <form action="{{ url_for('logout') }}" method="post" id="logoutForm" style="display: none;">
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                    </form>                                  
+                    <button id="createEvent" href="{{ url_for('create_event') }}" class="btn btn-danger" style="display: block;">Create Event</button>
+                    <div class="notification-container">
+                        <button class="notification-btn">Notifications</button>
+                        <!-- Notification dropdown -->
+                        <div class="notification-dropdown" style="display: none;">
+                            <!-- Sample notification item -->
+                            <div class="notification-item">
+                                <p>You're invited to GRo</p>
+                                <button class="accept-btn">Accept</button>
+                                <button class="decline-btn">Decline</button>
+                            </div>
+                            <div class="notification-item">
+                                <p>You're invited to [Event Name]</p>
+                                <button class="accept-btn">Accept</button>
+                                <button class="decline-btn">Decline</button>
+                            </div>
+                            <div class="notification-item">
+                                <p>You're invited to [Event Name]</p>
+                                <button class="accept-btn">Accept</button>
+                                <button class="decline-btn">Decline</button>
+                            </div>
+                            <!-- You can add more notification items like the one above -->
+                        </div>
+                    </div> 
+                </div>
+            </nav>
+            <div class="container">
+                <div class="events-columns">
+                    <!-- Hosted Events Column -->
+                    <div class="hosted-events">
+                        <h1>HOSTED EVENTS</h1>
+                        {% for event in events %}
+                        <div class="event">
+                            <h2>{{ event[1] }}</h2>
+                            <p>Start Date: {{ event[2] }}</p>
+                            <p>End Date: {{ event[3] }}</p>
+                            <p>Event Description: {{ event[6] }}</p>
+                            <div class="btn-container">
+                                <button class="invite-btn" data-eventid="{{ event[0] }}">Invite</button>
+                                <button class="delete-btn" data-eventid="{{ event[0] }}">Delete</button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Invited Events Column -->
+                    <div class="invited-events">
+                        <h1>PARTICIPATE EVENTS</h1>
+                        {% for event in events %}
+                        <div class="event">
+                            <h2>{{ event[1] }}</h2>
+                            <p>Start Date: {{ event[2] }}</p>
+                            <p>End Date: {{ event[3] }}</p>
+                            <p>Event Description: {{ event[6] }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        </div>
+
         <!-- Invitation Modal -->
         <div id="inviteModal" class="modal">
             <div class="modal-content">
@@ -56,6 +88,7 @@
                 <button class="invite-submit-btn">Send Invitation</button>
             </div>
         </div>
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
         <script>

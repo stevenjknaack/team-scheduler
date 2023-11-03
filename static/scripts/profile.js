@@ -3,12 +3,22 @@ document.getElementById("createEvent").addEventListener("click", function() {
     window.location.href = window.eventCreateUrl; 
 });
 
-// Toggle the logout form
-$(document).ready(function () {
-    $("#welcomeButton").on("click", function () {
-        $("#logoutForm").toggle();
+// welcone button 
+$(document).ready(function() {
+    $('#welcomeButton').on('click', function() {
+        $(this).hide();
+        $('#logoutForm').show();
+    });
+
+    // Switch back to the Welcome button if user clicks anywhere outside the logout button
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#logoutForm').length && !$(event.target).closest('#welcomeButton').length) {
+            $('#logoutForm').hide();
+            $('#welcomeButton').show();
+        }
     });
 });
+
 
 // Pop up modal functionality
 var modal = document.getElementById("inviteModal");
@@ -108,3 +118,17 @@ function deleteEvent(eventId) {
             console.error("Error:", error);
         });
 }
+
+// notification 
+$(document).ready(function() {
+    $('.notification-btn').on('click', function() {
+        $('.notification-dropdown').toggle(); // toggles the display of the dropdown
+    });
+
+    // Optional: Hide the dropdown if clicking outside of it
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.notification-container').length) {
+            $('.notification-dropdown').hide();
+        }
+    });
+});

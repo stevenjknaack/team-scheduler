@@ -1,0 +1,244 @@
+body {
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #182135;
+}
+.wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between; /* This will push logo to the left and button to the right */
+  align-items: center;
+  padding: 10px 5%;
+  background-color: #182135;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-right {
+  /* ... existing styles ... */
+  display: flex; /* Ensures horizontal alignment of children */
+  align-items: center; /* Vertically aligns children in the middle */
+  gap: 10px; /* Creates spacing between each child item */
+}
+
+.navbar-left img {
+  width: 200px; /* Adjust based on your logo's size */
+}
+
+.navbar-right button {
+  background-color: #555;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.navbar-right button:hover {
+  background-color: #777;
+}
+
+.container {
+  width: 60%;
+  text-align: center;
+  margin: 0 auto; /* This will center the container horizontally */
+}
+
+.logo img {
+  display: block;
+  margin: 0 auto;
+  width: 150px;
+}
+
+h1 {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+/* group and event box */
+
+.event {
+  background-color: #333;
+  margin: 30px 0;
+  padding: 15px;
+}
+
+.group {
+  background-color: #333;
+  margin: 30px 0;
+  padding: 15px;
+}
+
+.events-box {
+  display: none;
+}
+
+.groups-box {
+  display: block;
+}
+
+.admin-group {
+  border: 2px solid #4285f4;
+  border-radius: 8px;
+}
+.participant-group {
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+}
+
+.group-event {
+  border: 2px solid #4285f4;
+  border-radius: 8px;
+}
+.team-event {
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+}
+
+/* this is the notification button */
+
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #333;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 8px;
+  width: 250px; /* or whatever width you prefer */
+  z-index: 10; /* ensures the dropdown appears on top */
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #555;
+}
+
+.accept-btn,
+.decline-btn {
+  background-color: #555;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 5px;
+}
+
+.accept-btn:hover {
+  background-color: #277;
+}
+
+.decline-btn:hover {
+  background-color: #722;
+}
+
+/* Toggle switch styles */
+.switch-selector {
+  display: inline-block;
+  border: 2px solid #ccc;
+  overflow: hidden;
+  border-radius: 25px;
+  margin-top: 20px;
+}
+
+.switch-selector button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  float: left;
+  width: 50%;
+  transition: background-color 0.3s;
+}
+
+.switch-selector button.active {
+  background-color: #555;
+  color: white;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #555;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 95%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+
+/* Inside your home.css file or within a <style> tag in the <head> */
+.btn-create-group {
+  background-color: #1e1e1e; /* Green background */
+  color: white; /* White text */
+  padding: 12px 24px; /* Padding inside the button */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Cursor indicates it's clickable */
+  font-size: 16px; /* Font size */
+  margin-top: 10px; /* Margin on the top */
+  transition: background-color 0.3s; /* Smooth background color change on hover */
+}
+
+.btn-create-group:hover {
+  background-color: #424242; /* Darker green on hover */
+}

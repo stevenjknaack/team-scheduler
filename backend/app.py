@@ -126,6 +126,14 @@ def profile():
     return render_template('profile.html', username=username, events=events)
 
 
+@app.route('/home')
+def home() :
+    return render_template('home.html')
+
+@app.route('/newprofile')
+def newprofile() :
+    return render_template('newprofile.html')
+
 @app.route('/signup')
 def signup() :
     if 'username' in session :
@@ -264,6 +272,7 @@ def send_invitations():
     # Extract email addresses
     emails = data.get('emails', [])
 
+    
     # placeholder
     event_id = 5
 
@@ -274,8 +283,8 @@ def send_invitations():
     cursor = db.cursor()
 
     for email in emails:
-        query = "INSERT INTO participates_in (user_email, event_id, user_role) VALUES (%s, %s, %s)"
-        values = (email, event_id, 0)
+        query = "INSERT INTO invitee (event_id, email) VALUES (%s, %s)"
+        values = (event_id, email)
         cursor.execute(query, values)
         db.commit()
     

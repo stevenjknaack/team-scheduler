@@ -210,15 +210,14 @@ def create_event_request():
 
     user_id = session.get('user_id')
     group_id = 1
-    team_id = 1
-  
+    edit_permission = 'group_admin'
     """ Connect to the database """
     db = get_db_connection()
     cursor = db.cursor()
 
     """ Insert the event data into the "savedEvent" table """
-    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description, group_id, user_id, owner_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
-    values = (event_name, start_date, end_date, start_time, end_time, event_description, group_id, team_id, user_id)
+    query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
+    values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id)
     cursor.execute(query, values)
     
     """ Commit the changes to the database and close the cursor and database connection. """

@@ -16,6 +16,7 @@ import mysql.connector
 import bcrypt
 import os
 from dotenv import load_dotenv
+#import models
 
 load_dotenv() # add variables to the environment
 

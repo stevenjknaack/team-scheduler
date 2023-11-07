@@ -70,11 +70,11 @@ app = Flask(__name__)
 
 # configure the MYSQL database, relative to the app instance folder
 sql_url = 'mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}'.format(
-  user = os.getenv('DB_USER'), 
-  password = os.getenv('DB_PASSWORD'), 
-  host = os.getenv('DB_HOST'),
-  port = os.getenv('DB_PORT'), 
-  database = os.getenv('DB_NAME')
+    user = os.getenv('DB_USER'), 
+    password = os.getenv('DB_PASSWORD'), 
+    host = os.getenv('DB_HOST'),
+    port = os.getenv('DB_PORT'), 
+    database = os.getenv('DB_NAME')
 )
 
 app.config['SQLALCHEMY_DATABASE_URI'] = sql_url
@@ -87,124 +87,128 @@ Base.metadata.reflect(engine)
 
 ###### Below are the Models #######
 
-user_group_channel = db.metadata.tables['in_group']
-
 user_team_channel = db.metadata.tables['in_team']
 
 user_event_channel = db.metadata.tables['participates_in']
 
+class Membership(Base) :
+    __table__ = Base.metadata.tables['in_group']
+
+    user_email = __table__.columns['user_email']
+    group_id = __table__.columns['group_id']
+    role = __table__.columns['role']
+
+    user = relationship('User', back_populates = 'memberships')
+    group = relationship('Group', back_populates = 'memberships')
+
+    def __repr__(self) :
+        return f'Membership(user_email: {self.user_email}; group_id: {self.group_id})'
+
 class User(Base) :
-  __table__ = Base.metadata.tables['user']
+    __table__ = Base.metadata.tables['user']
 
-  email = __table__.columns['email']
-  username = __table__.columns['username']
-  password = __table__.columns['password']
+    email = __table__.columns['email']
+    username = __table__.columns['username']
+    password = __table__.columns['password']
 
-  availability_blocks = relationship('AvailabilityBlock', back_populates='user')
-  #groups = relationship('Group', secondary = user_group_channel, back_populates = 'members')
-  groups = relationship('user_group_channel')
-  teams = relationship('Team', secondary = user_team_channel, back_populates = 'members')
-  events = relationship('Event', secondary = user_event_channel, back_populates = 'participants')
+    availability_blocks = relationship('AvailabilityBlock', back_populates='user')
+    
+    memberships = relationship('Membership', back_populates = 'user')
+    teams = relationship('Team', secondary = user_team_channel, back_populates = 'members')
+    events = relationship('Event', secondary = user_event_channel, back_populates = 'participants')
 
-  group_roles = association_proxy('groups', 'role')
-  
-  def __repr__(self) :
-    return f'User(name: {self.username}; email: {self.email})'
+    group_roles = association_proxy('groups', 'role')
+    
+    def __repr__(self) :
+        return f'User(name: {self.username}; email: {self.email})'
   
 class AvailabilityBlock(Base) :
-  __table__ = Base.metadata.tables['availability_block']
+    __table__ = Base.metadata.tables['availability_block']
 
-  id = __table__.columns['id']
-  start_day = __table__.columns['start_day']
-  end_day = __table__.columns['end_day']
-  start_time = __table__.columns['start_time']
-  end_time = __table__.columns['end_time']
+    id = __table__.columns['id']
+    start_day = __table__.columns['start_day']
+    end_day = __table__.columns['end_day']
+    start_time = __table__.columns['start_time']
+    end_time = __table__.columns['end_time']
 
-  user_email = __table__.columns['user_email']
-  user = relationship('User', back_populates = 'availability_blocks')
-   
-  def __repr__(self) :
-    return f'AvailabilityBlock(id: {self.id})'
+    user_email = __table__.columns['user_email']
+    user = relationship('User', back_populates = 'availability_blocks')
+    
+    def __repr__(self) :
+        return f'AvailabilityBlock(id: {self.id})'
   
 class Group(Base) :
-  __table__ = Base.metadata.tables['group']
+    __table__ = Base.metadata.tables['group']
 
-  id = __table__.columns['id']
-  name = __table__.columns['name']
-  description = __table__.columns['description']
+    id = __table__.columns['id']
+    name = __table__.columns['name']
+    description = __table__.columns['description']
 
-  teams = relationship('Team', back_populates='group')
-  all_events = relationship('Event', back_populates='group')
-  #members = relationship('User', secondary = user_group_channel, back_populates = 'groups')
-
-  def get_group_level_events(self) :
-    group_level_events = []
-
-    for event in self.all_events :
-        if event.team_id == None :
-          group_level_events.append(event)
-
-    return group_level_events
-   
-  def __repr__(self) :
-    return f'Group(id: {self.id}; name: {self.name})'
+    teams = relationship('Team', back_populates='group')
+    all_events = relationship('Event', back_populates='group')
+    memberships = relationship('Membership', back_populates = 'group')
+    
+    def __repr__(self) :
+        return f'Group(id: {self.id}; name: {self.name})'
   
 class Team(Base) :
-  __table__ = Base.metadata.tables['team']
+    __table__ = Base.metadata.tables['team']
 
-  id = __table__.columns['id']
-  name = __table__.columns['name']
-  description = __table__.columns['description']
+    id = __table__.columns['id']
+    name = __table__.columns['name']
+    description = __table__.columns['description']
 
-  group_id = __table__.columns['group_id']
-  group = relationship('Group', back_populates='teams')
+    group_id = __table__.columns['group_id']
+    group = relationship('Group', back_populates='teams')
 
-  events = relationship('Event', back_populates='team')
+    events = relationship('Event', back_populates='team')
 
-  members = relationship('User', secondary = user_team_channel, back_populates = 'teams')
-   
-  def __repr__(self) :
-    return f'Team(id: {self.id}; name: {self.name})'
+    members = relationship('User', secondary = user_team_channel, back_populates = 'teams')
+    
+    def __repr__(self) :
+        return f'Team(id: {self.id}; name: {self.name})'
   
 class Event(Base) :
-  __table__ = Base.metadata.tables['event']
+    __table__ = Base.metadata.tables['event']
 
-  id = __table__.columns['id']
-  name = __table__.columns['name']
-  description = __table__.columns['description']
-  end_date = __table__.columns['end_date']
-  reg_start_day = __table__.columns['reg_start_day']
-  reg_end_day = __table__.columns['reg_end_day']
-  start_time = __table__.columns['start_time']
-  end_time = __table__.columns['end_time']
-  edit_permission = __table__.columns['edit_permission']
+    id = __table__.columns['id']
+    name = __table__.columns['name']
+    description = __table__.columns['description']
+    end_date = __table__.columns['end_date']
+    reg_start_day = __table__.columns['reg_start_day']
+    reg_end_day = __table__.columns['reg_end_day']
+    start_time = __table__.columns['start_time']
+    end_time = __table__.columns['end_time']
+    edit_permission = __table__.columns['edit_permission']
 
-  group_id = __table__.columns['group_id']
-  group = relationship('Group', back_populates='all_events')
+    group_id = __table__.columns['group_id']
+    group = relationship('Group', back_populates='all_events')
 
-  team_id = __table__.columns['team_id']
-  team = relationship('Team', back_populates='events')
+    
+    team_id = __table__.columns['team_id']
+    team = relationship('Team', back_populates='events')
 
-  participants = relationship('User', secondary = user_event_channel, back_populates = 'events')
-   
-  def __repr__(self) :
-    return f'Group(id: {self.id}; name: {self.name})'
-  
+    participants = relationship('User', secondary = user_event_channel, back_populates = 'events')
+    
+    def __repr__(self) :
+        return f'Group(id: {self.id}; name: {self.name})'
+
+    
 
 ####### TESTING ########
 @app.route('/')
 def user_table () :
-  query_str = ''
-  for row in db.session.scalars(db.select(Group)):
-    query_str += str(row) + ' '
-  return query_str
+    query_str = ''
+    for row in db.session.scalars(db.select(Group)):
+        query_str += str(row) + ' '
+    return query_str
 
 @app.route('/pop') 
 def test_user_group_conn () :
-  steven = db.session.get(User, 'Steven@gmail.com')
-  steven.groups.append(Group(name = "Steven", description = "Steven"))
-  db.session.commit()
-  return str(steven.group_roles)
+    steven = db.session.get(User, 'Steven@gmail.com')
+    steven.groups.append(Group(name = "Steven", description = "Steven"))
+    db.session.commit()
+    return str(steven.group_roles)
 
 if __name__ == '__main__':
     app.run(debug = True, port = os.getenv('FLASK_PORT'))

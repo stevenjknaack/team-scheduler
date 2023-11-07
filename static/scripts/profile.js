@@ -176,7 +176,7 @@ document.querySelectorAll(".edit-btn").forEach(function (btn) {
 });
 
 // Function to get the saved event details when editing
-function getEventDetails(eventId) {
+/*function getEventDetails(eventId) {
     // Make request to server to fetch event details based on eventId, return details as an object as a promise
     return fetch("/get-event/" + eventId, {
         method: "GET", 
@@ -196,7 +196,7 @@ function getEventDetails(eventId) {
             console.error("Error:", error);
             return null;
         });
-}
+}*/
 
 // Event listener for saving event changes
 document.getElementById("saveEventChanges").addEventListener("click", function() {

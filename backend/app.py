@@ -90,22 +90,19 @@ def get_user_events(username):
 
     """ Fetch user ID by username  """
 
-    cursor.execute("SELECT user_id FROM user WHERE username = %s", (username,))
+    cursor.execute("SELECT username FROM user WHERE username = %s", (username,))
     user = cursor.fetchone()
+    
 
     """ Security check so that people cannot go into the user page without logging in. It may be 
     redundant with the security check in /profile, however too much security is not a bad thing."""
 
-    if user is None:
-        cursor.close()
-        db.close()
-        return [] 
+    if user is not None:
+        user_id = user[0]
 
-    """ Fetch events owned by the user """
+        cursor.execute("SELECT * FROM event WHERE group_id = %s", (group_id))
+        events = cursor.fetchall()
 
-    user_id = user[0]
-    cursor.execute("SELECT * FROM saved_event WHERE owner_id = %s", (user_id,))
-    events = cursor.fetchall()
 
     """ Close connection to database and return all the fetched events. """
 
@@ -123,7 +120,7 @@ def profile():
     if 'username' not in session:
         return redirect(url_for('index'))
     username = session['username']
-    events = get_user_events(username)
+    #events = get_user_events(username)
     return render_template('profile.html', username=username)#, events=events)
 
 
@@ -212,14 +209,16 @@ def create_event_request():
     end_time = "21:00:00"
 
     user_id = session.get('user_id')
+    group_id = 1
+    team_id = 1
   
     """ Connect to the database """
     db = get_db_connection()
     cursor = db.cursor()
 
     """ Insert the event data into the "savedEvent" table """
-    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description, owner_id) VALUES (%s, %s, %s, %s, %s, %s, %s);"
-    values = (event_name, start_date, end_date, start_time, end_time, event_description, user_id)
+    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description, group_id, user_id, owner_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    values = (event_name, start_date, end_date, start_time, end_time, event_description, group_id, team_id, user_id)
     cursor.execute(query, values)
     
     """ Commit the changes to the database and close the cursor and database connection. """
@@ -251,8 +250,8 @@ def create_group():
     cursor = db.cursor()
 
     """ Insert the event data into the "savedEvent" table """
-    query = "INSERT INTO sgroup (group_name, group_description, owner_id) VALUES (%s, %s, %s);"
-    values = (group_name, group_description, user_id)
+    query = "INSERT INTO group (group_name, group_description) VALUES (%s, %s);"
+    values = (group_name, group_description)
     cursor.execute(query, values)
 
     """ Commit the changes to the database and close the cursor and database connection. """
@@ -335,7 +334,7 @@ def delete_event(event_id):
 
     """ Get the owner_id of the event """
 
-    cursor.execute("SELECT owner_id FROM saved_event WHERE event_id = %s", (event_id,))
+    cursor.execute("SELECT edit_permission FROM saved_event WHERE event_id = %s", (event_id,))
     owner = cursor.fetchone()
     """
     Should not be able to delete if button isn't present, which it wouldn't be if there is no event
@@ -350,7 +349,7 @@ def delete_event(event_id):
 
     """ Check if the user is the owner of the event """
     if 'username' in session:
-        cursor.execute("SELECT user_id FROM user WHERE username = %s", (session['username'],))
+        cursor.execute("SELECT username FROM user WHERE username = %s", (session['username'],))
         user = cursor.fetchone()
         if user is not None:
             user_id = user[0]

@@ -124,7 +124,7 @@ def profile():
         return redirect(url_for('index'))
     username = session['username']
     events = get_user_events(username)
-    return render_template('profile.html', username=username, events=events)
+    return render_template('profile.html', username=username)#, events=events)
 
 
 """
@@ -241,7 +241,26 @@ def create_group():
     The next step will be to establish connection to the database and execute the query.
     Then we close the database and redirect to home page. 
     """
+    group_name = request.form.get('group_name')
+    group_description = request.form.get('group_description')
 
+    user_id = session.get('user_id')
+  
+    """ Connect to the database """
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    """ Insert the event data into the "savedEvent" table """
+    query = "INSERT INTO sgroup (group_name, group_description, owner_id) VALUES (%s, %s, %s);"
+    values = (group_name, group_description, user_id)
+    cursor.execute(query, values)
+
+    """ Commit the changes to the database and close the cursor and database connection. """
+    db.commit()
+    cursor.close()
+    db.close()
+
+    return redirect(url_for('profile'))
 """
 This method will use an algorithm to generate teams within a group, such as T_1->T_10 part of 
 CS50Fall623. It will then send invitations to users to their respective teams which they will be

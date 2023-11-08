@@ -1,6 +1,8 @@
 CREATE DATABASE `10stars`;
 USE `10stars`;
-/*ADD Link to docs, change user primary key*/
+/*ADD Link to docs, change user primary key
+check email like '%@%.%'
+remove default names*/
 
 CREATE TABLE `user` (
   `email` VARCHAR(255) PRIMARY KEY,

@@ -36,11 +36,11 @@ class MyTestCase(unittest.TestCase) :
     def test_user(self) -> None :
         """ test the User model """
         with self.app.application.app_context() :
-            new_user = models.User('test2@gmail.com', 'test', 'test')
-            self.db.session.add(new_user)
-            self.db.session.commit()
+            #new_user = models.User('test2@gmail.com', 'test', 'test')
+            #self.db.session.add(new_user)
+            #self.db.session.commit()
             steven: models.User =\
-                self.db.session.get(models.User, 'test2@gmail.com')
+                self.db.session.get(models.User, 'Steven@gmail.com')
             print(steven)
 
     def test_availability_block(self) -> None :

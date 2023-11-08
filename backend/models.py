@@ -287,9 +287,9 @@ class Event(Base) :
 
     # define relationship properties
     group: Mapped['Group'] =\
-        relationship('Group', back_populates='all_events', overlaps="events")
+        relationship('Group', back_populates='all_events')
     team: Mapped['Team'] =\
-        relationship('Team', back_populates='events', overlaps='all_events,group')
+        relationship('Team', back_populates='events')
     participants: Mapped[List['User']] =\
         relationship('User', secondary=user_event_channel, back_populates='events')
     

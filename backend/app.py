@@ -85,7 +85,6 @@ This function gets all the events created by the active user to display at the p
 """
 
 def get_user_events(username):
-
     """ Initiate a connection to the database. """
 
     db = get_db_connection()

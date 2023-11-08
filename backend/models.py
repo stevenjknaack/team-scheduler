@@ -2,38 +2,38 @@
 This class defines the models for interacting with the 10stars database
 in  ORM/CRUD using Flask-SQLAlchemy.
 
-  db.session
-    Create 
-      <create Model> Model(var1 = val1, var2 = val2, ...)
+db.session
+Create 
+    <create Model> Model(var1 = val1, var2 = val2, ...)
 
-      .add(Model)
+    .add(Model)
 
-      <commit>
+    <commit>
 
-    Read
-      .get(Model, primary_key_value)
+Read
+    .get(Model, primary_key_value)
 
-      .execute(db.select(multple columns).filter_by(conditions))
+    .execute(db.select(multple columns).filter_by(conditions))
 
-      .scalars(db.select(Model or single column).filter_by(conditions))
+    .scalars(db.select(Model or single column).filter_by(conditions))
 
-      <use .first() if you only expect one result>
+    <use .first() if you only expect one result>
 
-    Update
-      <get a Model from the db>
+Update
+    <get a Model from the db>
 
-      <update the Model object's attributes>
+    <update the Model object's attributes>
 
-      <commit>
+    <commit>
 
-    Delete
-      <get a Model from the db>
+Delete
+    <get a Model from the db>
 
-      .delete(Modal)
-      
-      <commit>
+    .delete(Modal)
 
-  <Commit>
+    <commit>
+
+<Commit>
     db.session.commit()
 
 Bulk / Multi Row INSERT, upsert, UPDATE and DELETE are also available

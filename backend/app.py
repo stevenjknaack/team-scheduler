@@ -38,7 +38,7 @@ def get_db_connection():
 def index():
     """Home page"""
     if 'username' in session :
-        return redirect(url_for('profile'))
+        return redirect(url_for('home'))
     return redirect(url_for('login'))
 
 # can add @app.rout('/') here and remove the above
@@ -74,8 +74,10 @@ def login_request():
             session['user_id'] = user[0]
             return jsonify(status='success')
         else:
+            #print("error 1")
             return jsonify(status='error'), 401
     else:
+        #print("error 2")
         return jsonify(status='error', message='Username not found'), 401
 
 """ 
@@ -209,24 +211,61 @@ def create_event_request():
     start_time = "9:00:00"
     end_time = "21:00:00"
 
-    user_id = session.get('user_id')
-    group_id = 1
-    edit_permission = 'group_admin'
-    """ Connect to the database """
-    db = get_db_connection()
-    cursor = db.cursor()
+    """ Retrieve user's email """
+    user_email = session.get('user_id')
 
-    """ Insert the event data into the "savedEvent" table """
-    query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
-    values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id)
-    cursor.execute(query, values)
-    
-    """ Commit the changes to the database and close the cursor and database connection. """
-    db.commit()
-    cursor.close()
-    db.close()
+    if user_email:
+        db = get_db_connection()
+        cursor = db.cursor()
 
-    return redirect(url_for('profile'))
+        """ Retrieve group_id """
+        #cursor.execute("SELECT group_id FROM in_group WHERE user_email = %s", (user_email,))
+        #group_id = cursor.fetchone()[0]
+        group_id = 10000
+        # Add your code to retrieve team_id, similar to the group_id retrieval
+        cursor.execute("SELECT team_id FROM in_team WHERE user_email = %s", (user_email,))
+        team_result = cursor.fetchone()
+        if team_result: 
+            team_id = team_result[0]
+            edit_permission = 'group_admin'
+            """ Insert the event data into the "savedEvent" table """
+            query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+            values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id)
+            cursor.execute(query, values)
+
+            """ Commit the changes to the database and close the cursor and database connection. """
+            db.commit()
+            cursor.close()
+            db.close()
+            return redirect(url_for('profile'))            
+        
+        else: 
+            edit_permission = 'group_admin'
+            """ Insert the event data into the "savedEvent" table """
+            query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
+            values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id)
+            cursor.execute(query, values)
+
+            """ Commit the changes to the database and close the cursor and database connection. """
+            db.commit()
+            cursor.close()
+            db.close()
+            return redirect(url_for('profile'))            
+        
+        edit_permission = 'group_admin'
+        """ Insert the event data into the "savedEvent" table """
+        query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id)
+        cursor.execute(query, values)
+
+        """ Commit the changes to the database and close the cursor and database connection. """
+        db.commit()
+        cursor.close()
+        db.close()
+        return redirect(url_for('profile'))
+    else:
+        # If the user is not logged in, you might want to redirect to the login page or handle the case differently.
+        return redirect(url_for('login'))
 
 """ 
 This method will be made for creating groups. It'll allow for someone to make a group such as 

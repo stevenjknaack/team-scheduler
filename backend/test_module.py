@@ -6,6 +6,7 @@ import mysql.connector
 import bcrypt
 import os
 from dotenv import load_dotenv
+from flask_login import login_user
 
 class MyTestCase(unittest.TestCase):
 
@@ -31,49 +32,36 @@ class MyTestCase(unittest.TestCase):
         response = self.app.get('/create-event')
         self.assertEqual(response.status_code, 302)
 
-    # Test creating an event via 'create_event_request'
+    """ Test creating an event via 'create_event_request'"""
     def test_create_event_request(self):
-        event_data = {
-            'event_name': 'Test Event',
-            'event_description': 'This is a test event description',
-            'start_day': '01',
-            'start_month': '01',
-            'start_year': '2023',
-            'end_day': '02',
-            'end_month': '01',
-            'end_year': '2023'
-        }
-        response = self.app.post('/create-event-request', data=event_data, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)  # Assuming a successful redirect upon event creation    
-    
-    # Test fetching user events
-   # def test_get_user_events(self):
-    #    response = self.app.get('/profile')
-     #   self.assertEqual(response.status_code, 200)
-        # Assertions to validate whether the user's events are being correctly retrieved
-        
+        """ Simulate a signed-in user """
+        with self.app as client:
+            user_data = {
+                'email': 'dk@gmail.com',
+                'password': 'krovas'
+            }
+            response = client.post('/login-request', data=user_data)
+            """ Check for successful login """
+            self.assertEqual(response.status_code, 200)
 
-    # Test getting details of a specific event
-  #  def test_get_event_details(self):
-        # Assuming '1' is an example event ID
-    #    response = self.app.get('/get-event/')
-   #     self.assertEqual(response.status_code, 200)
-        # Assertions to validate the details retrieved for the event
+            """ Data for creating an event """
+            event_data = {
+                'event_name': 'Test Event',
+                'event_description': 'This is a test event description',
+                'start_day': '01',
+                'start_month': '01',
+                'start_year': '2023',
+                'end_day': '02',
+                'end_month': '01',
+                'end_year': '2023'
+            }
 
-    # Test deleting an event
-   # def test_delete_event(self):
-        # Assuming '1' is an example event ID to delete
-    #    response = self.app.delete('/delete-event/1')
-     #   self.assertEqual(response.status_code, 200)
-        # Additional assertions or checks to ensure the event is correctly deleted
+            """ Use the test client to post the event creation request"""
+            response = client.post('/create-event-request', data=event_data, follow_redirects=True)
+            # Assuming a successful redirect upon event creation
+            self.assertEqual(response.status_code, 200)
 
-
-    # Test create-event-request
-    # def test_create_event_request(self):
-    #    event_creation = {
-            
-    #    }
-
+ # Assuming a successful redirect upon event creation
     # Test logging in with valid credentials.
     #def test_login_valid_credentials(self):
     #    valid_credentials = {
@@ -85,22 +73,22 @@ class MyTestCase(unittest.TestCase):
         # TODO: test router
 
     # Test logging in with invalid credentials
-    #def test_login_invalid_credentials(self):
-    #    invalid_credentials = {
-    #        'email': 'test@gmail.com',  
-    #        'password': 'wrongpassword'
-    #    }
-    #    response = self.app.post('/login-request', data=invalid_credentials)
-    #    self.assertEqual(response.status_code, 401)
+    def test_login_invalid_credentials(self):
+        invalid_credentials = {
+            'email': 'test@gmail.com',  
+            'password': 'wrongpassword'
+        }
+        response = self.app.post('/login-request', data=invalid_credentials)
+        self.assertEqual(response.status_code, 401)
 
     # Test logging in with nonexistent account
-    #def test_login_nonexistent_user(self):
-    #    nonexistent_user = {
-    #        'email': 'nonexistent@gmail.com', 
-    #        'password': 'test'
-    #    }
-    #   response = self.app.post('/login-request', data=nonexistent_user)
-    #    self.assertEqual(response.status_code, 401)
+    def test_login_nonexistent_user(self):
+        nonexistent_user = {
+            'email': 'nonexistent@gmail.com', 
+            'password': 'test'
+        }
+        response = self.app.post('/login-request', data=nonexistent_user)
+        self.assertEqual(response.status_code, 401)
 
 
 if __name__ == '__main__':

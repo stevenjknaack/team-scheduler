@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__,  root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
     app.secret_key = os.getenv('SECRET_KEY')
     
     # Initialize Database

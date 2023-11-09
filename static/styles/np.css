@@ -1,0 +1,249 @@
+body {
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #182135;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    /* This will push logo to the left and button to the right */
+    align-items: center;
+    padding: 10px 5%;
+    background-color: #182135;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-right {
+    /* ... existing styles ... */
+    display: flex;
+    /* Ensures horizontal alignment of children */
+    align-items: center;
+    /* Vertically aligns children in the middle */
+    gap: 10px;
+    /* Creates spacing between each child item */
+}
+
+.navbar-left img {
+    width: 200px;
+    /* Adjust based on your logo's size */
+}
+
+.navbar-right button {
+    background-color: #555;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar-right button:hover {
+    background-color: #777;
+}
+
+.container {
+    width: 95%;
+    text-align: center;
+    margin: 0 auto;
+    /* This will center the container horizontally */
+}
+
+.logo img {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+}
+
+#schedule-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.day {
+    min-height: 100px;
+    background-color: #757575;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    /* Use flexbox layout */
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: flex-start;
+    /* Align items to the start of the container */
+    padding-top: 30px;
+    /* Enough space for the day name */
+}
+
+.day>.avail-block {
+    width: calc(100% - 20px);
+    /* Adjust width to fit inside the day box */
+    margin-top: 5px;
+    /* Space between avail blocks */
+    z-index: 1;
+    /* Make sure blocks are above the day's name */
+}
+
+.day:before {
+    content: attr(id);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#avail-blocks {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.avail-block {
+    width: 100px;
+    padding: 5px;
+    background-color: #777;
+    border-radius: 5px;
+    text-align: center;
+    margin-right: 10px;
+    cursor: move;
+    z-index: 10;
+    transition: transform 0.2s ease-in-out;
+    
+}
+
+/* Highlight the day columns when a avail block is dragged over them */
+.day.over {
+    background-color: #add8e6;
+}
+
+/* ... (previous styles remain unchanged) ... */
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 100;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Style the submit button */
+input[type="submit"] {
+    margin-top: 10px;
+    padding: 5px 20px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #777;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 5px;
+    cursor: pointer;
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+}
+
+.btn-primary {
+    background-color: #555; /* Blue background for primary actions */
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #777; /* Dark Blue on hover */
+}
+
+.btn-success {
+    background-color: #555; /* Green background for success actions */
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #777; /* Dark Green on hover */
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .start-time-label,
+.end-time-label, .description-label {
+  color: #555; /* This is a shade of sea green; replace with the color you prefer */
+}
+

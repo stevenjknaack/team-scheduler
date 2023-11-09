@@ -85,19 +85,19 @@ This function gets all the events created by the active user to display at the p
 """
 
 def get_user_events(username):
-    """ Initiate a connection to the database. """
+    # Initiate a connection to the database. 
 
     db = get_db_connection()
     cursor = db.cursor()
 
-    """ Fetch user ID by username  """
+    # Fetch user ID by username  
 
     cursor.execute("SELECT username FROM user WHERE username = %s", (username,))
     user = cursor.fetchone()
     
 
-    """ Security check so that people cannot go into the user page without logging in. It may be 
-    redundant with the security check in /profile, however too much security is not a bad thing."""
+    # Security check so that people cannot go into the user page without logging in. It may be 
+    # redundant with the security check in /profile, however too much security is not a bad thing.
 
     if user is not None:
         user_id = user[0]
@@ -106,17 +106,14 @@ def get_user_events(username):
         events = cursor.fetchall()
 
 
-    """ Close connection to database and return all the fetched events. """
+    # Close connection to database and return all the fetched events. 
 
     cursor.close()
     db.close()
 
     return events
     
-""" 
-Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
-get_event to get the information from each event to display.
-"""
+
 @app.route('/profile') # check later
 def profile():
     if 'username' not in session:
@@ -126,9 +123,7 @@ def profile():
     return render_template('profile.html', username=username)#, events=events)
 
 
-"""
-Gets groups and events owned by user (use get_user_events and get_user_groups) and return to JS, which then executes
-"""
+
 @app.route('/home')
 def home() :
 
@@ -194,7 +189,7 @@ the connection to the database and returns to the profile page
 """
 @app.route('/create-event-request', methods=['POST'])
 def create_event_request():
-    """ Get event data from the HTML form """
+    # Get event data from the HTML form 
     event_name = request.form.get('event_name')
     event_description = request.form.get('event_description')
     start_day = request.form.get('start_day')
@@ -204,35 +199,35 @@ def create_event_request():
     end_month = request.form.get('end_month')
     end_year = request.form.get('end_year')
     
-    """ Combine the date components into a single string. Will eventually add time customization """
+    # Combine the date components into a single string. Will eventually add time customization 
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
     start_time = "9:00:00"
     end_time = "21:00:00"
 
-    """ Retrieve user's email """
+    # Retrieve user's email 
     user_email = session.get('user_id')
 
     if user_email:
         db = get_db_connection()
         cursor = db.cursor()
 
-        """ Retrieve group_id """
+        # Retrieve group_id 
         #cursor.execute("SELECT group_id FROM in_group WHERE user_email = %s", (user_email,))
         #group_id = cursor.fetchone()[0]
         group_id = 10000
-        # Add your code to retrieve team_id, similar to the group_id retrieval
+
         cursor.execute("SELECT team_id FROM in_team WHERE user_email = %s", (user_email,))
         team_result = cursor.fetchone()
         if team_result: 
             team_id = team_result[0]
             edit_permission = 'group_admin'
-            """ Insert the event data into the "savedEvent" table """
+            # Insert the event data into the "savedEvent" table 
             query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
             values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id)
             cursor.execute(query, values)
 
-            """ Commit the changes to the database and close the cursor and database connection. """
+            # Commit the changes to the database and close the cursor and database connection. 
             db.commit()
             cursor.close()
             db.close()
@@ -240,12 +235,12 @@ def create_event_request():
         
         else: 
             edit_permission = 'group_admin'
-            """ Insert the event data into the "savedEvent" table """
+            # Insert the event data into the "savedEvent" table 
             query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
             values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id)
             cursor.execute(query, values)
 
-            """ Commit the changes to the database and close the cursor and database connection. """
+            # Commit the changes to the database and close the cursor and database connection. 
             db.commit()
             cursor.close()
             db.close()
@@ -273,26 +268,23 @@ executed to save the group to the database, and then once done it will redirect 
 """
 @app.route('/create_group', methods=['POST'])
 def create_group():
-    """
-    This part will get information from the user such as event name and description.
-    The next step will be to establish connection to the database and execute the query.
-    Then we close the database and redirect to home page. 
-    """
+    # Step1: get information from the user such as event name and description.
+    # Step2: establish connection to the database and execute the query.
+    # Step3: close the database and redirect to home page. 
+    
     group_name = request.form.get('group_name')
     group_description = request.form.get('group_description')
 
     user_id = session.get('user_id')
   
-    """ Connect to the database """
     db = get_db_connection()
     cursor = db.cursor()
 
-    """ Insert the event data into the "savedEvent" table """
+    
     query = "INSERT INTO group (group_name, group_description) VALUES (%s, %s);"
     values = (group_name, group_description)
     cursor.execute(query, values)
 
-    """ Commit the changes to the database and close the cursor and database connection. """
     db.commit()
     cursor.close()
     db.close()
@@ -370,14 +362,14 @@ def delete_event(event_id):
     db = get_db_connection()
     cursor = db.cursor()
 
-    """ Get the owner_id of the event """
+    # Get the owner_id of the event 
 
     cursor.execute("SELECT edit_permission FROM saved_event WHERE event_id = %s", (event_id,))
     owner = cursor.fetchone()
-    """
-    Should not be able to delete if button isn't present, which it wouldn't be if there is no event
-    to delete, hoowever as discussed too much security is never bad.
-    """
+    
+    # Should not be able to delete if button isn't present, which it wouldn't be if there is no event
+    # to delete, hoowever as discussed too much security is never bad.
+    
     if owner is None:
         cursor.close()
         db.close()
@@ -385,7 +377,7 @@ def delete_event(event_id):
 
     owner_id = owner[0]
 
-    """ Check if the user is the owner of the event """
+    # Check if the user is the owner of the event 
     if 'username' in session:
         cursor.execute("SELECT username FROM user WHERE username = %s", (session['username'],))
         user = cursor.fetchone()
@@ -393,14 +385,14 @@ def delete_event(event_id):
             user_id = user[0]
             if user_id == owner_id:
 
-                """ Delete the event if user_id matches owner_id and close database """
+                # Delete the event if user_id matches owner_id and close database 
 
                 cursor.execute("DELETE FROM saved_event WHERE event_id = %s", (event_id,))
                 db.commit()
                 cursor.close()
                 db.close()
                 return jsonify(status='success')
-    """ Close database in case of getting around the above if statements. """
+    # Close database in case of getting around the above if statements. 
     cursor.close()
     db.close()
     return jsonify(status='fail')
@@ -414,7 +406,7 @@ def get_event(event_id):
     db = get_db_connection()
     cursor = db.cursor()
 
-    """ Fetch event details using event_id """
+    # Fetch event details using event_id 
 
     cursor.execute("SELECT * FROM saved_event WHERE event_id = %s", (event_id,))
     event = cursor.fetchone()
@@ -424,8 +416,7 @@ def get_event(event_id):
 
     if event:
 
-        """ return event details as a json object. Format the date as a string if it's a date object """
-        
+        # return event details as a json object. Format the date as a string if it's a date object 
         event_details = {
             "event_name": event[1],
             "start_date": event[2].strftime('%Y-%m-%d'),  

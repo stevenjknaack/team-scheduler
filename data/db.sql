@@ -1,13 +1,12 @@
 CREATE DATABASE `10stars`;
 USE `10stars`;
-/*ADD Link to docs, change user primary key
-check email like '%@%.%'
-remove default names*/
+/*ADD Link to docs, change user primary key*/
 
 CREATE TABLE `user` (
   `email` VARCHAR(255) PRIMARY KEY,
   `username` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL
+  `password` VARCHAR(255) NOT NULL,
+  CHECK (`email` LIKE '_%@_%._%')
 );
 
 CREATE UNIQUE INDEX `user_email_index`
@@ -31,7 +30,7 @@ ON `availability_block` (`user_email`);
 
 CREATE TABLE `group` ( 
   `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL DEFAULT 'Unnamed Group',
+  `name` VARCHAR(50),
   `description` TEXT
 );
 
@@ -81,7 +80,7 @@ CREATE TABLE `in_team` (
 
 CREATE TABLE `event` (
   `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
+  `name` VARCHAR(255),
   `description` TEXT,
   `start_date` DATE NOT NULL,
   `end_date` DATE NOT NULL,
@@ -90,14 +89,16 @@ CREATE TABLE `event` (
   `start_time` TIME NOT NULL,
   `end_time` TIME NOT NULL,
   `edit_permission` ENUM ('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
-  `group_id` INTEGER NOT NULL,
+  `group_id` INTEGER,
   `team_id` INTEGER,
   CHECK (DATE(`start_date`) <= DATE(`end_date`)),
   CHECK ((`reg_start_day` IS NULL AND `reg_end_day` IS NULL)
-  XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)), 
+  XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)),
+  CHECK ((`group_id` IS NULL AND `team_id` IS NOT NULL)
+  XOR (`group_id` IS NOT NULL AND `team_id` IS NULL)), 
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`team_id`, `group_id`) REFERENCES `team` (`id`, `group_id`)
+  FOREIGN KEY (`team_id`) REFERENCES `team` (`id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 

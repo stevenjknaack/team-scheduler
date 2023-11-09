@@ -6,7 +6,7 @@ import mysql.connector
 import bcrypt
 import os
 from dotenv import load_dotenv
-from flask_login import login_user
+
 
 class MyTestCase(unittest.TestCase):
 
@@ -61,15 +61,15 @@ class MyTestCase(unittest.TestCase):
             # Assuming a successful redirect upon event creation
             self.assertEqual(response.status_code, 200)
 
- # Assuming a successful redirect upon event creation
+    # Assuming a successful redirect upon event creation
     # Test logging in with valid credentials.
-    #def test_login_valid_credentials(self):
-    #    valid_credentials = {
-    #       'email': 'test@gmail.com',  
-    #        'password': 'test'     
-    #   }
-    #    response = self.app.post('/login-request', data=valid_credentials, follow_redirects=True)
-    #   self.assertEqual(response.status_code, 200)
+    def test_login_valid_credentials(self):
+        valid_credentials = {
+            'email': 'dk@gmail.com',  
+            'password': 'krovas'     
+        }
+        response = self.app.post('/login-request', data=valid_credentials, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
         # TODO: test router
 
     # Test logging in with invalid credentials

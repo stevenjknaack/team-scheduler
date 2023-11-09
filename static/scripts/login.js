@@ -19,7 +19,7 @@ $('#loginForm').submit(function(event) {
     })
     .done(function(data) {
         if (data.status === 'success') {
-            window.location.href = '/profile';  // Redirect to the profile page
+            window.location.href = '/home';  // Redirect to the profile page
         }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

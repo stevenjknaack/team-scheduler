@@ -16,6 +16,7 @@ import mysql.connector
 import bcrypt
 import os
 from dotenv import load_dotenv
+from typing import Union, Dict, List
 #import models
 
 load_dotenv() # add variables to the environment
@@ -35,7 +36,7 @@ def get_db_connection():
     )
 
 @app.route('/')
-def index():
+def index() -> None:
     """Home page"""
     if 'username' in session :
         return redirect(url_for('profile'))
@@ -43,13 +44,13 @@ def index():
 
 # can add @app.rout('/') here and remove the above
 @app.route('/login', methods=['GET']) # redundant with above
-def login():
+def login() -> Union[str, None]:
     if 'username' in session :
         return redirect(url_for('home'))
     return render_template('login.html')
 
 @app.route('/login-request', methods=['POST'])
-def login_request():
+def login_request() -> dict:
     # post 
     email = request.form.get('email')
     password = request.form.get('password')
@@ -82,7 +83,7 @@ def login_request():
 This function gets all the events created by the active user to display at the profile page.
 """
 
-def get_user_events(username):
+def get_user_events(username: str) -> List[Dict]:
 
     """ Initiate a connection to the database. """
 
@@ -116,11 +117,11 @@ def get_user_events(username):
     return events
     
 """ 
-Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
+Gets events owned by user (see get_user_events method) and returns to JS, which then executes
 get_event to get the information from each event to display.
 """
 @app.route('/profile') # check later
-def profile():
+def profile() -> Union[None, str]:
     if 'username' not in session:
         return redirect(url_for('index'))
     username = session['username']
@@ -132,28 +133,28 @@ def profile():
 Gets groups and events owned by user (use get_user_events and get_user_groups) and return to JS, which then executes
 """
 @app.route('/home')
-def home() :
+def home() -> str:
 
     return render_template('home.html')
 
 @app.route('/newprofile')
-def newprofile() :
+def newprofile() -> str:
     return render_template('newprofile.html')
 
 @app.route('/signup')
-def signup() :
+def signup() -> Union[str, None]:
     if 'username' in session :
         return redirect(url_for('profile'))
     return render_template('signup.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
-def logout():
+def logout() -> None:
     if 'username' in session:
         session.pop('username', None)
     return redirect(url_for('index'))
 
 @app.route('/signup-request',  methods=['POST'])
-def signup_request():
+def signup_request() -> dict:
     email = request.form.get('email')
     username = request.form.get('username')
     password = request.form.get('password')
@@ -181,7 +182,7 @@ def signup_request():
     return jsonify(status='success')
 
 @app.route('/create-event', methods=['GET'])
-def create_event():
+def create_event() -> Union[None, str]:
     if 'username' not in session :
         return redirect(url_for('login'))
     return render_template('create_event.html', username=session['username'])
@@ -195,7 +196,7 @@ the connection to the database and returns to the profile page
 @version 2023.10.19
 """
 @app.route('/create-event-request', methods=['POST'])
-def create_event_request():
+def create_event_request() -> None:
     """ Get event data from the HTML form """
     event_name = request.form.get('event_name')
     event_description = request.form.get('event_description')
@@ -264,23 +265,23 @@ creates a team can give a name to the team and insert people manually into it by
 Other USers who have been invited will get a notification which will allow them to accept or deny invitation.
 """
 @app.route('/manual_create_teams', methods=['POST'])
-def create_team():
+def create_team() -> str:
     """ Creates a team with team name and size. """
     """ Get information from group participant via email from DB"""
     """ Commit team to DB """
     """ Commit participants into DB """
     """ Return succesful JQuery """
 @app.route('/send-invitations', methods=['POST'])
-def send_invitations():
+def send_invitations() -> Union[dict, str]:
     # Get JSON data sent from the frontend
     data = request.get_json()
 
     # Extract email addresses
-    emails = data.get('emails', [])
+    emails: List[str] = data.get('emails', [])
 
     
     # placeholder
-    event_id = 5
+    event_id: int = 5
 
     # connect to database
     db = get_db_connection()
@@ -310,7 +311,7 @@ This method deletes events. It checks that the event is owned by the active user
 and then proceeds to execute the query command to delete the event selected.
 """
 @app.route('/delete-event/<int:event_id>', methods=['DELETE'])
-def delete_event(event_id):
+def delete_event(event_id: int) -> Union[dict, tuple]:
 
     db = get_db_connection()
     cursor = db.cursor()
@@ -349,13 +350,18 @@ def delete_event(event_id):
     cursor.close()
     db.close()
     return jsonify(status='fail')
+    
 """
 This method works in tandem with get_user_events. It is called in the JS code after the profile page 
 calls get_user_events and gets all the event id's back. This method then uses the event ID's provided
 to get all the information from each event to display in the profile page.
+
+@param int event_id: The unique identifier of the event to be fetched.
+@author: Kyle Sung
+@version 2023.11.5
 """
 @app.route('/get-event/<int:event_id>', methods=['GET'])
-def get_event(event_id):
+def get_event(event_id: int) -> Union[dict, tuple]:
     db = get_db_connection()
     cursor = db.cursor()
 
@@ -380,6 +386,36 @@ def get_event(event_id):
         return jsonify(event_details)
     else:
         return jsonify(status='error', message='Event not found'), 404
+
+"""
+Handles the HTTP PUT request to update and save changes to an event in the database.
+Responsible for updating the details of an event identified by the provided `event_id` with the edited 
+event details received in the request data. The edited event details should be sent in JSON format.
+
+@param int event_id: The unique identifier of the event to be updated.
+@author: Kyle Sung
+@version: 2023.10.19
+"""
+@app.route('/save-event-changes/<int:event_id>', methods=['PUT'])
+def save_event_changes(event_id: int) -> dict:
+
+    edited_event = request.get_json() # Get edited event details from the request data
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    # Update the event in the saved_event table, changing the values of name, startDate, endDate, and description
+    query = "UPDATE saved_event SET event_name = %s, start_date = %s, end_date = %s, event_description = %s WHERE event_id = %s;"
+    values = (edited_event['name'], edited_event['startDate'], edited_event['endDate'], edited_event['description'], event_id)
+    cursor.execute(query, values)
+    print("SQL Query:", query % values)  # debug comment
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return jsonify(status='success')
 
 if __name__ == '__main__':
     app.run(debug = True, port = os.getenv('FLASK_PORT'))  # Running the app on localhost:<PORT>

@@ -16,15 +16,18 @@ class MyTestCase(unittest.TestCase) :
     def setUp(self) -> None :
         """ 
         setup process for testing 
+        
         initializes
             self.app: FlaskClient
             self.db: SQLAlchemy
         for use in the testing
         """
-        self.real_app =\
-            Flask(__name__, root_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+        # set up testing app
+        self.real_app = Flask(__name__)
         CORS(self.real_app)
         self.real_app.testing = True
+
+        # set up SQLAlchemy object
         self.db: SQLAlchemy =\
             models.configure_flask_sqlalchemy(self.real_app)
         self.app = self.real_app.test_client()

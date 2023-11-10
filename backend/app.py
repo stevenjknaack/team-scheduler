@@ -12,6 +12,7 @@ from flask import Flask
 from blueprints.auth import auth_blueprint
 from blueprints.events import events_blueprint
 from blueprints.teams import teams_blueprint
+from blueprints.groups import groups_blueprint
 from db import init_db
 import os
 from dotenv import load_dotenv
@@ -28,6 +29,7 @@ def create_app():
     # Register Blueprints
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(events_blueprint)
+    app.register_blueprint(groups_blueprint)
     app.register_blueprint(teams_blueprint)
 
     return app

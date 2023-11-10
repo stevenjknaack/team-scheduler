@@ -1,15 +1,16 @@
 from flask import g
 from flask import current_app as app
 import mysql.connector
+import os
 
 def get_db():
     if 'db' not in g:
         g.db = mysql.connector.connect(
-            host=app.config['DB_HOST'],
-            port=app.config['DB_PORT'],
-            user=app.config['DB_USER'],
-            password=app.config['DB_PASSWORD'],
-            database=app.config['DB_NAME']
+            user = os.getenv('DB_USER'), 
+            password = os.getenv('DB_PASSWORD'), 
+            host = os.getenv('DB_HOST'),
+            port = os.getenv('DB_PORT'), 
+            database = os.getenv('DB_NAME')
         )
     return g.db
 

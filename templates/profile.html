@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ten Star User Profile</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
-    </head>
-    <body>
-        <div class="wrapper">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ten Star User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+</head>
+<body>
+    <div class="wrapper">
         <nav class="navbar">
             <div class="navbar-left">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
@@ -17,15 +17,35 @@
                 <form action="{{ url_for('logout') }}" method="post" id="logoutForm" style="display: none;">
                     <button type="submit" class="btn btn-danger">Logout</button>
                 </form>
-            </div>
-            <!---->
-            <div class="navbar-right">
                 <button id="createEvent" href="{{ url_for('create_event') }}" class="btn btn-danger" style="display: block;">Create Event</button>
+                <div class="notification-container">
+                    <button class="notification-btn">Notifications</button>
+                    <!-- Notification dropdown -->
+                    <div class="notification-dropdown" style="display: none;">
+                        <!-- Sample notification item -->
+                        <div class="notification-item">
+                            <p>You're invited to GRo</p>
+                            <button class="accept-btn">Accept</button>
+                            <button class="decline-btn">Decline</button>
+                        </div>
+                        <div class="notification-item">
+                            <p>You're invited to [Event Name]</p>
+                            <button class="accept-btn">Accept</button>
+                            <button class="decline-btn">Decline</button>
+                        </div>
+                        <div class="notification-item">
+                            <p>You're invited to [Event Name]</p>
+                            <button class="accept-btn">Accept</button>
+                            <button class="decline-btn">Decline</button>
+                        </div>
+                        <!-- You can add more notification items like the one above -->
+                    </div>
+                </div>
             </div>
-            <!---->
         </nav>
+
         <div class="container">
-            <h1>EVENTS</h1>
+            <h1>Groups</h1>
             {% for event in events %}
             <div class="event">
                 <h2>{{ event[1] }}</h2>
@@ -102,36 +122,26 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
+        
 
         <!-- Invitation Modal -->
         <div id="inviteModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Invite Participants</h2>
-                <input type="email" id="invite-email" placeholder="Enter email">
-                <div id="invited-participants"></div>
-                <button class="invite-submit-btn">Send Invitation</button>
-            </div>
+            <!-- Content for Invitation Modal -->
         </div>
+        
         <!-- Edit Event Modal -->
         <div id="editEventModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <span class="edit-close-btn">&times;</span>
-                <h2>Edit Event</h2>
-                <form id="editEventForm">
-                    <input type="text" id="editEventName" placeholder="Event Name">
-                    <input type="text" id="editStartDate" placeholder="Start Date">
-                    <input type="text" id="editEndDate" placeholder="End Date">
-                    <textarea id="editEventDescription" placeholder="Event Description"></textarea>
-                    <button type="button" id="saveEventChanges" class="save-change-btn">Save Changes</button>
-                </form>
-            </div>
-        </div>        
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
-        <script>
-            window.eventCreateUrl = "{{ url_for('create_event') }}";
-        </script>
-    </body>
+            <!-- Content for Edit Event Modal -->
+        </div>
+
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
+    <script>
+        window.eventCreateUrl = "{{ url_for('create_event') }}";
+    </script>
+</body>
 </html>

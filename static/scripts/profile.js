@@ -200,7 +200,7 @@ function getEventDetails(eventId) {
             console.error("Error:", error);
             return null;
         });
-}
+}*/
 
 /**
  * Event listener for saving event changes.

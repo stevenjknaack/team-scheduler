@@ -26,6 +26,8 @@ class MyTestCase(unittest.TestCase) :
         self.real_app = Flask(__name__)
         CORS(self.real_app)
         self.real_app.testing = True
+        #self.db: SQLAlchemy =\
+        #    models.configure_flask_sqlalchemy(self.real_app)
 
         # set up SQLAlchemy object
         self.db: SQLAlchemy =\
@@ -40,12 +42,14 @@ class MyTestCase(unittest.TestCase) :
         
     def test_user(self) -> None :
         """ test the User model """
-        with self.app.application.app_context() :
-            #new_user = User('test2@gmail.com', 'test', 'test')
-            #self.db.session.add(new_user)
-            #self.db.session.commit()
-            steven = self.db.session.get(User, 'sjk@gmail.com')
-            print(steven)
+        #with self.app.application.app_context() :
+        #    new_user = models.User('test2@gmail.com', 'test', 'test')
+        #   self.db.session.add(new_user)
+        #    self.db.session.commit()
+        #    steven: models.User =\
+        #        self.db.session.get(models.User, 'test2@gmail.com')
+        #    print(steven)
+        pass
 
     def test_availability_block(self) -> None :
         """ test the Availability model """

@@ -89,13 +89,11 @@ CREATE TABLE `event` (
   `start_time` TIME NOT NULL,
   `end_time` TIME NOT NULL,
   `edit_permission` ENUM ('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
-  `group_id` INTEGER,
+  `group_id` INTEGER, /* careful */
   `team_id` INTEGER,
   CHECK (DATE(`start_date`) <= DATE(`end_date`)),
   CHECK ((`reg_start_day` IS NULL AND `reg_end_day` IS NULL)
   XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)),
-  CHECK ((`group_id` IS NULL AND `team_id` IS NOT NULL)
-  XOR (`group_id` IS NOT NULL AND `team_id` IS NULL)), 
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
   ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`team_id`) REFERENCES `team` (`id`)

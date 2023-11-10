@@ -207,7 +207,7 @@ class Group(Base) :
     # define relationship properties
     teams: Mapped[List['Team']] =\
         relationship('Team', back_populates='group')
-    all_events: Mapped[List['Event']] =\
+    events: Mapped[List['Event']] =\
         relationship('Event', back_populates='group')
     memberships: Mapped[List['Membership']] =\
         relationship('Membership', back_populates='group')
@@ -283,9 +283,10 @@ class Event(Base) :
 
     # define relationship properties
     group: Mapped['Group'] =\
-        relationship('Group', back_populates='all_events')
+        relationship('Group', back_populates='events')
     team: Mapped['Team'] =\
         relationship('Team', back_populates='events')
+    #TODO ENSURE TEAM AND GROUP DONT CONFLICT
     participants: Mapped[List['User']] =\
         relationship('User', secondary=user_event_channel, back_populates='events')
     

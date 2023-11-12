@@ -8,7 +8,7 @@ CS50Fall623. It will then send invitations to users to their respective teams wh
 able to accept or deny. It inserts all the teams generated to the database, and once a user accepts
 their invitation they will be put into the database under their team (see accept_invite method).
 """
-@app.route('/generate_teams', methods=['POST'])
+@teams_blueprint.route('/generate_teams', methods=['POST'])
 def generate_teams():
     """ Get list of group participants as well as their time availability from database. """
 
@@ -22,7 +22,7 @@ This Method will allow for creating a team manually, without needing time availa
 creates a team can give a name to the team and insert people manually into it by providing their email.
 Other USers who have been invited will get a notification which will allow them to accept or deny invitation.
 """
-@app.route('/manual_create_teams', methods=['POST'])
+@teams_blueprint.route('/manual_create_teams', methods=['POST'])
 def create_team() -> str:
     """ Creates a team with team name and size. """
     """ Get information from group participant via email from DB"""

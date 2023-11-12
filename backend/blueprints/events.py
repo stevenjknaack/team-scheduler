@@ -12,7 +12,7 @@ def create_event():
         return redirect(url_for(''))
     return render_template('create_event.html', username=session['username'])
 
-@app.route('/create-event-request', methods=['POST'])
+@events_blueprint.route('/create-event-request', methods=['POST'])
 def create_event_request() -> None:
     """
     This method collects the data inputed by the creator of an event and inserts the information
@@ -94,7 +94,7 @@ def create_event_request() -> None:
         # If the user is not logged in, redirect to the login.
         return redirect(url_for('login'))
 
-@app.route('/delete-event/<int:event_id>', methods=['DELETE'])
+@events_blueprint.route('/delete-event/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id: int) -> Union[dict, tuple]:
     """
     This method deletes events. It checks that the event is owned by the active user (created by them)

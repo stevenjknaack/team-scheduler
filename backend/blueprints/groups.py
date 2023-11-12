@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from db import get_db
 
 groups_blueprint = Blueprint('groups', __name__, template_folder='../../templates', static_folder='../../static')
-@app.route('/create_group', methods=['POST'])
+@groups_blueprint.route('/create_group', methods=['POST'])
 def create_group():
     """ 
     This method will be made for creating groups. It'll allow for someone to make a group such as 

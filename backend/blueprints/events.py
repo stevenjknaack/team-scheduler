@@ -95,7 +95,8 @@ def create_event_request() -> None:
         return redirect(url_for('login'))
 
 @events_blueprint.route('/delete-event/<int:event_id>', methods=['DELETE'])
-def delete_event(event_id: int) -> Union[dict, tuple]:
+#def delete_event(event_id: int) -> Union[dict, tuple]:
+def delete_event(event_id: int):
     """
     This method deletes events. It checks that the event is owned by the active user (created by them)
     and then proceeds to execute the query command to delete the event selected.

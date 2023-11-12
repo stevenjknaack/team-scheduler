@@ -12,17 +12,17 @@ def create_event():
         return redirect(url_for(''))
     return render_template('create_event.html', username=session['username'])
 
-"""
-This method collects the data inputed by the creator of an event and inserts the information
-into the database. It works by getting the values, creating a connection to the database,
-making a query with the collected values to the database, and once all is done it closes 
-the connection to the database and returns to the profile page
-@author: Dante Katz Andrade
-@version 2023.10.19
-"""
-@events_blueprint.route('/create-event-request', methods=['POST'])
-def create_event_request():
-    """ Get event data from the HTML form """
+@app.route('/create-event-request', methods=['POST'])
+def create_event_request() -> None:
+    """
+    This method collects the data inputed by the creator of an event and inserts the information
+    into the database. It works by getting the values, creating a connection to the database,
+    making a query with the collected values to the database, and once all is done it closes 
+    the connection to the database and returns to the profile page
+    @author: Dante Katz Andrade
+    @version 2023.10.19
+    """
+    # Get event data from the HTML form 
     event_name = request.form.get('event_name')
     event_description = request.form.get('event_description')
     start_day = request.form.get('start_day')
@@ -32,49 +32,86 @@ def create_event_request():
     end_month = request.form.get('end_month')
     end_year = request.form.get('end_year')
     
-    """ Combine the date components into a single string. Will eventually add time customization """
+    # Combine the date components into a single string. Will eventually add time customization 
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
     start_time = "9:00:00"
     end_time = "21:00:00"
 
-    user_id = session.get('user_id')
-  
-    """ Connect to the database """
-    db = get_db
+    # Retrieve user's email 
+    user_email = session.get('user_id')
+
+    if user_email:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        # Retrieve group_id 
+        #cursor.execute("SELECT group_id FROM in_group WHERE user_email = %s", (user_email,))
+        #group_id = cursor.fetchone()[0]
+        group_id = 10000
+
+        cursor.execute("SELECT team_id FROM in_team WHERE user_email = %s", (user_email,))
+        team_result = cursor.fetchone()
+        if team_result: 
+            team_id = team_result[0]
+            edit_permission = 'group_admin'
+            # Insert the event data into the "savedEvent" table 
+            query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+            values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id)
+            cursor.execute(query, values)
+
+            # Commit the changes to the database and close the cursor and database connection. 
+            db.commit()
+            cursor.close()
+            db.close()
+            return redirect(url_for('profile'))            
+        
+        else: 
+            edit_permission = 'group_admin'
+            # Insert the event data into the "savedEvent" table 
+            query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
+            values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id)
+            cursor.execute(query, values)
+
+            # Commit the changes to the database and close the cursor and database connection. 
+            db.commit()
+            cursor.close()
+            db.close()
+            return redirect(url_for('profile'))            
+        
+        edit_permission = 'group_admin'
+        # Insert the event data into the "savedEvent" table 
+        query = "INSERT INTO event (name, description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        values = (event_name, event_description, start_date, end_date, start_time, end_time, edit_permission, group_id, team_id)
+        cursor.execute(query, values)
+
+        # Commit the changes to the database and close the cursor and database connection. 
+        db.commit()
+        cursor.close()
+        db.close()
+        return redirect(url_for('profile'))
+    else:
+        # If the user is not logged in, redirect to the login.
+        return redirect(url_for('login'))
+
+@app.route('/delete-event/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id: int) -> Union[dict, tuple]:
+    """
+    This method deletes events. It checks that the event is owned by the active user (created by them)
+    and then proceeds to execute the query command to delete the event selected.
+    """
+
+    db = get_db_connection()
     cursor = db.cursor()
 
-    """ Insert the event data into the "savedEvent" table """
-    query = "INSERT INTO saved_event (event_name, start_date, end_date, start_time, end_time, event_description, owner_id) VALUES (%s, %s, %s, %s, %s, %s, %s);"
-    values = (event_name, start_date, end_date, start_time, end_time, event_description, user_id)
-    cursor.execute(query, values)
-    
-    """ Commit the changes to the database and close the cursor and database connection. """
-    db.commit()
-    cursor.close()
-    db.close()
+    # Get the owner_id of the event 
 
-    return redirect(url_for('profile'))
-
-
-"""
-This method deletes events. It checks that the event is owned by the active user (created by them)
-and then proceeds to execute the query command to delete the event selected.
-"""
-@events_blueprint.route('/delete-event/<int:event_id>', methods=['DELETE'])
-def delete_event(event_id):
-
-    db = get_db()
-    cursor = db.cursor()
-
-    """ Get the owner_id of the event """
-
-    cursor.execute("SELECT owner_id FROM saved_event WHERE event_id = %s", (event_id,))
+    cursor.execute("SELECT edit_permission FROM saved_event WHERE event_id = %s", (event_id,))
     owner = cursor.fetchone()
-    """
-    Should not be able to delete if button isn't present, which it wouldn't be if there is no event
-    to delete, hoowever as discussed too much security is never bad.
-    """
+    
+    # Should not be able to delete if button isn't present, which it wouldn't be if there is no event
+    # to delete, hoowever as discussed too much security is never bad.
+    
     if owner is None:
         cursor.close()
         db.close()
@@ -82,38 +119,25 @@ def delete_event(event_id):
 
     owner_id = owner[0]
 
-    """ Check if the user is the owner of the event """
+    # Check if the user is the owner of the event 
     if 'username' in session:
-        cursor.execute("SELECT user_id FROM user WHERE username = %s", (session['username'],))
+        cursor.execute("SELECT username FROM user WHERE username = %s", (session['username'],))
         user = cursor.fetchone()
         if user is not None:
             user_id = user[0]
             if user_id == owner_id:
 
-                """ Delete the event if user_id matches owner_id and close database """
+                # Delete the event if user_id matches owner_id and close database 
 
                 cursor.execute("DELETE FROM saved_event WHERE event_id = %s", (event_id,))
                 db.commit()
                 cursor.close()
                 db.close()
                 return jsonify(status='success')
-    """ Close database in case of getting around the above if statements. """
+    # Close database in case of getting around the above if statements. 
     cursor.close()
     db.close()
     return jsonify(status='fail')
-
-"""
-This Method will allow for creating a team manually, without needing time availabilty. A user who 
-creates a team can give a name to the team and insert people manually into it by providing their email.
-Other USers who have been invited will get a notification which will allow them to accept or deny invitation.
-"""
-@events_blueprint.route('/manual_create_teams', methods=['POST'])
-def create_team():
-    """ Creates a team with team name and size. """
-    """ Get information from group participant via email from DB"""
-    """ Commit team to DB """
-    """ Commit participants into DB """
-    """ Return succesful JQuery """
 
 @events_blueprint.route('/send-invitations', methods=['POST'])
 def send_invitations():

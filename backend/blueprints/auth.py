@@ -8,7 +8,7 @@ auth_blueprint = Blueprint('auth', __name__, template_folder='../../templates', 
 def index():
     """Home page"""
     if 'username' in session :
-        return redirect(url_for('profile'))
+        return redirect(url_for('home'))
     return redirect(url_for('auth.login'))
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])

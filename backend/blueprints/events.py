@@ -42,7 +42,7 @@ def create_event_request() -> None:
     user_email = session.get('user_id')
 
     if user_email:
-        db = get_db_connection()
+        db = get_db()
         cursor = db.cursor()
 
         # Retrieve group_id 
@@ -101,7 +101,7 @@ def delete_event(event_id: int) -> Union[dict, tuple]:
     and then proceeds to execute the query command to delete the event selected.
     """
 
-    db = get_db_connection()
+    db = get_db()
     cursor = db.cursor()
 
     # Get the owner_id of the event 

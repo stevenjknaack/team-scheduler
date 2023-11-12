@@ -29,4 +29,4 @@ def create_team() -> str:
     """ Commit team to DB """
     """ Commit participants into DB """
     """ Return succesful JQuery """
-
+    return string

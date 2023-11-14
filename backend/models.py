@@ -181,7 +181,7 @@ class AvailabilityBlock(Base) :
         relationship('User', back_populates='availability_blocks')
     
     # methods
-    def __init__(self, id: int, start_day: str, end_day: str, 
+    def __init__(self, start_day: str, end_day: str, 
                  start_time: time, end_time: time, user_email: str) -> None :
         """ 
         start_day and end_day must be in 

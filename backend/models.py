@@ -2,7 +2,8 @@
 This class defines the models for interacting with the 10stars database
 in  ORM/CRUD using Flask-SQLAlchemy.
 
-db.session
+Call the below functions on db.session
+
 Create 
     <create Model> Model(var1 = val1, var2 = val2, ...)
 
@@ -134,16 +135,11 @@ class Membership(Base) :
 class User(Base) :
     """ Model of the `user` table. """
     __table__ = Base.metadata.tables['user']
-    #__tablename__ = Base.metadata.tables['user']
-    
 
     # define column properties
     email: Mapped[str] = __table__.columns['email']
     username: Mapped[str] = __table__.columns['username']
     password: Mapped[str] = __table__.columns['password']
-    #email: Mapped[str] = db.mapped_column(db.String(255), primary_key=True)
-    #username: Mapped[str] = db.mapped_column(db.String(255))
-    #password: Mapped[str] = db.mapped_column(db.String(255))
 
     # define relationship properties
     availability_blocks: Mapped[List['AvailabilityBlock']] =\
@@ -211,7 +207,7 @@ class Group(Base) :
     # define relationship properties
     teams: Mapped[List['Team']] =\
         relationship('Team', back_populates='group')
-    all_events: Mapped[List['Event']] =\
+    events: Mapped[List['Event']] =\
         relationship('Event', back_populates='group')
     memberships: Mapped[List['Membership']] =\
         relationship('Membership', back_populates='group')
@@ -287,9 +283,10 @@ class Event(Base) :
 
     # define relationship properties
     group: Mapped['Group'] =\
-        relationship('Group', back_populates='all_events', overlaps="events")
+        relationship('Group', back_populates='events')
     team: Mapped['Team'] =\
-        relationship('Team', back_populates='events', overlaps='all_events,group')
+        relationship('Team', back_populates='events')
+    #TODO ENSURE TEAM AND GROUP DONT CONFLICT
     participants: Mapped[List['User']] =\
         relationship('User', secondary=user_event_channel, back_populates='events')
     

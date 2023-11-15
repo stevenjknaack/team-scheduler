@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 from models import *
-from events import create_event, add_participant_to_event
+from blueprints.events import create_event, add_participant_to_event
 
 groups_blueprint: Blueprint = Blueprint('groups', __name__, 
                                         template_folder='../../templates', 
@@ -112,7 +112,6 @@ def send_invitations() -> Response :
         db.commit()
     
     # close cursor and database
-
     cursor.close()
     db.close()
 

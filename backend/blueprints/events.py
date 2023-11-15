@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
-from db import get_db
 
 events_blueprint = Blueprint('events', __name__, template_folder='../../templates', static_folder='../../static')
 
@@ -242,12 +241,13 @@ def get_user_events(username):
 
     return events
 
+# NEW CODE BELOW
 """
 This method works in tandem with get_user_events. It is called in the JS code after the profile page 
 calls get_user_events and gets all the event id's back. This method then uses the event ID's provided
 to get all the information from each event to display in the profile page.
 """
-@app.route('/get-event/<int:event_id>', methods=['GET'])
+#@events_blueprint.route('/get-event/<int:event_id>', methods=['GET'])
 def get_event(event_id):
     db = get_db_connection()
     cursor = db.cursor()
@@ -274,7 +274,7 @@ def get_event(event_id):
     else:
         return jsonify(status='error', message='Event not found'), 404
 
-@app.route('/group/<int:group_id>/create-event', methods=['POST'])
+#@events_blueprint.route('/group/<int:group_id>/create-event', methods=['POST'])
 def create_group_event(group_id):
     # Authenticate the user and check if they are the group admin
 

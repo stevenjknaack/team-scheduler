@@ -1,46 +1,62 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
-import bcrypt
-from db import get_db
+""" Defines routes for user authentication """
 
-auth_blueprint = Blueprint('auth', __name__, template_folder='../../templates', static_folder='../../static')
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
+import bcrypt
+from models import *
+
+auth_blueprint: Blueprint = Blueprint('auth', __name__, 
+                                      template_folder='../../templates', 
+                                      static_folder='../../static')
+
+db: SQLAlchemy = current_app.db
 
 @auth_blueprint.route('/')
-def index():
-    """Home page"""
+def index() -> Response:
+    """
+    Home page
+
+    Currently redirects to 
+        -login page if not logged in
+        -user home page if logged in
+
+    :returns: Redirecting Response
+    """
     if 'username' in session :
         return redirect(url_for('home'))
     return redirect(url_for('auth.login'))
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> str | Response:
+    """
+    GET:
+        render the login page
+    :returns: template-rendering str
+
+    POST:
+        submit a login request
+    :returns: Response object specifing if successful login or not
+    """
     if request.method == 'GET':
-        # Render the login form template
+        # Render the login form template if not logged in
+        if 'username' in session :
+            return redirect(url_for('home'))
         return render_template('login.html')
     elif request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+        email: str = request.form.get('email')
+        password: str = request.form.get('password')
 
-        # get data associated with user from database # change the comments
-        db = get_db()
-        cursor = db.cursor()
+        # get user from database 
+        user: User = db.session.get(User, email)
 
-        # Use parameterized query
-        query = "SELECT * FROM user WHERE email = %s"
-        cursor.execute(query, (email,))
-        user = cursor.fetchone()
-
-        cursor.close()
-        db.close()
-        # Check if user exists
-    
+        # Check if user's password is correct
         if user: # also encry on the frontend
-            stored_hashed_password = user[2]
-            if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
-                session['username'] = user[1]
-                session['user_id'] = user[0]
+            stored_hashed_password: str = user.password
+            if bcrypt.checkpw(password.encode('utf-8'),
+                            stored_hashed_password.encode('utf-8')):
+                session['user'] = user
                 return jsonify(status='success')
             else:
-                return jsonify(status='error'), 401
+                return jsonify(status='error',  message='Incorrect email or password'), 401
         else:
             return jsonify(status='error', message='Username not found'), 401
 
@@ -57,12 +73,12 @@ def profile():
     return render_template('profile.html', username=username, events=events)
 
 
-"""
-Gets groups and events owned by user (use get_user_events and get_user_groups) and return to JS, which then executes
-"""
+
 @auth_blueprint.route('/home')
 def home() :
-
+    """
+    Gets groups and events owned by user (use get_user_events and get_user_groups) and return to JS, which then executes
+    """
     return render_template('home.html')
 
 @auth_blueprint.route('/newprofile')
@@ -82,30 +98,32 @@ def logout():
     return redirect(url_for('index'))
 
 @auth_blueprint.route('/signup-request',  methods=['POST'])
-def signup_request():
-    email = request.form.get('email')
-    username = request.form.get('username')
-    password = request.form.get('password')
+def signup_request() -> Response:
+    """
+    Processes a signup request from the signup page
 
-    # connect to the database
-    db = get_db()
+    :return: Response object with status='success' if 
+        successful signup or status='error' if failed
+    """
+    email: str = request.form.get('email')
+    username: str = request.form.get('username')
+    password: str = request.form.get('password')
 
-    # create a cursor
-    cursor = db.cursor()
-    query = "INSERT INTO user (email, username, password) VALUES (%s, %s, %s);"
+    # check if user already exists
+    if db.session.get(User, email) :
+        return jsonify(status='error',  
+                    message='An account is already associated with the provided email')
 
     # hashed_password  # make sure also encry at the frontend
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    values = (email, username, hashed_password) 
+    hashed_password: bytes = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-    # use the cursor to execute the query 
-    cursor.execute(query, values)
+    # create a User object
+    new_user: User = User(email, username, hashed_password)
 
-    # commit change to database
-    db.commit()  
+    # add new_user to db
+    db.session.add(new_user)
+    db.session.commit()
 
-    # close cursor and database
-    cursor.close()
-    db.close()
+    # notify success
     return jsonify(status='success')
 

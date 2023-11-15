@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
-from db import get_db
 
 teams_blueprint = Blueprint('teams', __name__, template_folder='../../templates', static_folder='../../static')
 """

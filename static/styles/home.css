@@ -102,6 +102,7 @@ h1 {
 }
 
 /* this is the notification button */
+/* TODO: scroll notificaitons */ 
 
 .notification-container {
   position: relative;
@@ -241,4 +242,17 @@ h1 {
 
 .btn-create-group:hover {
   background-color: #424242; /* Darker green on hover */
+}
+
+
+/* Hover affect for admin group box */
+.admin-group {
+  /* Your existing styles */
+  cursor: pointer; /* Change cursor to indicate the item is clickable */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.admin-group:hover {
+  transform: translateY(-5px); /* Slightly raise the box to give a lifting effect */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Increase shadow for depth perception */
 }

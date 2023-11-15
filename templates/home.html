@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ten Star User Profile</title>
+    <title>Ten Star User Home Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
 </head>
 
 <body>
@@ -68,7 +69,7 @@
             <!-- Box to display the groups -->
             <div class="groups-box">
                 <h1>GROUPS</h1>
-                <div class="group admin-group">
+                <div class="group admin-group" data-group-url="/group">
                     <!-- admin group -->
                     <h2>Admin Group 1</h2>
                     <p>Members: 25</p>
@@ -123,7 +124,6 @@
             </form>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
 </body>
 
 </html>

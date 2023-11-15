@@ -118,6 +118,22 @@ $(document).ready(function () {
             modal.style.display = "none";
         }
     };
+
+    /**
+     * Functionality redirect to group page when group box clicked
+     */
+
+    // Get all admin group divs
+    var adminGroups = document.querySelectorAll('.admin-group');
+
+    // Add click event listener to each admin group div
+    adminGroups.forEach(function (group) {
+        group.addEventListener('click', function () {
+            // Redirect to the group's page
+            var groupUrl = group.getAttribute('data-group-url');
+            window.location.href = groupUrl;
+        });
+    });
 });
 
 

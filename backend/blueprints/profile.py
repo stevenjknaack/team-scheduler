@@ -1,31 +1,36 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
+""" Defines routes for the profile page """
+
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
+from models import *
 
 profile_blueprint: Blueprint = Blueprint('profile', __name__, 
-                            template_folder='../../templates', static_folder='../../static')
+                                         template_folder='../../templates', 
+                                         static_folder='../../static')
 
 @profile_blueprint.route('/save_schedule', methods=['POST'])
-def save_schedule():
+def save_schedule() -> Response :
     """
     TODO: This Method will allow for saving the availability to the availability table. 
     """
 
-    """ Get Username and avail blocks """
+    # Get Username and avail blocks 
     data = request.get_json()
     username = data['username']
     schedules = data['schedule']
 
-    """ Get connection to database """
-    db = get_db_connection()
+    # Get connection to database 
+    db = None
     cursor = db.cursor()
 
-    """ Check if user had saved availability"""
+    # Check if user had saved availability
     cursor.execute("SELECT * FROM your_table_name WHERE user_email LIKE %s", (username,))
     user = cursor.fetchone()    
     if user:
-        """ delete all user availability """
-        """ insert new availability """
+        # delete all user availability 
+        # insert new availability 
+        pass
     else:
-        """ else, insert avail blocks into table"""
+        # else, insert avail blocks into table
         for schedule in schedules:
             day = schedule['day']
             start_time = schedule['startTime']
@@ -33,8 +38,8 @@ def save_schedule():
             query = "INSERT INTO schedule_table (start_day, end_day, start_time, end_time, user_email) VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(query, (day, day, start_time, end_time, username,))
         db.commit()          
-    """ close connection """
+    # close connection
     cursor.close()
     db.close()
 
-    """ return succesful Jquery """
+    # return succesful Jquery 

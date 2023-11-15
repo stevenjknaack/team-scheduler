@@ -1,13 +1,14 @@
-import pytest
-from flask import url_for
-from unittest.mock import patch
+""" Test routes and functions of events.py """
 
+import pytest
+from flask import url_for, Flask, FlaskClient
+from unittest.mock import patch
 from app import create_app
 
-# Setup the Flask test client
 @pytest.fixture
-def client():
-    app = create_app()
+def client() -> None :
+    """ Setup the Flask test client """
+    app: Flask = create_app()
 
     # Use the TEST configuration if available
     app.config.update({
@@ -20,8 +21,8 @@ def client():
             init_db_for_tests(app)
         yield client
 
-# Test the GET request for the event creation page
-def test_event_creation_page(client):
+def test_event_creation_page(client: FlaskClient) -> None :
+    """ Test the GET request for the event creation page """
     # Simulate a logged-in user
     with client.session_transaction() as sess:
         sess['user_id'] = 1  
@@ -29,9 +30,9 @@ def test_event_creation_page(client):
     assert response.status_code == 200
     assert b'Event Creation Form' in response.data  # Check for form content
 
-# Test the POST request for creating an event
 @patch('events.get_db')
-def test_create_event(mock_get_db, client):
+def test_create_event(mock_get_db, client: FlaskClient) -> None :
+    """ Test the POST request for creating an event """
     # Setup the mock to simulate a database
     mock_cursor = mock_get_db.return_value.cursor.return_value
     mock_cursor.execute.return_value = None
@@ -52,16 +53,16 @@ def test_create_event(mock_get_db, client):
     assert response.status_code == 302  # Assuming redirect after event creation
     assert url_for('events.view_event') in response.location  # Assuming there is a route to view the event
 
-# Initializing the db connection
-def init_db_for_tests(app):
+def init_db_for_tests(app: Flask) -> None:
+    """ Initializing the db connection """
     app.config['DB_HOST'] = 'test_db_host'
     app.config['DB_PORT'] = 'test_db_port'
     app.config['DB_USER'] = 'test_db_user'
     app.config['DB_PASSWORD'] = 'test_db_password'
     app.config['DB_NAME'] = 'test_db_name'
 
-# Create the schema for test
-def create_test_db_schema(db):
+def create_test_db_schema(db) -> None :
+    """ Create the schema for test """
     with db.cursor() as cursor:
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS `event` (

@@ -2,10 +2,11 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 from models import *
+from events import create_event, add_participant_to_event
 
-groups_blueprint = Blueprint('groups', __name__, 
-                             template_folder='../../templates', 
-                             static_folder='../../static')
+groups_blueprint: Blueprint = Blueprint('groups', __name__, 
+                                        template_folder='../../templates', 
+                                        static_folder='../../static')
 
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
@@ -31,9 +32,13 @@ def create_group() -> Response:
     # Step3: redirect to home page. 
     return redirect(url_for('auth.home'))
 
-def is_group_admin(group_id, user_id):
+def is_group_admin(group_id: int, user_id: int) -> bool:
+    """ 
+    determines if the user of user_id an admin of 
+        the group of group_id #TODO
+    """
     # Connect to the database
-    db = get_db_connection()
+    db = None
     cursor = db.cursor()
 
     try:
@@ -57,9 +62,10 @@ def is_group_admin(group_id, user_id):
         cursor.close()
         db.close()
 
-def get_group_members(group_id):
+def get_group_members(group_id: int) -> List[int] :
+    """get the group members correlated with group_id"""
     # Connect to the database
-    db = get_db_connection()
+    db = None
     cursor = db.cursor()
 
     try:
@@ -78,3 +84,75 @@ def get_group_members(group_id):
     finally:
         cursor.close()
         db.close()
+
+@groups_blueprint.route('/send-invitations', methods=['POST'])
+def send_invitations() -> Response :
+    """ Sends group invitations to users """
+
+    # Get JSON data sent from the frontend
+    data = request.get_json()
+
+    # Extract email addresses
+    emails = data.get('emails', [])
+
+    
+    # placeholder
+    event_id = 5
+
+    # connect to database
+    db = None
+
+    # create a cursor 
+    cursor = db.cursor()
+
+    for email in emails:
+        query = "INSERT INTO invitee (event_id, email) VALUES (%s, %s)"
+        values = (event_id, email)
+        cursor.execute(query, values)
+        db.commit()
+    
+    # close cursor and database
+
+    cursor.close()
+    db.close()
+
+    # TODO: Process the emails, e.g., send invitation emails, save to the database, etc.
+    # For now, let's just print them for demonstration purposes
+    print(emails)
+
+    return jsonify(status='success', message='Invitations sent successfully!')
+
+#@events_blueprint.route('/group/<int:group_id>/create-event', methods=['POST'])
+def create_group_event(group_id: int) -> Response:
+    """ Create a group level event """
+
+    # Authenticate the user and check if they are the group admin
+    current_user_id = session.get('user_id')
+    if not is_group_admin(group_id, current_user_id):
+        return jsonify({"status": "error", "message": "You do not have permission to create group events."}), 403
+
+    # Get event details from the request
+    data = request.get_json()
+    event_name = data.get('event_name')
+    event_description = data.get('event_description')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    recurring = data.get('recurring')  # True or False
+
+    # Retrieve the list of group members
+    group_members = get_group_members(group_id)
+
+    if not group_members:
+        return jsonify({"status": "error", "message": "No group members found."}), 404
+
+    # Create the event in the database
+    event_id = create_event(event_name, event_description, start_date, end_date, recurring)
+
+    if event_id:
+        # Add all group members as event participants
+        for member_id in group_members:
+            add_participant_to_event(event_id, member_id)
+
+        return jsonify({"status": "success", "message": "Group event created successfully."}), 201
+    else:
+        return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500

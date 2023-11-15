@@ -1,26 +1,32 @@
+""" Houses tests """
+
 import app
 import unittest
 
 class MyTestCase(unittest.TestCase):
+    """ Wrapper for test cases """
 
-    def setUp(self):
+    def setUp(self) -> None :
+        """ Set up for testing """
         app.app.testing = True
         self.app = app.app.test_client()
 
-    def test_index(self):
+    def test_index(self) -> None:
+        """ Test index page """
         result = self.app.get('/')
         # Make your assertions
         self.assertEqual(1,1)
 
-    def test_signup_page(self):
+    def test_signup_page(self) -> None:
+        """ Test signup page """
         response = self.app.get('/signup')
         self.assertEqual(response.status_code, 200)
       
-    def test_login(self):
+    def test_login(self) -> None :
+        """ Test Login page """
         result = self.app.get('/login')
         self.assertEqual(result.status_code, 200)
     
-
     # Test create-event-request
     # def test_create_event_request(self):
     #    event_creation = {

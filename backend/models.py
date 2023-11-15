@@ -54,6 +54,7 @@ from typing import List, Optional
 from datetime import date, time
 import os
 from dotenv import load_dotenv
+import json
 
 ##### Set up #####
 
@@ -91,6 +92,9 @@ def configure_flask_sqlalchemy(app: Flask) -> SQLAlchemy :
 
 class Base(DeclarativeBase):
   """ Base for Models """
+  """def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)"""
   pass
 
 # Sync Base's metadata with the current db

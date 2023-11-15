@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ten Star User Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -22,11 +23,11 @@
                 <button id="welcomeButton" style="display: block">
                     Welcome, {{ username }}!
                 </button>
-                <form action="{{ url_for('logout') }}" method="post" id="logoutForm" style="display: none">
+                <form action="{{ url_for('auth.logout') }}" method="post" id="logoutForm" style="display: none">
                     <button type="submit" class="btn btn-danger">Logout</button>
                 </form>
                 <!-- profile button -->
-                <button id="editProfile" class="btn btn-danger" style="display: block" href="newprofile.html">
+                <button id="editProfile" class="btn btn-danger" style="display: block">
                     Profile
                 </button>
                 <!-- create event button -->
@@ -122,7 +123,6 @@
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
 </body>
 

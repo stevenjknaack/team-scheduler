@@ -79,6 +79,12 @@ $(document).ready(function () {
         }
     });
 
+    // link profile button to profile page
+    $("#editProfile").on("click", function (event) {
+        // Hide the dropdown if clicking outside of it
+        window.location.href = '/profile';
+    });
+
     /** funtionality for create group button 
      * handle: 
      * 1. open up the modal when create group is clicked

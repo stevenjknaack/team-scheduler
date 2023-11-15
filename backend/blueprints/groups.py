@@ -1,35 +1,35 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
+""" Defines group related routes """
 
-groups_blueprint = Blueprint('groups', __name__, template_folder='../../templates', static_folder='../../static')
-@groups_blueprint.route('/create_group', methods=['POST'])
-def create_group():
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
+from models import *
+
+groups_blueprint = Blueprint('groups', __name__, 
+                             template_folder='../../templates', 
+                             static_folder='../../static')
+
+@groups_blueprint.route('/create_group', methods=['GET', 'POST'])
+def create_group() -> Response:
     """ 
     This method will be made for creating groups. It'll allow for someone to make a group such as 
     CS506Fall23. It will get information such as group name and description. An SQL query will be
     executed to save the group to the database, and then once done it will redirect to home page.
     """
     # Step1: get information from the user such as event name and description.
-    # Step2: establish connection to the database and execute the query.
-    # Step3: close the database and redirect to home page. 
+    group_name: str = request.args.get('groupName')
+    group_description: str = request.args.get('groupDescription')
     
-    group_name = request.form.get('group_name')
-    group_description = request.form.get('group_description')
-
-    user_id = session.get('user_id')
-  
-    db = get_db_connection()
-    cursor = db.cursor()
-
     
-    query = "INSERT INTO group (group_name, group_description) VALUES (%s, %s);"
-    values = (group_name, group_description)
-    cursor.execute(query, values)
+    # Step2: create group and make the user a member
+    new_group: Group = Group(group_name, group_description)
+    email: str = session.get('email')
+    new_membership: Membership = Membership(email, None, 'owner')
+    new_group.memberships.append(new_membership)
 
-    db.commit()
-    cursor.close()
-    db.close()
+    current_app.db.session.add_all([new_group, new_membership])
+    current_app.db.session.commit()
 
-    return redirect(url_for('profile'))
+    # Step3: redirect to home page. 
+    return redirect(url_for('auth.home'))
 
 def is_group_admin(group_id, user_id):
     # Connect to the database

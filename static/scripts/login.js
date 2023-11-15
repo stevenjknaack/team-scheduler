@@ -12,14 +12,14 @@ $('#loginForm').submit(function(event) {
     // Make an AJAX POST request to the backend
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:6969/login-request',
+        url: 'http://localhost:6969/login',
         data: formData,
         dataType: 'json',
         encode: true
     })
     .done(function(data) {
         if (data.status === 'success') {
-            window.location.href = '/profile';  // Redirect to the profile page
+            window.location.href = '/home';  // Redirect to the profile page
         }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

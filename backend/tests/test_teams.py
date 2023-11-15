@@ -1,11 +1,14 @@
+""" Test routes and functions of teams.py """
+
 import pytest
-from flask import url_for
+from flask import url_for, Flask, FlaskClient
 from unittest.mock import patch
 from app import create_app
 
 @pytest.fixture
-def client():
-    app = create_app()
+def client() -> None :
+    """ Set up testing client """
+    app: Flask = create_app()
 
     # Use the TEST configuration if available
     app.config.update({
@@ -18,8 +21,8 @@ def client():
             init_db_for_tests(app)
         yield client
 
-# Test the GET request for the team creation page
-def test_team_creation_page(client):
+def test_team_creation_page(client: FlaskClient) -> None :
+    """ Test the GET request for the team creation page """
     # Simulate a logged-in user with sufficient permissions
     with client.session_transaction() as sess:
         sess['user_id'] = 1  # assuming a user ID is stored in the session when logged in
@@ -28,9 +31,10 @@ def test_team_creation_page(client):
     assert response.status_code == 200
     assert b'Team Creation Form' in response.data  # Check for form content
 
-# Test the POST request for creating a new team
+
 @patch('teams.get_db')
-def test_create_team(mock_get_db, client):
+def test_create_team(mock_get_db, client: FlaskClient) -> None :
+    """ Test the POST request for creating a new team """
     # Setup the mock to simulate a database
     mock_cursor = mock_get_db.return_value.cursor.return_value
     mock_cursor.execute.return_value = None
@@ -52,8 +56,8 @@ def test_create_team(mock_get_db, client):
     assert response.status_code == 302  # Assuming redirect after team creation
     assert url_for('teams.view_team') in response.location  # Assuming there is a route to view the team
 
-# Placeholder for initializing the test database
-def init_db_for_tests(app):
+def init_db_for_tests(app: Flask) -> None:
+    """ Placeholder for initializing the test database """
     # Configure the test database settings here
     app.config['DB_HOST'] = 'test_db_host'
     app.config['DB_PORT'] = 'test_db_port'
@@ -61,9 +65,8 @@ def init_db_for_tests(app):
     app.config['DB_PASSWORD'] = 'test_db_password'
     app.config['DB_NAME'] = 'test_db_name'
 
-    # Initialize the test database schema here
-
-def create_test_db_schema(db):
+def create_test_db_schema(db) -> None:
+    """ Initialize the test database schema here """
     with db.cursor() as cursor:
         
     # Create the `team` table.

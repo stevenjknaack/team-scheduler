@@ -7,8 +7,7 @@
     <title>User Weekly Schedule</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ url_for('static', filename='scripts/np.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/np.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}" />
 </head>
 
 <body>
@@ -24,12 +23,12 @@
             <button id="welcomeButton" style="display: block">
                 Welcome, {{ username }}!
             </button>
-            <form action="{{ url_for('logout') }}" method="post" id="logoutForm" style="display: none">
+            <form action="{{ url_for('auth.logout') }}" method="post" id="logoutForm" style="display: none">
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
             <!-- profile button -->
-            <button id="editProfile" class="btn btn-danger" style="display: block" href="newprofile.html">
-                Profile
+            <button id="goHome" class="btn btn-danger" style="display: block">
+                Home
             </button>
             <!-- create event button -->
             <button id="createGroupButton" class="btn btn-danger" style="display: block">
@@ -102,6 +101,6 @@
             </form>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
 </body>
-
 </html>

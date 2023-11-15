@@ -8,6 +8,10 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
                                         template_folder='../../templates', 
                                         static_folder='../../static')
 
+@groups_blueprint.route('/group')
+def go_to_group_page() -> Response:
+    return render_template('group.html')
+
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
     """ 

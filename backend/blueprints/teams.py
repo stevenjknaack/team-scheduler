@@ -7,6 +7,10 @@ teams_blueprint: Blueprint = Blueprint('teams', __name__,
                             template_folder='../../templates', 
                             static_folder='../../static')
 
+@teams_blueprint.route('/team')
+def go_to_team_page() -> Response:
+    return render_template('team.html')
+
 @teams_blueprint.route('/generate_teams', methods=['POST'])
 def generate_teams() -> Response :
     """

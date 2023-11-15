@@ -20,14 +20,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
     
 
-    var modal = document.getElementById('inviteModal');
+    var inviteModal = document.getElementById('inviteModal');
     var btn = document.getElementById('invite-btn');
     var span = document.getElementsByClassName('close-btn')[0];
     var invitationCodeInput = document.getElementById('invitationCode');
 
     // When the user clicks the button, open the modal and generate code if not already generated
     btn.onclick = function () {
-        modal.style.display = 'block';
+        inviteModal.style.display = 'block';
         if (!invitationCodeGenerated) {
             invitationCodeGenerated = Math.random().toString(36).substring(2, 10);
             invitationCodeInput.value = invitationCodeGenerated;
@@ -36,8 +36,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
-        modal.style.display = 'none';
+        inviteModal.style.display = 'none';
     };
+
+    // When user clicks on "esc" button, close the modal
+    document.addEventListener('keydown', function(event) {
+        // Check if the key pressed is the Escape key and if the modal is displayed
+        if (event.key === 'Escape' && inviteModal.style.display === 'block') {
+            inviteModal.style.display = 'none';
+        }
+    });
 
 
     // Invite participants functionality
@@ -62,7 +70,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             emails.push(invitedParticipants.children[i].innerText);
         }
         console.log(emails);
-        modal.style.display = "none";
+        inviteModal.style.display = "none";
     });
 
 
@@ -85,6 +93,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
     spanClosePeople.onclick = function () {
         peopleModal.style.display = 'none';
     };
+
+    // When user clicks on "esc" button, close the modal
+    document.addEventListener('keydown', function(event) {
+        // Check if the key pressed is the Escape key and if the modal is displayed
+        if (event.key === 'Escape' && peopleModal.style.display === 'block') {
+            peopleModal.style.display = 'none';
+        }
+    });
 
 
     // Function for searching emails

@@ -5,6 +5,7 @@ mysecrets.py
 
 # don't push your local venv
 venv
+myvenv
 
 # don't push intermidiate files
 *.pyc

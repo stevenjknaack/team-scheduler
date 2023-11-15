@@ -31,3 +31,51 @@ def create_group():
     db.close()
 
     return redirect(url_for('profile'))
+
+def is_group_admin(group_id, user_id):
+    # Connect to the database
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    try:
+        # Query to check if the user is the admin of the group
+        query = "SELECT admin_id FROM groups WHERE group_id = %s"
+        cursor.execute(query, (group_id,))
+        admin_id = cursor.fetchone()
+
+        # Check if the user_id matches the admin_id
+        if admin_id and user_id == admin_id[0]:
+            return True  # The user is the admin of the group
+        else:
+            return False  # The user is not the admin of the group
+
+    except Exception as e:
+        # Handle any potential errors, such as database connection issues
+        print(f"Error checking group admin: {str(e)}")
+        return False  # Return False to indicate that an error occurred
+
+    finally:
+        cursor.close()
+        db.close()
+
+def get_group_members(group_id):
+    # Connect to the database
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    try:
+        # Query to retrieve a list of member IDs for the specified group
+        query = "SELECT user_id FROM group_members WHERE group_id = %s"
+        cursor.execute(query, (group_id,))
+        member_ids = [result[0] for result in cursor.fetchall()]
+
+        return member_ids  # Return a list of member IDs
+
+    except Exception as e:
+        # Handle any potential errors, such as database connection issues
+        print(f"Error retrieving group members: {str(e)}")
+        return []  # Return an empty list to indicate that an error occurred
+
+    finally:
+        cursor.close()
+        db.close()

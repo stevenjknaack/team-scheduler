@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
 from db import get_db
 
-profile_blueprint = Blueprint('profile', __name__, template_folder='../../templates', static_folder='../../static')
+profile_blueprint: Blueprint = Blueprint('profile', __name__, 
+                            template_folder='../../templates', static_folder='../../static')
+
 @profile_blueprint.route('/save_schedule', methods=['POST'])
 def save_schedule():
     """

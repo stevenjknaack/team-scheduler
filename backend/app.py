@@ -121,11 +121,7 @@ get_event to get the information from each event to display.
 """
 @app.route('/profile') # check later
 def profile() -> Union[None, str]:
-    if 'username' not in session:
-        return redirect(url_for('index'))
-    username = session['username']
-    #events = get_user_events(username)
-    return render_template('profile.html', username=username)#, events=events)
+    return render_template('profile.html')
 
 
 
@@ -505,6 +501,16 @@ def save_schedule():
     db.close()
 
     """ return succesful Jquery """
+
+# can add @app.rout('/') here and remove the above
+@app.route('/group', methods=['GET']) # redundant with above
+def group() -> Union[str, None]:
+    return render_template('group.html')
+
+# can add @app.rout('/') here and remove the above
+@app.route('/team', methods=['GET']) # redundant with above
+def team() -> Union[str, None]:
+    return render_template('team.html')
 
 
 

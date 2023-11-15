@@ -1,0 +1,321 @@
+body {
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #182135;
+}
+
+.wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    /* This will push logo to the left and button to the right */
+    align-items: center;
+    padding: 10px 5%;
+    background-color: #182135;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-right {
+    /* ... existing styles ... */
+    display: flex;
+    /* Ensures horizontal alignment of children */
+    align-items: center;
+    /* Vertically aligns children in the middle */
+    gap: 10px;
+    /* Creates spacing between each child item */
+}
+
+.navbar-left img {
+    width: 200px;
+    /* Adjust based on your logo's size */
+}
+
+.navbar-right button {
+    background-color: #555;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar-right button:hover {
+    background-color: #777;
+}
+
+.container {
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+    /* This will center the container horizontally */
+}
+
+.logo img {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+}
+
+h1 {
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+/* Group Details */
+.group-details {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.group-details h1 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.group-details p {
+    font-size: 1em;
+    color: #a4acc4;
+}
+
+/* Events & Teams */
+
+.group-events h2,
+.group-teams h2,
+.team-events h2 {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.event-box {
+    background-color: #0f3460;
+    padding: 20px;
+    margin: 10px;
+    width: calc(33% - 20px);
+    /* three boxes per row with margins */
+    text-align: center;
+    border-radius: 10px;
+}
+
+.group-teams,
+.group-events,
+.team-events {
+    margin-bottom: 20px;
+}
+
+.team-box-container,
+.event-box-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.team-box,
+.event-box {
+    flex: 0 0 auto;
+    /* Do not grow, do not shrink, and base the size on the width property */
+    width: calc(33.333% - 20px);
+    /* You can set a fixed width for the boxes */
+    margin-right: 10px;
+    /* Add margin between boxes */
+    background-color: #0f3460;
+    padding: 20px;
+    margin: 10px;
+    width: calc(33% - 20px);
+    /* three boxes per row with margins */
+    text-align: center;
+    border-radius: 10px;
+}
+
+.team-box{
+    cursor: pointer; /* Change cursor to indicate the item is clickable */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+
+.team-box:hover {
+transform: translateY(-5px); /* Slightly raise the box to give a lifting effect */
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Increase shadow for depth perception */
+}
+
+.team-name,
+.event-name {
+    font-size: 1.2em;
+    /* Larger font size for the team name */
+    margin-bottom: 20px;
+    /* Space below the team name */
+}
+
+.team-members p,
+.event-members p {
+    font-size: 0.9em;
+    /* Smaller font size for team members */
+    margin-bottom: 3px;
+    /* Space between team member names */
+}
+
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(24, 33, 53, 0.8);
+    /* Dark background with opacity */
+}
+
+.modal-content {
+    background-color: #333;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 8px;
+    width: 30%;
+    text-align: center;
+}
+
+.close-btn {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: rgb(26, 255, 0);
+    /* Green color on hover */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.invite-submit-btn, .promotion-btn, .demotion-btn {
+    background-color: #555;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 5px;
+}
+
+.invite-submit-btn:hover {
+    background-color: #777;
+}
+
+input[type="email"],
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #182135;
+    color: white;
+    font-size: 16px;
+}
+
+#invited-participants div {
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #182135;
+    font-size: 16px;
+}
+
+
+
+.modal-body span {
+    font-weight: bold;
+    margin-right: 10px;
+    vertical-align: middle;
+    /* Aligns the text with the input vertically */
+}
+
+/* Style adjustments for the input to align with the new label */
+#invitationCode {
+    display: inline-block;
+    width: auto;
+    /* Adjust the width as needed, or use calc() to subtract the label's width */
+    margin: 0;
+    /* Adjust margins as needed */
+}
+
+/* People Modal styles */
+.email-list {
+    max-height: 200px; /* Set a max height for the container */
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    margin-top: 10px;
+    padding-right: 10px; /* Optional: to avoid the scrollbar overlapping content */
+    border: 3px solid #ccc; /* Optional: just for better visibility of the container */
+}
+
+.email-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.email-text {
+    flex-grow: 1;
+    margin-right: 10px; /* Give some space between email and buttons */
+}
+
+.promotion-btn,
+.demotion-btn {
+    padding: 5px 10px;
+    margin-left: 5px; /* Space between buttons */
+}
+
+.back-to-group {
+    margin-bottom: 20px; /* Adjust as needed */
+}
+
+.back-to-group button {
+    padding: 10px 20px;
+    background-color: #f2f2f2; /* Light gray, you can choose a color that fits your design */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px;
+    cursor: pointer; /* Cursor changes to pointer to indicate it's clickable */
+    font-weight: bold;
+}
+
+.back-to-group button:hover {
+    background-color: #e2e2e2; /* Slightly darker shade on hover for visual feedback */
+}
+
+
+.team-members {
+    display: flex; /* Use flexbox to layout team member names */
+    flex-wrap: wrap; /* Allow the items to wrap to new lines as needed */
+    gap: 10px; /* Provide some space between team member names */
+    justify-content: start; /* Align items to the start of the container */
+    align-items: center; /* Vertically align items in the middle */
+}
+
+.member {
+    background-color: #555; /* Light background for each member */
+    padding: 5px 10px; /* Padding around each member name */
+    border-radius: 5px; /* Rounded corners for each member name */
+    border: 1px solid #ddd; /* Border for each member name */
+    margin-bottom: 5px; /* Margin at the bottom of each member name */
+}

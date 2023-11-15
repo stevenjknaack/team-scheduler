@@ -102,6 +102,7 @@ h1 {
 }
 
 /* this is the notification button */
+/* TODO: scroll notificaitons */ 
 
 .notification-container {
   position: relative;

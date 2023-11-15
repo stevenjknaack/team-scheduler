@@ -62,17 +62,18 @@ def login() -> str | Response:
             return jsonify(status='error', message='Username not found'), 401
 
 
-@auth_blueprint.route('/profile') # check later
+@auth_blueprint.route('/profile') 
 def profile() -> str | Response:
     """ 
     Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
     get_event to get the information from each event to display.
     """
     if 'username' not in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('auth.index'))
     username = session['username']
-    events = get_db()
+    events = None
     return render_template('profile.html', username=username, events=events)
+
 
 @auth_blueprint.route('/home')
 def home() -> str :
@@ -84,14 +85,10 @@ def home() -> str :
         return redirect(url_for('auth.index'))
     return render_template('home.html', username=session['username'])
 
-@auth_blueprint.route('/newprofile')
-def newprofile() :
-    return render_template('newprofile.html')
-
 @auth_blueprint.route('/signup')
 def signup() :
     if 'username' in session :
-        return redirect(url_for('profile'))
+        return redirect(url_for('auth.home'))
     return render_template('signup.html')
 
 @auth_blueprint.route('/logout', methods=['POST'])

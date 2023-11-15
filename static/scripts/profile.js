@@ -262,5 +262,10 @@ $(document).ready(function () {
 
 });
 
+// link profile button to profile page
+$("#goHome").on("click", function (event) {
+    // Hide the dropdown if clicking outside of it
+    window.location.href = '/home';
+});
 
 

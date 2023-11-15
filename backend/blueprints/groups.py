@@ -30,4 +30,4 @@ def create_group():
     cursor.close()
     db.close()
 
-    return redirect(url_for('profile'))
+    return redirect(url_for('home'))

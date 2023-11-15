@@ -70,7 +70,7 @@ def profile() -> str | Response:
     """
     if 'username' not in session:
         return redirect(url_for('auth.index'))
-    username = session['username']
+    username: str = session['username']
     events = None
     return render_template('profile.html', username=username, events=events)
 
@@ -86,13 +86,21 @@ def home() -> str :
     return render_template('home.html', username=session['username'])
 
 @auth_blueprint.route('/signup')
-def signup() :
+def signup() -> str | Response :
+    """
+    Renders the signup.html page
+        or redirects to user home if logged in
+    """
     if 'username' in session :
         return redirect(url_for('auth.home'))
     return render_template('signup.html')
 
 @auth_blueprint.route('/logout', methods=['POST'])
-def logout():
+def logout() -> Response :
+    """
+    Logs user out by removing data from session
+        and redirecting to the launch page
+    """
     if 'username' in session:
         session.pop('username', None)
         session.pop('email', None)

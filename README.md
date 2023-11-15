@@ -3,7 +3,7 @@
 # setup (see below for help)
  0. open terminal in vs code
  1. navigate to backend folder and create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
- 2. install flask, python connector, cryptographic dependencies, environmental variables, SQLAlchemy
+ 2. install flask, python connector, cryptographic dependencies, and environmental variables
 
 # to start app
  0. open local terminal, login "ssh -L localhost:63306:localhost:63306 <username>@cs506-team-10.cs.wisc.edu"
@@ -44,9 +44,6 @@
 
 # install environmental variables (in venv)
   pip install python-dotenv
-
-# install Flask-SQLAlchemy (in venv)
-pip install -U Flask-SQLAlchemy
 
 # if there's an error connecting to the database, it may need to be created again
   0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 

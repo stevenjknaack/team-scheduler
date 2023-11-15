@@ -1,8 +1,5 @@
 CREATE DATABASE `10stars`;
 USE `10stars`;
-/*ADD Link to docs, change user primary key
-check email like '%@%.%'
-remove default names*/
 
 CREATE TABLE `user` (
   `email` VARCHAR(255) PRIMARY KEY,
@@ -14,7 +11,7 @@ CREATE UNIQUE INDEX `user_email_index`
 ON `user` (`email`);
 
 CREATE TABLE `availability_block` (
-  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `availability_block_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
   `start_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') NOT NULL,
   `end_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') NOT NULL,
   `start_time` TIME NOT NULL,
@@ -24,21 +21,11 @@ CREATE TABLE `availability_block` (
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-ALTER TABLE `availability_block` AUTO_INCREMENT = 10000;
-
-CREATE INDEX `availability_block_user_email_index`
-ON `availability_block` (`user_email`); 
-
 CREATE TABLE `group` ( 
-  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL DEFAULT 'Unnamed Group',
-  `description` TEXT
+  `group_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `group_name` VARCHAR(50) NOT NULL DEFAULT 'Unnamed Group',
+  `group_description` TEXT
 );
-
-ALTER TABLE `group` AUTO_INCREMENT = 10000;
-
-CREATE INDEX `group_id_index`
-ON `group` (`id`); 
 
 CREATE TABLE `in_group` (
   `user_email` VARCHAR(255) NOT NULL,
@@ -47,27 +34,19 @@ CREATE TABLE `in_group` (
   PRIMARY KEY (`user_email`, `group_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `team` (
-  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(50),
-  `description` TEXT,
+  `team_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `team_name` VARCHAR(50),
   `group_id` INTEGER NOT NULL,
-  UNIQUE (`id`, `group_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+  `team_description` TEXT,
+  UNIQUE (`team_id`, `group_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-ALTER TABLE `team` AUTO_INCREMENT = 10000;
-
-CREATE INDEX `team_id_index`
-ON `team` (`id`); 
-
-CREATE INDEX `team_group_id_index`
-ON `team` (`group_id`); 
 
 CREATE TABLE `in_team` (
   `user_email` VARCHAR(255) NOT NULL,
@@ -75,43 +54,40 @@ CREATE TABLE `in_team` (
   PRIMARY KEY (`user_email`, `team_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`team_id`) REFERENCES `team` (`id`)
+  FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `event` (
-  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
-  `description` TEXT,
+  `event_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `event_name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
   `start_date` DATE NOT NULL,
   `end_date` DATE NOT NULL,
   `reg_start_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
   `reg_end_day` ENUM ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
   `start_time` TIME NOT NULL,
   `end_time` TIME NOT NULL,
+  `event_description` TEXT,
   `edit_permission` ENUM ('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
   `group_id` INTEGER NOT NULL,
   `team_id` INTEGER,
-  CHECK (DATE(`start_date`) <= DATE(`end_date`)),
   CHECK ((`reg_start_day` IS NULL AND `reg_end_day` IS NULL)
   XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)), 
-  FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
+  FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`team_id`, `group_id`) REFERENCES `team` (`id`, `group_id`)
+  FOREIGN KEY (`team_id`, `group_id`) REFERENCES `team` (`team_id`, `group_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-ALTER TABLE `event` AUTO_INCREMENT = 10000;
-
 CREATE UNIQUE INDEX `event_id_index`
-ON `event` (`id`); 
+ON `event` (`event_id`); 
 
 CREATE TABLE `participates_in` (
   `user_email` VARCHAR(255) NOT NULL,
   `event_id` INTEGER NOT NULL,
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
+  FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 

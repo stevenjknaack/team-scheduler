@@ -39,12 +39,13 @@ def create_event_request() -> Response :
     end_day: int = request.form.get('end_day')
     end_month: str = request.form.get('end_month')
     end_year: int = request.form.get('end_year')
-    
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
     # Combine the date components into a single string. Will eventually add time customization 
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
-    start_time = "9:00:00"
-    end_time = "21:00:00"
+    #start_time = "9:00:00"
+    #end_time = "21:00:00"
 
     # Retrieve user's email 
     user_email: str = session.get('email')

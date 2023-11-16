@@ -31,14 +31,14 @@ def create_event_request() -> Response :
     # Get event data from the HTML form 
     event_type = request.args.get('type', 'group')
 
-    event_name: str = request.args.get('event_name')
+    event_name: str = request.form.get('event_name')
     event_description: str = request.form.get('event_description')
-    start_day = request.form.get('start_day')
-    start_month = request.form.get('start_month')
-    start_year = request.form.get('start_year')
-    end_day = request.form.get('end_day')
-    end_month = request.form.get('end_month')
-    end_year = request.form.get('end_year')
+    start_day: int = request.form.get('start_day')
+    start_month: str = request.form.get('start_month')
+    start_year: int = request.form.get('start_year')
+    end_day: int = request.form.get('end_day')
+    end_month: str = request.form.get('end_month')
+    end_year: int = request.form.get('end_year')
     
     # Combine the date components into a single string. Will eventually add time customization 
     start_date = f"{start_year}-{start_month}-{start_day}"

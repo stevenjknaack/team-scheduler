@@ -134,6 +134,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
+    var createGroupEventBtn = document.getElementById('createGroupEventButton');
+    if (createGroupEventBtn) {
+        createGroupEventBtn.addEventListener('click', function () {
+            window.location.href = '/create-event?type=group';
+        });
+    }
+
+    // Had to name it like this because of HTML. TODO: Change HTML and JS to have better representation of buttons
+    var createTeamEventBtn = document.getElementById('createTeamEventButton');
+    // Check if the element is not null before adding the event listener
+    if (createTeamEventBtn) {
+        createTeamEventBtn.addEventListener('click', function () {
+            // Redirect to create-event route with a parameter indicating it's a team event
+            window.location.href = '/create-event?type=team';
+        });
+    } 
 
     // Add functionality for promote and demote buttons
     // This pseudocode needs to be linked to actual event handlers that perform the promotion/demotion

@@ -28,7 +28,7 @@ def generate_teams() -> Response :
     # return succesful Jquery 
 
 @teams_blueprint.route('/manual_create_teams', methods=['POST'])
-def create_team() -> str:
+def create_team() -> Response:
     """
     This Method will allow for creating a team manually, without needing time availabilty. A user who 
     creates a team can give a name to the team and insert people manually into it by providing their email.
@@ -39,4 +39,4 @@ def create_team() -> str:
     # Commit team to DB 
     # Commit participants into DB 
     # Return succesful JQuery 
-    return "str"
+  

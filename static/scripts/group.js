@@ -101,7 +101,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
             peopleModal.style.display = 'none';
         }
     });
-
+    var createGroupEventBtn = document.getElementById('createGroupButton');
+    createGroupEventBtn.addEventListener('click', function () {
+    // Redirect to create-event route with a parameter indicating it's a group event
+    window.location.href = '/create-event?type=team';
+    });
 
     // Function for searching emails
     window.searchEmails = function () {
@@ -134,6 +138,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
+    var createGroupEventBtn = document.getElementById('createGroupEventButton');
+    createGroupEventBtn.addEventListener('click', function () {
+    // Redirect to create-event route with a parameter indicating it's a group event
+    window.location.href = '/create-event?type=group';
+    });
+    var createGroupEventBtn = document.getElementById('createGroupButton');
+    createGroupEventBtn.addEventListener('click', function () {
+    // Redirect to create-event route with a parameter indicating it's a group event
+    window.location.href = '/create-event?type=team';
+    });
 
     // Add functionality for promote and demote buttons
     // This pseudocode needs to be linked to actual event handlers that perform the promotion/demotion

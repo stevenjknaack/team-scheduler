@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <h1>Customizable Event Page</h1>
-        <form action="/create-event-request" method="post">  <!-- Adjust the action attribute to your Flask route -->
+        <form action="/create-event-request?type={{ event_type }}" method="post">
             <div class="form-group">
                 <label for="event_name">Event Name:</label>
                 <input type="text" id="event_name" name="event_name" placeholder="Enter event name" required>
@@ -132,7 +132,7 @@
                 </select>
             </div>
             <div class="navbar-right">
-                <button type="submit" id="save" href="{{ url_for('index') }}" class="btn btn-danger">Save Event</button>
+                <button type="submit" id="save" class="btn btn-danger">Save Event</button>
             </div>
         </form>
     </div>

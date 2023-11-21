@@ -1,6 +1,11 @@
+/* 
+ * for documentation see recs/specs doc 
+ * https://docs.google.com/document/d/1mabdPAdAYkwTHhWAPKwwtpW1em9ZWwXFY0fU4rzcjpQ/edit?usp=sharing 
+ *
+ */
+
 CREATE DATABASE `10stars`;
 USE `10stars`;
-/*ADD Link to docs, change user primary key*/
 
 CREATE TABLE `user` (
   `email` VARCHAR(255) PRIMARY KEY,

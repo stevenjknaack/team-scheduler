@@ -2,17 +2,16 @@
 
 # setup (see below for help)
  0. open terminal in vs code
- 1. navigate to backend folder and create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
- 2. install flask, python connector, cryptographic dependencies, and environmental variables
+ 1. create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
+ 2. install flask related modules, cryptographic dependencies, environmental variables, and mypy
 
 # to start app
- 0. open local terminal, login "ssh -L localhost:63306:localhost:63306 <username>@cs506-team-10.cs.wisc.edu"
+ 0. open local terminal, login "ssh -L `<host>`:`<port>`:`<host>`:`<port>` `<username>`@`<cs_address>`"
  1. open visual studio terminal
- 2. navigate to backend folder
- 3. activate venv if not active
- 3.5. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
- 4. type 'py app.py' to launch backend (for people using python3: python3 app.py)
- 5. open up "localhost:6969" in a browser
+ 2. activate venv if not active
+ 3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
+ 4. use 'py backend/app.py' to launch backend (or with python3: python3 backend/app.py)
+ 5. open up "localhost:`<flask_port>`" in a browser
 
 # to run the unit testing
   - python -m unittest discover
@@ -31,12 +30,10 @@
 # starting venv on mac
   source myvenv/bin/activate
 
-# install Flask (in venv)
+# install Flask related modules (in venv)
   pip install -U Flask
   pip install flask flask-cors
-
-# install python SQL Connector (in venv)
-  python -m pip install mysql-connector-python 
+  pip install -U Flask-SQLAlchemy
 
 # install cryptographic dependencies (in venv)
   pip install pyopenssl
@@ -45,22 +42,23 @@
 # install environmental variables (in venv)
   pip install python-dotenv
 
-# if there's an error connecting to the database, it may need to be created again
-  0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 
-    ensure you're in a directory with 10stars.yml 
-  1. run "docker ps" and see if it is up and running, continue if not
-  2. create sql server 10stars.yml "docker compose -f 10stars.yml -p 10stars up -d"
-  3. connect to it "mysql -h localhost -P 63306 --protocol=TCP -u root -p"
-  4. copy and paste contents of db_setup.txt, press enter, should be no errors
-  5. quit terminal
+# install mypy
+  pip install mypy
 
 # helpful links
-  - Standard Document we followed:
-      [Standard Document](https://docs.google.com/document/d/1_WsgEIjBhdkJ2me_Bu8Fjdv6UBOZOUNW/edit)
-  - frontend-backend flask help: 
-      https://tms-dev-blog.com/python-backend-with-javascript-frontend-how-to/#Prerequisites
-  - python to mysql help:
-      https://www.w3schools.com/nodejs/nodejs_mysql.asp
+  - our documentation:
+      https://docs.google.com/document/d/1_WsgEIjBhdkJ2me_Bu8Fjdv6UBOZOUNW/edit (standards)
+      https://docs.google.com/document/d/1mabdPAdAYkwTHhWAPKwwtpW1em9ZWwXFY0fU4rzcjpQ/edit?usp=sharing (recs/specs)
+  - flask help:
+      https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world (flask megatutorial)
+  - flask-sqlalchemy help: 
+      https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/quickstart/ (quick start)
+      https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html# (ORM basics)
+      https://docs.sqlalchemy.org/en/20/orm/queryguide/index.html (querying with ORM)
+  - typing hinting/mpy help:
+      https://mypy.readthedocs.io/en/stable/index.html (mypy)
+      https://docs.python.org/3/library/typing.html (typing)
+      https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html (typing cheat sheat)
   - venv help:
       https://python.land/virtual-environments/virtualenv
   - unit testing in python/flask

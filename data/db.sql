@@ -55,7 +55,7 @@ CREATE TABLE `team` (
   `name` VARCHAR(50),
   `description` TEXT,
   `group_id` INTEGER NOT NULL,
-  UNIQUE (`id`, `group_id`),
+  UNIQUE (`id`, `group_id`), /* unnecessary */
   FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 );

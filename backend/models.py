@@ -324,4 +324,4 @@ class Event(Base) :
         self.team_id = team_id
 
     def __repr__(self) -> str :
-        return f'Group(id: {self.id}; name: {self.name})'
+        return f'Event(id: {self.id}; name: {self.name})'

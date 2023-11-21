@@ -74,16 +74,27 @@ def profile() -> str | Response:
     events = None
     return render_template('profile.html', username=username, events=events)
 
-
 @auth_blueprint.route('/home')
-def home() -> str :
+def home() -> Response:
     """
     Gets groups and events owned by user (use get_user_events and get_user_groups) 
-        and return to JS, which then executes
+    and return to JS, which then executes
     """
     if 'username' not in session:
         return redirect(url_for('auth.index'))
-    return render_template('home.html', username=session['username'])
+    email: str = session.get('email')
+    
+    # Use the SQLAlchemy query attribute for Membership
+
+    user_memberships = current_app.db.session.scalars(current_app.db.select(Membership).filter_by(user_email=email))
+    if user_memberships:
+        user_groups = [membership.group for membership in user_memberships]
+        return render_template('home.html', username=session.get('username'), user_groups=user_groups)
+    else: 
+        return render_template('home.html', username=session['username'])
+    
+
+
 
 @auth_blueprint.route('/signup')
 def signup() -> str | Response :
@@ -135,4 +146,5 @@ def signup_request() -> Response:
 
     # notify success
     return jsonify(status='success')
+
 

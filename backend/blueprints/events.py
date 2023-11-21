@@ -5,6 +5,7 @@ from models import *
 from typing import List, Tuple
 from sqlalchemy import text
 
+
 events_blueprint: Blueprint = Blueprint('events', __name__, 
                                         template_folder='../../templates', 
                                         static_folder='../../static')
@@ -19,6 +20,7 @@ def create_event() -> str | Response :
 
 @events_blueprint.route('/create-event-request', methods=['POST'])
 def create_event_request() -> Response :
+    from blueprints.groups import is_group_admin
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -44,8 +46,7 @@ def create_event_request() -> Response :
     # Combine the date components into a single string. Will eventually add time customization 
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
-    #start_time = "9:00:00"
-    #end_time = "21:00:00"
+
 
     # Retrieve user's email 
     user_email: str = session.get('email')
@@ -56,7 +57,7 @@ def create_event_request() -> Response :
         # Retrieve group_id
         group_query = text("SELECT group_id FROM in_group WHERE user_email = :user_email")
         group_result = db_session.execute(group_query, {'user_email': user_email}).fetchone()
-
+        #group_id_query = db_session.scalars((InGroup.group_id).filter_by(user_email=user_email))
 
         if group_result is None:
             # No existing group_id, perform insert without group_id
@@ -78,8 +79,11 @@ def create_event_request() -> Response :
             else:
                 # Extract team_id from team_result
                 team_id = team_result[0]
-
-        edit_permission = 'group_admin'
+        membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+        if membership and membership.role == 'owner':
+            edit_permission = 'group_admin'
+        else:
+            return redirect(url_for('auth.home'))
 
         # Create and add the Event to the session
         new_event = Event(

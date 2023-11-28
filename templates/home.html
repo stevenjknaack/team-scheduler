@@ -67,27 +67,14 @@
                 <button id="showEvents">Events</button>
             </div>
             <!-- Box to display the groups -->
-            <div class="groups-box">
-                <h1>GROUPS</h1>
-                <div class="group admin-group" data-group-url="/group">
-                    <!-- admin group -->
-                    <h2>Admin Group 1</h2>
-                    <p>Members: 25</p>
-                    <p>Latest activity: 2 hours ago</p>
-                </div>
-                <div class="group participant-group">
-                    <!-- participant group -->
-                    <h2>Participant Group 1</h2>
-                    <p>Members: 10</p>
-                    <p>Latest activity: 1 day ago</p>
-                </div>
-                <div class="group participant-group">
-                    <!-- participant group -->
-                    <h2>Participant Group 1</h2>
-                    <p>Members: 10</p>
-                    <p>Latest activity: 1 day ago</p>
-                </div>
+            {% for group in user_groups %}
+            <div class="group {% if group.memberships[0].role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{ url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
+                <!-- Update the logic here based on the user's role -->
+                <h2>{{ group.name }}</h2>
+                <p>Members: {{ group.memberships | length }}</p>
+                <p>group ID: {{ group.id }}</p>
             </div>
+        {% endfor %}
             <!-- Box to display the events -->
             <div class="events-box">
                 <h1>EVENTS</h1>

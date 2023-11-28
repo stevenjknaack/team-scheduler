@@ -3,14 +3,17 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 from models import *
 from blueprints.events import create_event, add_participant_to_event
+from sqlalchemy import select
+
+from sqlalchemy.orm import selectinload
 
 groups_blueprint: Blueprint = Blueprint('groups', __name__, 
                                         template_folder='../../templates', 
                                         static_folder='../../static')
 
-@groups_blueprint.route('/group')
-def go_to_group_page() -> Response:
-    return render_template('group.html')
+#@groups_blueprint.route('/group')
+#def go_to_group_page() -> Response:
+#    return render_template('group.html')
 
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
@@ -159,3 +162,29 @@ def create_group_event(group_id: int) -> Response:
         return jsonify({"status": "success", "message": "Group event created successfully."}), 201
     else:
         return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500
+
+@groups_blueprint.route('/group/<int:group_id>')
+def group_page(group_id):
+    # Fetch the group details based on the group_id
+    group = current_app.db.session.get(Group, group_id)
+    
+    if 'email' in session:
+        user_email = session['email']
+
+        # Check if the user is a member of the group
+        is_member = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+
+        if group and is_member:
+            # Render the group page with the group details
+
+            user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id = group_id))
+           
+            user_events = [event for event in user_events_result]
+
+            return render_template('group.html', group=group, user=user_email, user_events=user_events)
+        else:
+        # Redirect to the home page or show an error page
+            return redirect(url_for('auth.home'))
+    else:
+        # Redirect to the home page or show an error page
+        return redirect(url_for('auth.home'))

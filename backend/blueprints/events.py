@@ -5,20 +5,23 @@ from models import *
 from typing import List, Tuple
 from sqlalchemy import text
 
+
 events_blueprint: Blueprint = Blueprint('events', __name__, 
                                         template_folder='../../templates', 
                                         static_folder='../../static')
 
-@events_blueprint.route('/create-event', methods=['GET'])
-def create_event() -> str | Response :
+@events_blueprint.route('/create-event/<int:group_id>', methods=['GET'])
+def create_event(group_id) -> str | Response :
 
     if 'username' not in session :
         return redirect(url_for(''))
     event_type = request.args.get('type', 'group')
-    return render_template('create_event.html', username=session['username'], event_type=event_type)
+    return render_template('create_event.html', username=session['username'], event_type=event_type, group_id=group_id)
 
-@events_blueprint.route('/create-event-request', methods=['POST'])
-def create_event_request() -> Response :
+@events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
+def create_event_request(group_id) -> Response :
+    from blueprints.groups import is_group_admin
+    print(group_id)
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -44,26 +47,12 @@ def create_event_request() -> Response :
     # Combine the date components into a single string. Will eventually add time customization 
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{end_year}-{end_month}-{end_day}"
-    #start_time = "9:00:00"
-    #end_time = "21:00:00"
+
 
     # Retrieve user's email 
     user_email: str = session.get('email')
     if user_email:
         db_session = current_app.db.session
-        
-        
-        # Retrieve group_id
-        group_query = text("SELECT group_id FROM in_group WHERE user_email = :user_email")
-        group_result = db_session.execute(group_query, {'user_email': user_email}).fetchone()
-
-
-        if group_result is None:
-            # No existing group_id, perform insert without group_id
-            group_id = None
-        else:
-            # Extract group_id from group_result
-            group_id = group_result[0]
 
         if event_type == 'group':
             team_id = None
@@ -78,8 +67,11 @@ def create_event_request() -> Response :
             else:
                 # Extract team_id from team_result
                 team_id = team_result[0]
-
-        edit_permission = 'group_admin'
+        membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+        if membership and membership.role == 'owner':
+            edit_permission = 'group_admin'
+        else:
+            return redirect(url_for('auth.home'))
 
         # Create and add the Event to the session
         new_event = Event(

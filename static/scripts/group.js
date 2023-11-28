@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             } else {
                 console.error('Group ID not found in the URL.');
                 // Handle the case where group ID is not found in the URL
-                // You can choose to redirect with a default value or handle it differently
             }
         });
     }

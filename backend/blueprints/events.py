@@ -21,7 +21,6 @@ def create_event(group_id) -> str | Response :
 @events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
 def create_event_request(group_id) -> Response :
     from blueprints.groups import is_group_admin
-    print("group_id:")
     print(group_id)
     """
     This method collects the data inputed by the creator of an event and inserts the information
@@ -54,19 +53,6 @@ def create_event_request(group_id) -> Response :
     user_email: str = session.get('email')
     if user_email:
         db_session = current_app.db.session
-        
-        
-        # Retrieve group_id
-        #group_query = text("SELECT group_id FROM in_group WHERE user_email = :user_email")
-        #group_result = db_session.execute(group_query, {'user_email': user_email}).fetchone()
-        #group_id_query = db_session.scalars((InGroup.group_id).filter_by(user_email=user_email))
-
-        #if group_result is None:
-            # No existing group_id, perform insert without group_id
-         #   group_id = None
-       # else:
-            # Extract group_id from group_result
-        #    group_id = group_result[0]
 
         if event_type == 'group':
             team_id = None

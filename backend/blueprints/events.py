@@ -10,17 +10,19 @@ events_blueprint: Blueprint = Blueprint('events', __name__,
                                         template_folder='../../templates', 
                                         static_folder='../../static')
 
-@events_blueprint.route('/create-event', methods=['GET'])
-def create_event() -> str | Response :
+@events_blueprint.route('/create-event/<int:group_id>', methods=['GET'])
+def create_event(group_id) -> str | Response :
 
     if 'username' not in session :
         return redirect(url_for(''))
     event_type = request.args.get('type', 'group')
-    return render_template('create_event.html', username=session['username'], event_type=event_type)
+    return render_template('create_event.html', username=session['username'], event_type=event_type, group_id=group_id)
 
-@events_blueprint.route('/create-event-request', methods=['POST'])
-def create_event_request() -> Response :
+@events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
+def create_event_request(group_id) -> Response :
     from blueprints.groups import is_group_admin
+    print("group_id:")
+    print(group_id)
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -55,16 +57,16 @@ def create_event_request() -> Response :
         
         
         # Retrieve group_id
-        group_query = text("SELECT group_id FROM in_group WHERE user_email = :user_email")
-        group_result = db_session.execute(group_query, {'user_email': user_email}).fetchone()
+        #group_query = text("SELECT group_id FROM in_group WHERE user_email = :user_email")
+        #group_result = db_session.execute(group_query, {'user_email': user_email}).fetchone()
         #group_id_query = db_session.scalars((InGroup.group_id).filter_by(user_email=user_email))
 
-        if group_result is None:
+        #if group_result is None:
             # No existing group_id, perform insert without group_id
-            group_id = None
-        else:
+         #   group_id = None
+       # else:
             # Extract group_id from group_result
-            group_id = group_result[0]
+        #    group_id = group_result[0]
 
         if event_type == 'group':
             team_id = None

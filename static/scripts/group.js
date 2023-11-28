@@ -137,7 +137,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var createGroupEventBtn = document.getElementById('createGroupEventButton');
     if (createGroupEventBtn) {
         createGroupEventBtn.addEventListener('click', function () {
-            window.location.href = '/create-event?type=group';
+            // Extract the group ID from the current URL
+            var currentUrl = window.location.href;
+            var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+
+            if (groupIdMatch && groupIdMatch[1]) {
+                var group_id = groupIdMatch[1];
+
+                // Redirect to create-event with the extracted group ID
+                window.location.href = `/create-event/${group_id}?type=group`;
+            } else {
+                console.error('Group ID not found in the URL.');
+                // Handle the case where group ID is not found in the URL
+                // You can choose to redirect with a default value or handle it differently
+            }
         });
     }
 

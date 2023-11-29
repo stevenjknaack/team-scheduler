@@ -2,7 +2,7 @@
 
 ## setup (see below for help)
  0. open terminal in vs code
- 1. [create/activate venv](#installing-virtual-environment-recommended-not-required-may-need---user-flag) 
+ 1. [create/activate venv](#installing-virtual-environment-recommended) 
  (DO NOT PUSH venv FOLDER TO GIT)
  2. install [flask related modules](#install-flask-related-modules-in-venv), 
 [cryptographic dependencies](#install-cryptographic-dependencies-in-venv), 
@@ -23,7 +23,7 @@ and [mypy](#install-mypy)
 
 ## help
 
-- ### installing virtual environment (recommended, not required), may need --user flag 
+- ### installing virtual environment (recommended)
   ```
   py -m pip install --user virtualenv
   ```

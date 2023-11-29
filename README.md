@@ -67,9 +67,9 @@ and [mypy](#install-mypy)
   pip install mypy
   ```
 - ### you can also install all at once (at the project root file)
- ```
- pip install -r backend/requirements.txt
- ```
+  ```
+  pip install -r backend/requirements.txt
+  ```
 
 ## helpful links
   - our documentation:

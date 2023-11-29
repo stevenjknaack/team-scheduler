@@ -2,13 +2,17 @@
 
 ## setup (see below for help)
  0. open terminal in vs code
- 1. create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
- 2. install flask related modules, cryptographic dependencies, environmental variables, and mypy
+ 1. [create/activate venv](#installing-virtual-environment-recommended-not-required-may-need---user-flag) 
+ (DO NOT PUSH venv FOLDER TO GIT)
+ 2. install [flask related modules](#install-flask-related-modules-in-venv), 
+[cryptographic dependencies](#install-cryptographic-dependencies-in-venv), 
+[environmental variables](#install-environmental-variables-in-venv), 
+and [mypy](#install-mypy)
 
 ## to start app
  0. open local terminal, login `ssh -L <host>:<port>:<host>:<port> <username>@<cs_address>`
  1. open visual studio terminal
- 2. activate venv if not active
+ 2. [activate venv](#starting-venv-in-windows-with-powershellvisual-studio-terminal) if not active
  3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
  4. use `py backend/app.py` to launch backend (or with python3: `python3 backend/app.py`)
  5. open up `localhost:<flask_port>` in a browser
@@ -19,46 +23,46 @@
 
 ## help
 
-- installing virtual environment (recommended, not required), may need --user flag 
+- ### installing virtual environment (recommended, not required), may need --user flag 
   ```
   py -m pip install --user virtualenv
   ```
 
-- create new venv environment (in any subfolder but root is recommended)
+- ### create new venv environment (in any subfolder but root is recommended)
   ```
   python -m venv venv
   ```
 
-- starting venv in windows with powershell/visual studio terminal
+- ### starting venv in windows with powershell/visual studio terminal
   ```
   Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
   venv\Scripts\Activate.ps1
   ```
 
-- starting venv on mac
+- ### starting venv on mac
   ```
   source myvenv/bin/activate
   ```
 
-- install Flask related modules (in venv)
+- ### install Flask related modules (in venv)
   ```
   pip install -U Flask
   pip install flask flask-cors
   pip install -U Flask-SQLAlchemy
   ```
 
-- install cryptographic dependencies (in venv)
+- ### install cryptographic dependencies (in venv)
   ```
   pip install pyopenssl
   pip install bcrypt
   ```
 
-- install environmental variables (in venv)
+- ### install environmental variables (in venv)
   ```
   pip install python-dotenv
   ```
 
-- install mypy
+- ### install mypy
   ```
   pip install mypy
   ```

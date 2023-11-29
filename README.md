@@ -1,11 +1,9 @@
 # Team Scheduler
----
 
 ## setup (see below for help)
  0. open terminal in vs code
  1. create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
  2. install flask related modules, cryptographic dependencies, environmental variables, and mypy
- ---
 
 ## to start app
  0. open local terminal, login "ssh -L `<host>`:`<port>`:`<host>`:`<port>` `<username>`@`<cs_address>`"
@@ -14,12 +12,10 @@
  3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
  4. use 'py backend/app.py' to launch backend (or with python3: python3 backend/app.py)
  5. open up "localhost:`<flask_port>`" in a browser
- ---
 
 ## to run the unit testing
   - python -m unittest discover
   - Other possible command: (for people using python3: remove _init_.py) python3 -m unittest my_tests -v (after locating at the test folder)
-  ---
 
 ## help
 
@@ -50,7 +46,6 @@
 
 ### install mypy
   - pip install mypy
----
 
 ## helpful links
   - our documentation:

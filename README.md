@@ -6,46 +6,62 @@
  2. install flask related modules, cryptographic dependencies, environmental variables, and mypy
 
 ## to start app
- 0. open local terminal, login "ssh -L `<host>`:`<port>`:`<host>`:`<port>` `<username>`@`<cs_address>`"
+ 0. open local terminal, login `ssh -L <host>:<port>:<host>:<port> <username>@<cs_address>`
  1. open visual studio terminal
  2. activate venv if not active
  3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
- 4. use 'py backend/app.py' to launch backend (or with python3: python3 backend/app.py)
- 5. open up "localhost:`<flask_port>`" in a browser
+ 4. use `py backend/app.py` to launch backend (or with python3: `python3 backend/app.py`)
+ 5. open up `localhost:<flask_port>` in a browser
 
 ## to run the unit testing
-  - python -m unittest discover
-  - Other possible command: (for people using python3: remove _init_.py) python3 -m unittest my_tests -v (after locating at the test folder)
+  - `python -m unittest discover`
+  - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
 
 ## help
 
-### installing virtual environment (recommended, not required), may need --user flag 
-  - py -m pip install --user virtualenv
+- installing virtual environment (recommended, not required), may need --user flag 
+  ```
+  py -m pip install --user virtualenv
+  ```
 
-### create new venv environment (in any subfolder but root is recommended)
-  - python -m venv venv
+- create new venv environment (in any subfolder but root is recommended)
+  ```
+  python -m venv venv
+  ```
 
-### starting venv in windows with powershell/visual studio terminal 
-  - Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
-  - venv\Scripts\Activate.ps1 
+- starting venv in windows with powershell/visual studio terminal
+  ```
+  Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+  venv\Scripts\Activate.ps1
+  ```
 
-### starting venv on mac
-  - source myvenv/bin/activate
+- starting venv on mac
+  ```
+  source myvenv/bin/activate
+  ```
 
-### install Flask related modules (in venv)
-  - pip install -U Flask
-  - pip install flask flask-cors
-  - pip install -U Flask-SQLAlchemy
+- install Flask related modules (in venv)
+  ```
+  pip install -U Flask
+  pip install flask flask-cors
+  pip install -U Flask-SQLAlchemy
+  ```
 
-### install cryptographic dependencies (in venv)
-  - pip install pyopenssl
-  - pip install bcrypt
+- install cryptographic dependencies (in venv)
+  ```
+  pip install pyopenssl
+  pip install bcrypt
+  ```
 
-### install environmental variables (in venv)
-  - pip install python-dotenv
+- install environmental variables (in venv)
+  ```
+  pip install python-dotenv
+  ```
 
-### install mypy
-  - pip install mypy
+- install mypy
+  ```
+  pip install mypy
+  ```
 
 ## helpful links
   - our documentation:

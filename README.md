@@ -18,7 +18,7 @@ and [mypy](#install-mypy)
  5. open up `localhost:<flask_port>` in a browser
 
 ## to run the unit testing
-  - `python -m unittest discover`
+  - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)
   - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
 
 ## help

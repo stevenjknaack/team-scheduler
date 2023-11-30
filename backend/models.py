@@ -188,7 +188,6 @@ class AvailabilityBlock(Base) :
             ['sunday', 'monday', 'tuesday', 
             'wednesday', 'thursday', 'friday', 'saturday']
         """
-        self.id = id
         self.start_day = start_day
         self.end_day = end_day
         self.start_time = start_time

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ten Star User Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/create_teams.css') }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts/create_teams.js') }}"></script>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Nav Bar -->
+        <nav class="navbar">
+            <!-- on the left side there will be an iamge-->
+            <div class="navbar-left">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo" />
+            </div>
+            <!-- on the right side there will be buttons-->
+            <div class="navbar-right">
+                <button class="btn btn-danger" style="display: block" onclick="window.location.href='/home';">
+                    Back
+                </button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Other Sections -->
+            <!-- Expandable Member Selection Section -->
+            <div class="section" style="position: relative;">
+                <span class="section-text" onclick="toggleMemberSelection()">Select Participants</span>
+                <!-- The rest of your content -->
+                <div id="memberSelection" style="display: none;">
+                    <div class="search-bar">
+                        <input type="text" id="searchPeople" placeholder="Search people..." onkeyup="searchPeople()">
+                        <button id="checkAll">Check All</button>
+                    </div>
+                    <div class="team-members" id="peopleContainer">
+                        {% for person in people %}
+                        <label class="member" for="chk{{ person }}">
+                            <input type="checkbox" id="chk{{ person }}" value="{{ person }}">
+                            <span class="checkmark"></span>
+                            {{ person }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <!-- Confirm button -->
+                    <button onclick="confirmParticipants()" id="confirmButton">Confirm</button>
+                </div>
+                <!-- Container for showing selected participants -->
+                <div id="selectedParticipants" style="display: none;">
+                    <!-- Selected participants will be listed here -->
+                </div>
+            </div>
+            <div class="section" style="position: relative;">
+                <span class="section-text" onclick="toggleCreateEvents()">Create Events</span>
+                <div id="createEvent" style="display: none;">
+                    <!-- Inputs for creating an event -->
+                    <select id="eventDuration">
+                        <option value="5">5 minutes</option>
+                        <option value="10">10 minutes</option>
+                        <option value="15">15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="60">1 hour</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                    <select id="eventStartDay">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Wednesday">Thursday</option>
+                        <option value="Wednesday">Friday</option>
+                        <option value="Wednesday">Saturday</option>
+                        <option value="Wednesday">Sunday</option>
+                    </select>
+
+                    <!-- Dropdown for end day -->
+                    <select id="eventEndDay">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Wednesday">Thursday</option>
+                        <option value="Wednesday">Friday</option>
+                        <option value="Wednesday">Saturday</option>
+                        <option value="Wednesday">Sunday</option>
+                    </select>
+
+                    <!-- Input for start time -->
+                    <input type="text" id="eventStartTime" placeholder="Start Time (e.g., 9:00 AM)">
+
+                    <!-- Input for end time -->
+                    <input type="text" id="eventEndTime" placeholder="End Time (e.g., 6:00 PM)">
+                    <button onclick="createCustomEvent()">Create Event</button>
+
+                </div>
+                <div id="createdEvents" style="display: none;">
+                    <!-- Added events will be listed here -->
+                </div>
+            </div>
+            <div class="section" style="position: relative;">
+                <span class="section-text" onclick="toggleRangeOfPeople()">Range of People</span>
+                <div id="rangeSelection" style="display: none;">
+                    <label for="minPeople">Minimum:</label>
+                    <select id="minPeople">
+                        <!-- Options for minimum number of people -->
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <!-- ... more options as needed ... -->
+                    </select>
+
+                    <label for="maxPeople">Maximum:</label>
+                    <select id="maxPeople">
+                        <!-- Options for maximum number of people -->
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <!-- ... more options as needed ... -->
+                    </select>
+
+                    <button onclick="confirmRange()">Confirm</button>
+                </div>
+                <!-- Container for showing confirmed range -->
+                <div id="confirmedRange" style="display: none;">
+                    <!-- Confirmed range will be listed here -->
+                </div>
+            </div>
+            <div class="section" style="position: relative;">
+                <span class="section-text" onclick=" toggleProjectOptions()">Project Options</span>
+                <div id="projectOptions" style="display: none;">
+                    <div id="projectInput">
+                        <input type="text" id="projectName" placeholder="Project Name">
+                        <textarea id="projectDescription" placeholder="Project Description"></textarea>
+                        <button onclick="createProject()">Add Project</button>
+                    </div>
+                </div>
+                <div id="projectList" style="display: none;">
+                    <!-- Added projects will be listed here -->
+                </div>
+            </div>
+            <div id="finalButton">
+                <button onclick="createTeams()">Create Teams</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

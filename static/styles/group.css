@@ -253,9 +253,7 @@ input[type="text"] {
 #invitationCode {
     display: inline-block;
     width: auto;
-    /* Adjust the width as needed, or use calc() to subtract the label's width */
     margin: 0;
-    /* Adjust margins as needed */
 }
 
 /* People Modal styles */
@@ -286,8 +284,9 @@ input[type="text"] {
     margin-left: 5px; /* Space between buttons */
 }
 
+/* hover affect */
 .back-to-group {
-    margin-bottom: 20px; /* Adjust as needed */
+    margin-bottom: 20px; 
 }
 
 .back-to-group button {

@@ -12,6 +12,11 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
 def go_to_group_page() -> Response:
     return render_template('group.html')
 
+@groups_blueprint.route('/create_team')
+def create_teams() -> Response:
+    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
+    return render_template('create_teams.html', people=people)
+
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
     """ 

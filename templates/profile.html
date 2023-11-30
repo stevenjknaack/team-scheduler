@@ -26,37 +26,9 @@
             <form action="{{ url_for('auth.logout') }}" method="post" id="logoutForm" style="display: none">
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
-            <!-- profile button -->
-            <button id="goHome" class="btn btn-danger" style="display: block">
-                Home
+            <button class="btn btn-danger" style="display: block" onclick="window.location.href='/home';">
+                Back
             </button>
-            <!-- create event button -->
-            <button id="createGroupButton" class="btn btn-danger" style="display: block">
-                Create Groups
-            </button>
-            <!-- notification button -->
-            <div class="notification-container">
-                <button class="notification-btn">Notifications</button>
-                <!-- Notification dropdown -->
-                <div class="notification-dropdown" style="display: none">
-                    <!-- Sample notification item -->
-                    <div class="notification-item">
-                        <p>You're invited to GRo</p>
-                        <button class="accept-btn">Accept</button>
-                        <button class="decline-btn">Decline</button>
-                    </div>
-                    <div class="notification-item">
-                        <p>You're invited to [Event Name]</p>
-                        <button class="accept-btn">Accept</button>
-                        <button class="decline-btn">Decline</button>
-                    </div>
-                    <div class="notification-item">
-                        <p>You're invited to [Event Name]</p>
-                        <button class="accept-btn">Accept</button>
-                        <button class="decline-btn">Decline</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </nav>
 

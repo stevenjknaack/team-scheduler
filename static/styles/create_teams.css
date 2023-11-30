@@ -1,0 +1,469 @@
+
+body {
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #182135;
+}
+
+.wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    /* This will push logo to the left and button to the right */
+    align-items: center;
+    padding: 10px 5%;
+    background-color: #182135;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-right {
+    /* ... existing styles ... */
+    display: flex;
+    /* Ensures horizontal alignment of children */
+    align-items: center;
+    /* Vertically aligns children in the middle */
+    gap: 10px;
+    /* Creates spacing between each child item */
+}
+
+.navbar-left img {
+    width: 200px;
+    /* Adjust based on your logo's size */
+}
+
+.navbar-right button {
+    background-color: #555;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar-right button:hover {
+    background-color: #777;
+}
+
+/* Container and Sections */
+.container {
+    width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.container .section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    align-items: center;
+}
+
+.section {
+    /* Updated styles for flexbox layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    transition: all 0.3s ease; /* For smooth height transition */
+}
+
+
+
+.section-text {
+    /* Existing styles, and add cursor to indicate it's clickable */
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px; /* Space before the collapsible content */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Member Selection Styles */
+.members-box {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.members-box:hover {
+    background-color: #e9e9e9;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#peopleContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    max-height: 150px; /* Adjust this value based on your needs */
+    overflow-y: auto; /
+}
+
+.member {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #555;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+}
+
+/* Custom Checkbox Styles */
+.member input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 10px;
+    width: 10px;
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #dcdcdc;
+}
+
+.member:hover input[type="checkbox"] ~ .checkmark {
+    background-color: #ccc;
+}
+
+.member input[type="checkbox"]:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.member input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Member Selection Section */
+#memberSelection {
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 70%;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    overflow: auto;
+}
+
+.search-bar input[type="text"]:focus {
+    border-color: #555;
+}
+
+
+
+.participant {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+#selectedParticipants {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    flex-wrap: wrap;
+    width: 80%;
+    background: #273553;
+}
+
+/* Style for the event creation button */
+#memberSelection button{
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#memberSelection button:hover {
+    background-color: #777;
+}
+
+
+
+#expandButton {
+    padding: 5px; /* Adjust padding as needed */
+    border: none;
+    background: none; /* Remove background to only show the icon */
+    cursor: pointer;
+    display: inline-block; /* Add display type for proper sizing */
+    line-height: 1; /* Remove any extra line-height */
+    margin: 0; /* Remove any default margin */
+    vertical-align: bottom; /* Aligns the button to the top of the line */
+}
+
+
+.button-container{
+    padding:10px
+}
+
+/* Event Creation Section */
+#createEvent {
+    display: none; /* Initially hidden */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    width: 70%
+}
+
+/* Style for the dropdowns and inputs */
+#createEvent select, #createEvent input[type="text"] {
+    width: 100%; /* Full width for better responsiveness */
+    padding: 8px 10px;
+    margin-bottom: 10px; /* Spacing between fields */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in width */
+    font-size: 16px;
+}
+
+/* Style for the event creation button */
+#createEvent button{
+    margin-top: 10px;
+    width: 60%;
+    padding: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#createEvent button:hover {
+    background-color: #777;
+}
+
+/* Container for showing created events */
+#createdEvents {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px; /* Set a max-height for scrollability */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* event block */
+.event {
+    display: block; /* Ensures each event is on its own line */
+    background-color: #555; /* Light background color for the event */
+    border: 1px solid #ccc; /* Border for the event block */
+    padding: 8px; /* Some padding inside the event block */
+    margin-bottom: 10px; /* Space between event blocks */
+    border-radius: 4px; /* Optional: Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Adding some shadow for depth */
+}
+
+
+#rangeSelection {
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 70%;
+}
+
+#rangeSelection select {
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+#projectOptions {
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+#projectOptions input, #projectOptions textarea {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#projectOptions button {
+    padding: 5px 10px;
+    margin-top: 5px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#projectList{
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px; /* Set a max-height for scrollability */
+    overflow-y: auto; /* Enable vertical scrolling */
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 80%;
+}
+
+.project {
+    display: block; /* Ensures each event is on its own line */
+    background-color: #555; /* Light background color for the event */
+    border: 1px solid #ccc; /* Border for the event block */
+    padding: 8px; /* Some padding inside the event block */
+    margin-bottom: 10px; /* Space between event blocks */
+    border-radius: 4px; /* Optional: Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Adding some shadow for depth */
+}
+
+
+#eventDuration, #eventStartDay, #eventEndDay, #eventStartTime, #eventEndTime{
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+button:hover {
+    background-color: #45a049;
+}
+
+.delete-btn {
+    float: right; /* Position the delete button to the right */
+    cursor: pointer; /* Change cursor on hover */
+    color: red; /* Make the delete button stand out */
+    margin-left: 5px; /* Space from the event text */
+}
+
+
+.event:hover .delete-btn {
+    color: darkred; /* Change color on hover for better UX */
+}
+
+.range {
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#confirmedRange {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #273553;
+}
+
+
+#rangeSelection button{
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#rangeSelection button:hover {
+    background-color: #777;
+}
+
+#finalButton button{
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#finalButton button:hover {
+    background-color: #777;
+}

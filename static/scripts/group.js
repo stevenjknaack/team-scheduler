@@ -1,31 +1,65 @@
 "use strict";
 
-// Variable outside to store the invitation code
+/**
+ * Global variable to store the generated invitation code.
+ * @type {string|null}
+ */
 var invitationCodeGenerated = null;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-
-    // ... other code ...
-
-    // Get all team boxes
+    
+    
+    /**
+     * Functionality: Team box click
+     * Attaches click event listeners to all elements with class 'team-box'.
+     * On click, redirects to the team's page based on the data attribute 'data-team-url'.
+     */
     var teamBoxes = document.querySelectorAll('.team-box');
-
-    // Add click event listener to each team box
     teamBoxes.forEach(function (box) {
         box.addEventListener('click', function () {
-            // Redirect to the team's page
             var teamUrl = box.getAttribute('data-team-url');
+            console.log('this is url', teamUrl)
             window.location.href = teamUrl;
         });
     });
     
+    /**
+     * Functionality: Inivte Button click
+     * Handle 1: closing modal when click (x) or "esc" button
+     * Handle 2: generating a unique invitation code for each group
+     * Handle 3: inserting email inputs
+     * Handle 4: sending emails functionality 
+     */
 
     var inviteModal = document.getElementById('inviteModal');
     var btn = document.getElementById('invite-btn');
     var span = document.getElementsByClassName('close-btn')[0];
     var invitationCodeInput = document.getElementById('invitationCode');
+    
+    /**
+     * Handle 1
+     * Closes the invite modal when the close button (span) is clicked.
+     */
+    span.onclick = function () {
+        inviteModal.style.display = 'none';
+    };
 
-    // When the user clicks the button, open the modal and generate code if not already generated
+    /**
+     * Handle 1
+     * Closes the invite modal when the Escape key is pressed, provided the modal is currently displayed.
+     * @param {object} event - an KeyBoardEvent
+     */
+    document.addEventListener('keydown', function(event) {
+        // Check if the key pressed is the Escape key and if the modal is displayed
+        if (event.key === 'Escape' && inviteModal.style.display === 'block') {
+            inviteModal.style.display = 'none';
+        }
+    });
+    
+    /**
+     * Handle 2
+     * Opens the invite modal and generates an invitation code if it hasn't been generated already.
+     */
     btn.onclick = function () {
         inviteModal.style.display = 'block';
         if (!invitationCodeGenerated) {
@@ -34,25 +68,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     };
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        inviteModal.style.display = 'none';
-    };
 
-    // When user clicks on "esc" button, close the modal
-    document.addEventListener('keydown', function(event) {
-        // Check if the key pressed is the Escape key and if the modal is displayed
-        if (event.key === 'Escape' && inviteModal.style.display === 'block') {
-            inviteModal.style.display = 'none';
-        }
-    });
-
-
-    // Invite participants functionality
+    // Inviting participants
     const emailInput = document.getElementById("invite-email");
     const invitedParticipants = document.getElementById("invited-participants");
     const inviteSubmitBtn = document.querySelector(".invite-submit-btn");
 
+    /**
+     * Handle 3
+     * Allows adding participant emails by pressing the Enter key.
+     * Appends entered emails to the 'invited-participants' element.
+     * @param {object} event - an KeyBoardEvent
+     */
     emailInput.addEventListener("keyup", function (event) {
         if (event.key === "Enter") {
             if (emailInput.value.trim()) {
@@ -63,47 +90,70 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     });
-
+    
+    /**
+     * Handle 4
+     * Gathers and logs the emails of all invited participants when the submit button is clicked.
+     * Closes the invite modal afterwards.
+     */
     inviteSubmitBtn.addEventListener("click", function () {
         const emails = [];
         for (let i = 0; i < invitedParticipants.children.length; i++) {
             emails.push(invitedParticipants.children[i].innerText);
         }
+        // TODO use ajax to connect to database 
         console.log(emails);
         inviteModal.style.display = "none";
     });
+    
+    
+    /**
+     * Functionality: People modal 
+     * Handle 1: opening the modal when people button clicked
+     * Handle 2: closing modal when click (x) or "esc" button
+     * Handle 3: search function
+     * Handle 4: TODO promote and demote functionality
+     */
 
 
-
-    // Get the People modal
+    // People modal handling
     var peopleModal = document.getElementById('peopleModal');
-
-    // Get the People button
     var peopleBtn = document.getElementById('people-btn');
-
-    // Get the span element that closes the People modal
     var spanClosePeople = peopleModal.getElementsByClassName('close-btn')[0];
 
-    // When the user clicks the People button, open the People modal
+    /**
+     * Handle 1
+     * Opens the people modal when the 'people-btn' is clicked.
+     */
     peopleBtn.onclick = function () {
         peopleModal.style.display = 'block';
     };
-
-    // When the user clicks on <span> (x), close the People modal
+    
+    /**
+     * Handle 2
+     * Closes the people modal when the close button (span) is clicked.
+     */
     spanClosePeople.onclick = function () {
         peopleModal.style.display = 'none';
     };
-
-    // When user clicks on "esc" button, close the modal
+    
+    /**
+     * Handle 2
+     * Closes the people modal when the Escape key is pressed
+     * @param {object} event - an KeyBoardEvent
+     */
     document.addEventListener('keydown', function(event) {
         // Check if the key pressed is the Escape key and if the modal is displayed
         if (event.key === 'Escape' && peopleModal.style.display === 'block') {
             peopleModal.style.display = 'none';
         }
     });
-
-
-    // Function for searching emails
+    
+    /**
+     * Handle 3
+     * Filters and displays email entries in 'emailList' that match the search criteria entered in 'searchEmail'.
+     * Performs a case-insensitive search.
+     */
     window.searchEmails = function () {
 
         // Declare variables for input field, filter text, list of emails, individual email entries, and loop index
@@ -135,12 +185,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     };
 
-    // Add functionality for promote and demote buttons
-    // This pseudocode needs to be linked to actual event handlers that perform the promotion/demotion
+    // TODO: Add functionality for promote and demote buttons
     /*
-    var promoteButtons = document.getElementsByClassName('promotion-btn');
-    var demoteButtons = document.getElementsByClassName('demotion-btn');
-    // Loop through buttons and assign event handlers
+        var promoteButtons = document.getElementsByClassName('promotion-btn');
+        var demoteButtons = document.getElementsByClassName('demotion-btn');
+        // Loop through buttons and assign event handlers
     */
 
 });

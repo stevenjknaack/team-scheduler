@@ -184,6 +184,34 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
+    var createGroupEventBtn = document.getElementById('createGroupEventButton');
+    if (createGroupEventBtn) {
+        createGroupEventBtn.addEventListener('click', function () {
+            // Extract the group ID from the current URL
+            var currentUrl = window.location.href;
+            var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+
+            if (groupIdMatch && groupIdMatch[1]) {
+                var group_id = groupIdMatch[1];
+
+                // Redirect to create-event with the extracted group ID
+                window.location.href = `/create-event/${group_id}?type=group`;
+            } else {
+                console.error('Group ID not found in the URL.');
+                // Handle the case where group ID is not found in the URL
+            }
+        });
+    }
+
+    // Had to name it like this because of HTML. TODO: Change HTML and JS to have better representation of buttons
+    var createTeamEventBtn = document.getElementById('createTeamEventButton');
+    // Check if the element is not null before adding the event listener
+    if (createTeamEventBtn) {
+        createTeamEventBtn.addEventListener('click', function () {
+            // Redirect to create-event route with a parameter indicating it's a team event
+            window.location.href = '/create-event?type=team';
+        });
+    } 
 
     // TODO: Add functionality for promote and demote buttons
     /*

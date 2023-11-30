@@ -1,9 +1,9 @@
 """ Test routes and functions of events.py """
-
 import pytest
-from flask import url_for, Flask, FlaskClient
+from flask import url_for, Flask
+from flask.testing import FlaskClient
 from unittest.mock import patch
-from app import create_app
+from app import create_app 
 
 @pytest.fixture
 def client() -> None :

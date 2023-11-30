@@ -1,67 +1,91 @@
 # Team Scheduler
 
-# setup (see below for help)
+## setup (see below for help)
  0. open terminal in vs code
- 1. navigate to backend folder and create/activate venv (DO NOT PUSH venv FOLDER TO GIT)
- 2. install flask, python connector, cryptographic dependencies, and environmental variables
+ 1. [create/activate venv](#installing-virtual-environment-recommended) 
+ (DO NOT PUSH venv FOLDER TO GIT)
+ 2. install [flask related modules](#install-flask-related-modules-in-venv), 
+[cryptographic dependencies](#install-cryptographic-dependencies-in-venv), 
+[environmental variables](#install-environmental-variables-in-venv), 
+and [mypy](#install-mypy)
 
-# to start app
- 0. open local terminal, login "ssh -L localhost:63306:localhost:63306 <username>@cs506-team-10.cs.wisc.edu"
+## to start app
+ 0. open local terminal, login `ssh -L <host>:<port>:<host>:<port> <username>@<cs_address>`
  1. open visual studio terminal
- 2. navigate to backend folder
- 3. activate venv if not active
- 3.5. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
- 4. type 'py app.py' to launch backend (for people using python3: python3 app.py)
- 5. open up "localhost:6969" in a browser
+ 2. [activate venv](#starting-venv-in-windows-with-powershellvisual-studio-terminal) if not active
+ 3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
+ 4. use `py backend/app.py` to launch backend (or with python3: `python3 backend/app.py`)
+ 5. open up `localhost:<flask_port>` in a browser
 
-# to run the unit testing
-  - python -m unittest discover
-  - Other possible command: (for people using python3: remove _init_.py) python3 -m unittest my_tests -v (after locating at the test folder)
+## to run the unit testing
+  - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)
+  - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
 
-# installing virtual environment (recommended, not required), may need --user flag 
+## help
+
+- ### installing virtual environment (recommended)
+  ```
   py -m pip install --user virtualenv
+  ```
 
-# create new venv environment (in any subfolder but root is recommended)
+- ### create new venv environment (in any subfolder but root is recommended)
+  ```
   python -m venv venv
+  ```
 
-# starting venv in windows with powershell/visual studio terminal 
+- ### starting venv in windows with powershell/visual studio terminal
+  ```
   Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
-  venv\Scripts\Activate.ps1 
+  venv\Scripts\Activate.ps1
+  ```
 
-# starting venv on mac
+- ### starting venv on mac
+  ```
   source myvenv/bin/activate
+  ```
 
-# install Flask (in venv)
+- ### install Flask related modules (in venv)
+  ```
   pip install -U Flask
   pip install flask flask-cors
+  pip install -U Flask-SQLAlchemy
+  ```
 
-# install python SQL Connector (in venv)
-  python -m pip install mysql-connector-python 
-
-# install cryptographic dependencies (in venv)
+- ### install cryptographic dependencies (in venv)
+  ```
   pip install pyopenssl
   pip install bcrypt
+  ```
 
-# install environmental variables (in venv)
+- ### install environmental variables (in venv)
+  ```
   pip install python-dotenv
+  ```
 
-# if there's an error connecting to the database, it may need to be created again
-  0. "ssh <username>@cs506-team-10.cs.wisc.edu" and 
-    ensure you're in a directory with 10stars.yml 
-  1. run "docker ps" and see if it is up and running, continue if not
-  2. create sql server 10stars.yml "docker compose -f 10stars.yml -p 10stars up -d"
-  3. connect to it "mysql -h localhost -P 63306 --protocol=TCP -u root -p"
-  4. copy and paste contents of db_setup.txt, press enter, should be no errors
-  5. quit terminal
+- ### install mypy
+  ```
+  pip install mypy
+  ```
+- ### you can also install all at once (at the project root file)
+  ```
+  pip install -r backend/requirements.txt
+  ```
 
-# helpful links
-  - Standard Document we followed:
-      [Standard Document](https://docs.google.com/document/d/1_WsgEIjBhdkJ2me_Bu8Fjdv6UBOZOUNW/edit)
-  - frontend-backend flask help: 
-      https://tms-dev-blog.com/python-backend-with-javascript-frontend-how-to/#Prerequisites
-  - python to mysql help:
-      https://www.w3schools.com/nodejs/nodejs_mysql.asp
+## helpful links
+  - our documentation:
+      - [standards](https://docs.google.com/document/d/1_WsgEIjBhdkJ2me_Bu8Fjdv6UBOZOUNW/edit) 
+      - [recs/specs](https://docs.google.com/document/d/1mabdPAdAYkwTHhWAPKwwtpW1em9ZWwXFY0fU4rzcjpQ/edit?usp=sharing) 
+  - flask help:
+      - [flask megatutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) 
+  - flask-sqlalchemy help: 
+      - [quick start](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/quickstart/) 
+      - [ORM basics](https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html#) 
+      - [querying with ORM](https://docs.sqlalchemy.org/en/20/orm/queryguide/index.html) 
+  - typing hinting/mpy help:
+      - [mypy](https://mypy.readthedocs.io/en/stable/index.html) 
+      - [typing](https://docs.python.org/3/library/typing.html) 
+      - [typing cheat sheat](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html) 
   - venv help:
-      https://python.land/virtual-environments/virtualenv
+      - [venv docs](https://python.land/virtual-environments/virtualenv)
   - unit testing in python/flask
-      https://realpython.com/python-testing/#testing-for-web-frameworks-like-django-and-flask
+      - [python unittest with flask](https://realpython.com/python-testing/#testing-for-web-frameworks-like-django-and-flask)

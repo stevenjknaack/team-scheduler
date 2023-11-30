@@ -2,6 +2,7 @@
 secrets.py
 mysecrets.py
 *.env
+DONTREADME.md
 
 # don't push your local venv
 venv

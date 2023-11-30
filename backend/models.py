@@ -43,6 +43,9 @@ https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html#bulk-multi
 More Comprehensive Docs
 https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html#
 
+Querying:
+https://docs.sqlalchemy.org/en/20/orm/queryguide/index.html
+
 :author: Steven Knaack
 """
 
@@ -323,4 +326,4 @@ class Event(Base) :
         self.team_id = team_id
 
     def __repr__(self) -> str :
-        return f'Group(id: {self.id}; name: {self.name})'
+        return f'Event(id: {self.id}; name: {self.name})'

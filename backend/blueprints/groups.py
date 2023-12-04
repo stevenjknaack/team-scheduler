@@ -165,26 +165,30 @@ def create_group_event(group_id: int) -> Response:
 
 @groups_blueprint.route('/group/<int:group_id>')
 def group_page(group_id):
+    """ This method is used to redirect from the home page to a group page, when the user clicks
+        on a group in their home page. The user must be a part of the group, whether a member or admin,
+        for the box to show up. It takes the groupID that matches the group, and embeds it in the URL, to identify 
+        which group it is for other actions in the future (like creating a group event).
+
+        :author: Dante Katz Andrade
+        :version: 2023.10.19
+        """
+    if 'email' not in session:
+        # Redirect to the home page
+        return redirect(url_for('auth.home'))
+    user_email = session['email']
     # Fetch the group details based on the group_id
     group = current_app.db.session.get(Group, group_id)
-    
-    if 'email' in session:
-        user_email = session['email']
+    # Check that user is a member of the group
+    is_member = current_app.db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
+    if group and is_member:
+        # Render the group page with the group details
 
-        # Check if the user is a member of the group
-        is_member = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
-
-        if group and is_member:
-            # Render the group page with the group details
-
-            user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id = group_id))
+        user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id = group_id))
            
-            user_events = [event for event in user_events_result]
+        user_events = [event for event in user_events_result]
 
-            return render_template('group.html', group=group, user=user_email, user_events=user_events)
-        else:
-        # Redirect to the home page or show an error page
-            return redirect(url_for('auth.home'))
+        return render_template('group.html', group=group, user_events=user_events)
     else:
-        # Redirect to the home page or show an error page
+    # Redirect to the home page or show an error page
         return redirect(url_for('auth.home'))

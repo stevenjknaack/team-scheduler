@@ -134,16 +134,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
+    // This handles the button click for creating event.
     var createGroupEventBtn = document.getElementById('createGroupEventButton');
+    // Check that the Button is there and recognized by the program
     if (createGroupEventBtn) {
         createGroupEventBtn.addEventListener('click', function () {
             // Extract the group ID from the current URL
             var currentUrl = window.location.href;
+            // Extract from the url 'group/id' (localhost:6969/group/id)
             var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
-
+            // Make sure that there is an element there and that there is an id element
             if (groupIdMatch && groupIdMatch[1]) {
                 var group_id = groupIdMatch[1];
-
                 // Redirect to create-event with the extracted group ID
                 window.location.href = `/create-event/${group_id}?type=group`;
             } else {
@@ -152,6 +154,37 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
     }
+    /*document.querySelectorAll(".delete-event-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            var eventId = this.getAttribute("data-event-id");
+            delete_event(eventId);
+        });
+    });*/
+    document.querySelectorAll(".delete-event-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            var eventId = this.getAttribute("data-event-id");
+            // Make an AJAX request to the delete event endpoint
+            fetch(`/delete-event/${eventId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                    
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server
+                if (data.status === 'success') {
+                    console.log('Event deleted successfully');
+                } else {
+                    console.error('Failed to delete event:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
 
     // Had to name it like this because of HTML. TODO: Change HTML and JS to have better representation of buttons
     var createTeamEventBtn = document.getElementById('createTeamEventButton');

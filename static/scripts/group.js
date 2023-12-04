@@ -184,16 +184,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
+    // This handles the button click for creating event.
     var createGroupEventBtn = document.getElementById('createGroupEventButton');
+    // Check that the Button is there and recognized by the program
     if (createGroupEventBtn) {
         createGroupEventBtn.addEventListener('click', function () {
             // Extract the group ID from the current URL
             var currentUrl = window.location.href;
+            // Extract from the url 'group/id' (localhost:6969/group/id)
             var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
-
+            // Make sure that there is an element there and that there is an id element
             if (groupIdMatch && groupIdMatch[1]) {
                 var group_id = groupIdMatch[1];
-
                 // Redirect to create-event with the extracted group ID
                 window.location.href = `/create-event/${group_id}?type=group`;
             } else {
@@ -201,6 +203,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 // Handle the case where group ID is not found in the URL
             }
         });
+    }
+    document.querySelectorAll(".delete-event-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            console.log("button clicked")
+            var eventId = this.getAttribute("data-event-id");
+            delete_event(eventId);
+        });
+    });
+    // Function to delete an event
+    function delete_event(eventId) {
+        // Extract the group ID from the current URL
+        var currentUrl = window.location.href;
+        // Extract from the url 'group/id' (localhost:6969/group/id)
+        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+        // Make sure that there is an element there and that there is an id element
+        if (groupIdMatch && groupIdMatch[1]) {
+            var group_id = groupIdMatch[1];
+                        // Redirect to create-event with the extracted group ID
+        }
+        // Send a request to the server to delete the event
+        fetch(`/delete-event/${eventId}/${group_id}`, {
+            method: "DELETE",
+        })
+            .then(function(response) {
+                if (response.ok) {
+                    // Reload the page to reflect the changes
+                    location.reload();
+                } else {
+                    console.log("Failed to delete the event.");
+                }
+            })
+            .catch(function(error) {
+                console.error("Error:", error);
+            });
     }
 
     // Had to name it like this because of HTML. TODO: Change HTML and JS to have better representation of buttons

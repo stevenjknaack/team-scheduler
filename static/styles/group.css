@@ -302,6 +302,11 @@ input[type="text"] {
     background-color: #e2e2e2; /* Slightly darker shade on hover for visual feedback */
 }
 
+.btn-container, .switch-container {
+    display: flex;
+    justify-content: center; /* Centers the content horizontally */
+    margin-top: 15px;
+}
 
 .team-members {
     display: flex; /* Use flexbox to layout team member names */

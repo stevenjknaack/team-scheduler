@@ -59,6 +59,11 @@
                                         <div class="event-members">
                                             <p>{{ event.description }}</p>
                                         </div>
+                                        <div class="event-dates">
+                                            <p>Start Date: {{ event.start_date }}</p>
+                                            <p>End Date: {{ event.end_date }}</p>
+                                        </div>
+                                        <button class="delete-event-btn" data-event-id="{{ event.id }}">Delete Event</button>
                                     </div>
                                 {% endfor %}
                             </div>

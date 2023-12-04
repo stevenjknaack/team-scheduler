@@ -21,7 +21,6 @@ def create_event(group_id) -> str | Response :
 @events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
 def create_event_request(group_id) -> Response :
     from blueprints.groups import is_group_admin
-    print(group_id)
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -56,17 +55,18 @@ def create_event_request(group_id) -> Response :
 
         if event_type == 'group':
             team_id = None
-        elif event_type == 'team':
+        #elif event_type == 'team':
             # Retrieve team_id
-            team_query = text("SELECT team_id FROM in_team WHERE user_email = :user_email")
-            team_result = db_session.execute(team_query, {'user_email': user_email}).fetchone()
+            
+            #team_query = text("SELECT team_id FROM in_team WHERE user_email = :user_email")
+            #team_result = db_session.execute(team_query, {'user_email': user_email}).fetchone()
         
-            if team_result is None:
+         #   if team_result is None:
                 # No existing team_id, perform insert without team_id
-                team_id = None
-            else:
+           #     team_id = None
+          #  else:
                 # Extract team_id from team_result
-                team_id = team_result[0]
+                #team_id = team_result[0]
         membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
         if membership and membership.role == 'owner':
             edit_permission = 'group_admin'
@@ -98,45 +98,29 @@ def create_event_request(group_id) -> Response :
         return redirect(url_for('auth.login'))
 
 
-@events_blueprint.route('/delete-event/<int:event_id>', methods=['DELETE'])
-def delete_event(event_id: int) -> Response:
+@events_blueprint.route('/delete-event/<int:event_id>/<int:group_id>', methods=['DELETE'])
+def delete_event(event_id: int, group_id: int) -> Response:
     """
     This method deletes events. It checks that the event is owned by the active user (created by them)
     and then proceeds to execute the query command to delete the event selected.
     """
-    db = None
-    cursor = db.cursor()
+    # Authenticate the user and check if they are the group admin
+    print("here")
+    user_email: str = session.get('email')
 
-    # Get the owner_id of the event 
-    cursor.execute("SELECT edit_permission FROM saved_event WHERE event_id = %s", (event_id,))
-    owner = cursor.fetchone()
-    
-    # Should not be able to delete if button isn't present, which it wouldn't be if there is no event
-    # to delete, hoowever as discussed too much security is never bad.
-    if owner is None:
-        cursor.close()
-        db.close()
-        return jsonify(status='error', message='Event not found'), 404
-
-    owner_id = owner[0]
-
+    membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+    print(membership.role)
     # Check if the user is the owner of the event 
-    if 'username' in session:
-        cursor.execute("SELECT username FROM user WHERE username = %s", (session['username'],))
-        user = cursor.fetchone()
-        if user is not None:
-            user_id = user[0]
-            if user_id == owner_id:
-                # Delete the event if user_id matches owner_id and close database 
-                cursor.execute("DELETE FROM saved_event WHERE event_id = %s", (event_id,))
-                db.commit()
-                cursor.close()
-                db.close()
-                return jsonify(status='success')
-            
-    # Close database in case of getting around the above if statements. 
-    cursor.close()
-    db.close()
+    if membership and membership.role == 'owner':
+        db_session = current_app.db.session
+        # Query the event to delete
+        event = db_session.get(Event, event_id)
+        # Delete and commit change to db
+        db_session.delete(event)
+        db_session.commit()
+        return jsonify(status='success')
+    # If user is not owner, do not delete.
+    print("here2")
     return jsonify(status='fail')
 
 @events_blueprint.route('/get-event/<int:event_id>', methods=['GET'])

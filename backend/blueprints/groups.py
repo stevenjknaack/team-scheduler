@@ -177,13 +177,15 @@ def group_page(group_id):
         # Redirect to the home page
         return redirect(url_for('auth.home'))
     user_email = session['email']
+
     # Fetch the group details based on the group_id
     group = current_app.db.session.get(Group, group_id)
+
     # Check that user is a member of the group
     is_member = current_app.db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
+
     if group and is_member:
         # Render the group page with the group details
-
         user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id = group_id))
            
         user_events = [event for event in user_events_result]

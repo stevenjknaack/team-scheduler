@@ -17,7 +17,7 @@
             </div>
             <!-- on the right side there will be a back button -->
             <div class="navbar-right">
-                <button class="btn btn-danger" onclick="window.location.href='/group';">
+                <button class="btn btn-danger" onclick="window.location.href='/group/{{group_id}}';">
                     Back
                 </button>
             </div>
@@ -88,6 +88,27 @@
                         <option value="2023">2023</option>
                         <option value="2024">2024</option>
                         <!-- Add more year options as needed -->
+                    </select>
+                    <label for="eventStartDay">Recurrence (otional):</label>
+                    <select id="eventStartDay">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Wednesday">Thursday</option>
+                        <option value="Wednesday">Friday</option>
+                        <option value="Wednesday">Saturday</option>
+                        <option value="Wednesday">Sunday</option>
+                    </select>
+
+                    <!-- Dropdown for end day -->
+                    <select id="eventEndDay">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Wednesday">Thursday</option>
+                        <option value="Wednesday">Friday</option>
+                        <option value="Wednesday">Saturday</option>
+                        <option value="Wednesday">Sunday</option>
                     </select>
                     <label for="end_day">To:</label>
                     <select id="end_day" name="end_day">

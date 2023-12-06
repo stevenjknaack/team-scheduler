@@ -21,6 +21,9 @@ and [mypy](#install-mypy)
   - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)
   - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
 
+## to run the tests for blueprints files
+  - `pytest -m pytests backend/tests ` 
+
 ## help
 
 - ### installing virtual environment (recommended)

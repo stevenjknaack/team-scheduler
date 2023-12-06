@@ -90,25 +90,27 @@
                         <!-- Add more year options as needed -->
                     </select>
                     <label for="eventStartDay">Recurrence (otional):</label>
-                    <select id="eventStartDay">
+                    <select id="eventStartDay" name="eventStartDay">
+                        <option></option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
                         <option value="Wednesday">Wednesday</option>
-                        <option value="Wednesday">Thursday</option>
-                        <option value="Wednesday">Friday</option>
-                        <option value="Wednesday">Saturday</option>
-                        <option value="Wednesday">Sunday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
                     </select>
 
                     <!-- Dropdown for end day -->
-                    <select id="eventEndDay">
+                    <select id="eventEndDay" name="eventEndDay">
+                        <option></option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
                         <option value="Wednesday">Wednesday</option>
-                        <option value="Wednesday">Thursday</option>
-                        <option value="Wednesday">Friday</option>
-                        <option value="Wednesday">Saturday</option>
-                        <option value="Wednesday">Sunday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
                     </select>
                     <label for="end_day">To:</label>
                     <select id="end_day" name="end_day">
@@ -183,7 +185,6 @@
         
         </div>
     </div>    
-    
     <script src="{{ url_for('static', filename='scripts/create_event.js') }}"></script>
 </body>
 </html>

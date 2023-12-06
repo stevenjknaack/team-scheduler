@@ -38,8 +38,8 @@ def create_event_request(group_id) -> Response :
     start_day: int = request.form.get('start_day')
     start_month: str = request.form.get('start_month')
     start_year: int = request.form.get('start_year')
-    recur_day: str = request.form.get('eventStartDay')
-    recur_end: str = request.form.get('eventEndDay')
+    reg_start_day: str = request.form.get('eventStartDay')
+    reg_end_day: str = request.form.get('eventEndDay')
     end_day: int = request.form.get('end_day')
     end_month: str = request.form.get('end_month')
     end_year: int = request.form.get('end_year')
@@ -81,6 +81,8 @@ def create_event_request(group_id) -> Response :
             description=event_description,
             start_date=start_date,
             end_date=end_date,
+            reg_start_day = reg_start_day,
+            reg_end_day = reg_end_day,
             start_time=start_time,
             end_time=end_time,
             edit_permission=edit_permission,

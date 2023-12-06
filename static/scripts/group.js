@@ -101,9 +101,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
         for (let i = 0; i < invitedParticipants.children.length; i++) {
             emails.push(invitedParticipants.children[i].innerText);
         }
-        // TODO use ajax to connect to database 
-        console.log(emails);
-        inviteModal.style.display = "none";
+
+        // make HTTP request to the Flask backend
+        fetch('/send-invitations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ emails: emails }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // return JSON response
+        })
+        .catch(error => {
+            console.error('Error: ', error); // if error, print out error
+        });
+        // console.log(emails);
+        inviteModal.style.display = "none"; // close the invite modal
     });
     
     

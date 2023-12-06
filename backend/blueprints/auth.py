@@ -3,6 +3,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 import bcrypt
 from models import *
+from typing import Union
 
 auth_blueprint: Blueprint = Blueprint('auth', __name__, 
                                       template_folder='../../templates', 
@@ -26,7 +27,7 @@ def index() -> Response:
     return redirect(url_for('auth.login'))
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
-def login() -> str | Response:
+def login() -> Union[str , Response]:
     """
     GET:
         render the login page

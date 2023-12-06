@@ -35,19 +35,12 @@ def create_event_request(group_id) -> Response :
 
     event_name: str = request.form.get('event_name')
     event_description: str = request.form.get('event_description')
-    start_day: int = request.form.get('start_day')
-    start_month: str = request.form.get('start_month')
-    start_year: int = request.form.get('start_year')
+    start_date: str = request.form.get('start_date')  # Updated
+    end_date: str = request.form.get('end_date')  # Updated
     reg_start_day: str = request.form.get('eventStartDay')
     reg_end_day: str = request.form.get('eventEndDay')
-    end_day: int = request.form.get('end_day')
-    end_month: str = request.form.get('end_month')
-    end_year: int = request.form.get('end_year')
     start_time = request.form.get('start_time')
     end_time = request.form.get('end_time')
-    # Combine the date components into a single string. Will eventually add time customization 
-    start_date = f"{start_year}-{start_month}-{start_day}"
-    end_date = f"{end_year}-{end_month}-{end_day}"
 
 
     # Retrieve user's email 
@@ -81,10 +74,10 @@ def create_event_request(group_id) -> Response :
             description=event_description,
             start_date=start_date,
             end_date=end_date,
-            reg_start_day = reg_start_day,
-            reg_end_day = reg_end_day,
-            start_time=start_time,
-            end_time=end_time,
+            reg_start_day = reg_start_day if reg_start_day else None,
+            reg_end_day = reg_end_day if reg_end_day else None,
+            start_time=start_time if start_time else None,
+            end_time=end_time if start_time else None,
             edit_permission=edit_permission,
             group_id=group_id,
             team_id=team_id
@@ -94,8 +87,8 @@ def create_event_request(group_id) -> Response :
         # Commit the changes to the database
         db_session.commit()
 
-        # Redirect to the profile page
-        return redirect(url_for('auth.home'))
+        # Redirect back to page
+        return redirect(url_for('groups.group_page', group_id=group_id))
 
     else:
         # If the user is not logged in, redirect to the login.

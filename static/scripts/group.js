@@ -184,6 +184,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
+    $("#createEventButton").click(function () {
+        $("#createEventModal").css("display", "block");
+    });
+
+    // Close create event modal
+    $(".close-btn").click(function () {
+        $("#createEventModal").css("display", "none");
+    });
+
+    // Close create event modal if clicked outside the modal
+    window.onclick = function (event) {
+        if (event.target === $("#createEventModal")[0]) {
+            $("#createEventModal").css("display", "none");
+        }
+    };
+
     // This handles the button click for creating event.
     var createGroupEventBtn = document.getElementById('createGroupEventButton');
     // Check that the Button is there and recognized by the program

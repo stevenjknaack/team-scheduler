@@ -195,7 +195,7 @@ def group_page(group_id):
            
         user_events = [event for event in user_events_result]
 
-        return render_template('group.html', group=group, user_events=user_events)
+        return render_template('group.html', group=group, user_events=user_events, group_id=group_id)
     else:
     # Redirect to the home page or show an error page
         return redirect(url_for('auth.home'))

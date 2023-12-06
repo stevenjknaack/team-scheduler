@@ -75,21 +75,27 @@
             </div>
             {% endfor %}
             <!-- Box to display the events -->
-            <div class="events-box">
-                <h1>EVENTS</h1>
-                <div class="event group-event">
-                    <!-- group event -->
-                    <h2>Group Event 1</h2>
-                    <p>Duration: 1hr</p>
-                    <p>12 participants</p>
-                </div>
-                <div class="event team-event">
-                    <!-- team event -->
-                    <h2>Team Event 1</h2>
-                    <p>Duration: 1hr</p>
-                    <p>8 participants</p>
-                </div>
-            </div>
+            {% if user_events %}
+                <ul>
+                    <div class="event-box">
+                        {% for event in user_events %}
+                            <div class="event group-event">
+                                <h3 class="event-name">{{ event.name }}</h3>
+                                <div class="event-members">
+                                    <p>{{ event.description }}</p>
+                                </div>
+                                <div class="event-dates">
+                                    <p>Start Date: {{ event.start_date }}</p>
+                                    <p>End Date: {{ event.end_date }}</p>
+                                </div>
+                                <h3 class="event-name">Group Name: {{ event.group.name }}</h3>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </ul>
+            {% else %}
+                <p>No events</p>
+            {% endif %}
         </div>
     </div>
     <!-- Create Group Modal -->

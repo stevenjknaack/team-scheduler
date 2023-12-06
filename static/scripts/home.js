@@ -43,7 +43,7 @@ $(document).ready(function () {
         // show events
         $(this).addClass("active").addClass("selected");
         $("#showGroups").removeClass("active").removeClass("selected");
-        $(".groups-box").hide();
+        $(".group").hide();
         $(".events-box").show();
     });
     // handle 2: group is click 
@@ -55,7 +55,7 @@ $(document).ready(function () {
         $(this).addClass("active").addClass("selected");
         $("#showEvents").removeClass("active").removeClass("selected");
         $(".events-box").hide();
-        $(".groups-box").show();
+        $(".group").show();
     });
 
     /**

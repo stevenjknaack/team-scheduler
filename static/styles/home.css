@@ -256,3 +256,9 @@ h1 {
   transform: translateY(-5px); /* Slightly raise the box to give a lifting effect */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Increase shadow for depth perception */
 }
+.event-name {
+    font-size: 1.2em;
+    /* Larger font size for the team name */
+    margin-bottom: 20px;
+    /* Space below the team name */
+}

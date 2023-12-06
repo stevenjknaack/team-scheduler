@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var invitationCodeInput = document.getElementById('invitationCode');
 
     // When the user clicks the button, open the modal and generate code if not already generated
+    /**
+     * We want to SWITCH this the code is just the group_id instead of unique generated code
+     */
     btn.onclick = function () {
         inviteModal.style.display = 'block';
         if (!invitationCodeGenerated) {
@@ -64,13 +67,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
+    /**
+     * This is a function that sends automated group invitation emails to addresses in the email list 
+     * using Flask-Mail API whenever the invite submit button is clicked.
+     * 
+     * @author {String} Kyle Sung
+     */
     inviteSubmitBtn.addEventListener("click", function () {
         const emails = [];
         for (let i = 0; i < invitedParticipants.children.length; i++) {
             emails.push(invitedParticipants.children[i].innerText);
         }
-        console.log(emails);
-        inviteModal.style.display = "none";
+
+        // make HTTP request to the Flask backend
+        fetch('/send-invitations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ emails: emails }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // return JSON response
+        })
+        .catch(error => {
+            console.error('Error: ', error); // if error, print out error
+        });
+        // console.log(emails);
+        inviteModal.style.display = "none"; // close the invite modal
     });
 
 

@@ -17,7 +17,7 @@
             </div>
             <!-- on the right side there will be a back button -->
             <div class="navbar-right">
-                <button class="btn btn-danger" onclick="window.location.href='/group';">
+                <button class="btn btn-danger" onclick="window.location.href='/group/{{group_id}}';">
                     Back
                 </button>
             </div>
@@ -88,6 +88,29 @@
                         <option value="2023">2023</option>
                         <option value="2024">2024</option>
                         <!-- Add more year options as needed -->
+                    </select>
+                    <label for="eventStartDay">Recurrence (otional):</label>
+                    <select id="eventStartDay" name="eventStartDay">
+                        <option></option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+
+                    <!-- Dropdown for end day -->
+                    <select id="eventEndDay" name="eventEndDay">
+                        <option></option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
                     </select>
                     <label for="end_day">To:</label>
                     <select id="end_day" name="end_day">
@@ -162,7 +185,6 @@
         
         </div>
     </div>    
-    
     <script src="{{ url_for('static', filename='scripts/create_event.js') }}"></script>
 </body>
 </html>

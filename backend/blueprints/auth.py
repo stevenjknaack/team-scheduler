@@ -89,7 +89,19 @@ def home() -> Response:
     user_memberships = current_app.db.session.scalars(current_app.db.select(Membership).filter_by(user_email=email))
     if user_memberships:
         user_groups = [membership.group for membership in user_memberships]
-        return render_template('home.html', username=session.get('username'), user_groups=user_groups)
+        # initiate list of events to render in home.html
+        user_events=[]
+        # Loop through groups, and get each event to display in the home page
+        for group in user_groups:
+            group_id = group.id
+            user_events_result = current_app.db.session.scalars(current_app.db.select(Event).filter_by(group_id = group_id))
+
+            for event in user_events_result:
+                # Only append valid events, no null events
+                if event:
+                    user_events.append(event)
+        # Render home.html with username from session, groups and events the user participates in.
+        return render_template('home.html', username=session.get('username'), user_groups=user_groups, user_events=user_events)
     else: 
         return render_template('home.html', username=session['username'])
     

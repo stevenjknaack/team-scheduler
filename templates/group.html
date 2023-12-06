@@ -30,8 +30,8 @@
                 <button id="createGroupButton" class="btn btn-danger" style="display: block" onclick="window.location.href='/create_team';">
                     Create Teams
                 </button>
-                <button id="createGroupEventButton" class="btn btn-danger" style="display: block">
-                    Create Group Events
+                <button id="createEventButton" class="btn btn-danger" style="display: block">
+                    Create Event
                 </button>
                 <button class="btn btn-danger" style="display: block" onclick="window.location.href='/home';">
                     Back
@@ -62,7 +62,10 @@
                                             <p>Start Date: {{ event.start_date }}</p>
                                             <p>End Date: {{ event.end_date }}</p>
                                         </div>
-                                        <button class="delete-event-btn" data-event-id="{{ event.id }}">Delete Event</button>
+                                        <div class="navbar-right">
+                                            <button class="navbar-right" data-event-id="{{ event.id }}">Delete Event</button>
+                                        </div>
+                                       
                                     </div>
                                 {% endfor %}
                             </div>
@@ -212,6 +215,65 @@
             </div>
         </div>
 
+    </div>
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Create Event</h2>
+            <form action="{{ url_for('events.create_event_request', group_id=group_id) }}" method="post">
+                <div class="form-group">
+                    <label for="event_name">Event Name:</label>
+                    <input type="text" id="event_name" name="event_name" placeholder="Enter event name" required>
+                </div>
+                    <div class="form-group">
+                    <label for="event_description">Event Description:</label>
+                    <input type="text" id="event_description" name="event_description" placeholder="Enter event Description" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_date">From:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                    <br>
+                    <label for="end_date">To:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                    </select>
+                    <br>
+                    <label for="eventStartDay">Recurrence (otional):</label>
+                    <br>
+                    <select id="eventStartDay" name="eventStartDay">
+                        <option></option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                    <br>
+                    <select id="eventEndDay" name="eventEndDay">
+                        <option></option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                    <br>
+
+                    <label for="avail-start" class="start-time-label">Start Time:</label>
+                    <br>
+                    <input id="start_time", name="start_time" type="time" id="avail-start" name="avail-start" required />
+                    <br>
+                    <label for="avail-end" class="end-time-label">End Time:</label>
+                    <br>
+                    <input id="end_time", name="end_time" type="time" id="avail-end" name="avail-end" required />
+                </div>
+                <div class="navbar-right">
+                    <button type="submit" id="save" class="btn btn-danger">Save Event</button>
+                </div>
+        </div>
     </div>
 </body>
 

@@ -2,6 +2,8 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 from models import *
+# from app import create_app
+from flask_mail import Mail, Message
 from blueprints.events import create_event, add_participant_to_event
 from sqlalchemy import select
 
@@ -97,9 +99,38 @@ def get_group_members(group_id: int) -> List[int] :
         cursor.close()
         db.close()
 
+@groups_blueprint.route('/get-group-id', methods=['GET'])
+def get_group_id() -> Response :
+    """ Retreives a group_id given a specified group name """
+    # get the group name from the request parameters
+    group_name = request.args.get('group_name')
+
+    # query the database to find group_id for specified group_name
+    db = None
+    cursor = db.cursor
+    cursor.execute("SELECT id from 'group' WHERE name = %s", (group_name,))
+    result = cursor.fetchone()
+
+    if result: 
+        group_id = result[0]
+        return jsonify({'group_id': group_id}) # success: return group_id
+    else: 
+        return jsonify({'error': 'Group not found'}), 404 # failure: return error response
+
 @groups_blueprint.route('/send-invitations', methods=['POST'])
 def send_invitations() -> Response :
-    """ Sends group invitations to users """
+    """ Sends group invitations to users via email using Flask-Mail API"""
+
+    # configure Flask-Mail API
+    current_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    current_app.config['MAIL_PORT'] = 587
+    current_app.config['MAIL_USE_TLS'] = True
+    current_app.config['MAIL_USE_SSL'] = False
+    current_app.config['MAIL_USERNAME'] = '10stars.scheduling@gmail.com'
+    current_app.config['MAIL_PASSWORD'] = 'ScottDaBeast2023^'
+    current_app.config['MAIL_DEFAULT_SENDER'] = '10stars.scheduling@gmail.com'
+
+    mail = Mail(current_app)
 
     # Get JSON data sent from the frontend
     data = request.get_json()
@@ -107,16 +138,16 @@ def send_invitations() -> Response :
     # Extract email addresses
     emails = data.get('emails', [])
 
-    
-    # placeholder
+    # TODO: fetch event id instead of this placeholder
     event_id = 5
 
     # connect to database
-    db = None
+    db = current_app
 
     # create a cursor 
     cursor = db.cursor()
 
+    # add all emails into the invitee list for the specific group
     for email in emails:
         query = "INSERT INTO invitee (event_id, email) VALUES (%s, %s)"
         values = (event_id, email)
@@ -130,6 +161,17 @@ def send_invitations() -> Response :
     # TODO: Process the emails, e.g., send invitation emails, save to the database, etc.
     # For now, let's just print them for demonstration purposes
     print(emails)
+
+    # sending invitation email functionality through Flask-Mail API
+
+    # for each email in email list, send an invitation email
+    for email in emails: 
+        message = Message(subject='You have been invited to a group!', recipients=[email])
+        message.body = f'You are invited to a group with ID {event_id}. Please log into the Scheduler App to accept your invitation!'
+        try: 
+            mail.send(message)
+        except Exception as e:
+            print(f'Error sending invitation email to {email}: {str(e)}')
 
     return jsonify(status='success', message='Invitations sent successfully!')
 

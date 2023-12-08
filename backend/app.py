@@ -9,6 +9,7 @@
 :author : Anwita
 """
 from flask import Flask
+from flask_mail import Mail
 from blueprints.auth import auth_blueprint
 from blueprints.events import events_blueprint
 from blueprints.groups import groups_blueprint
@@ -40,6 +41,17 @@ def create_app() -> Flask:
     app.register_blueprint(groups_blueprint)
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(teams_blueprint)
+
+    # configure Flask-Mail API
+    # app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    # app.config['MAIL_PORT'] = 587
+    # app.config['MAIL_USE_TLS'] = True
+    # app.config['MAIL_USE_SSL'] = False
+    # app.config['MAIL_USERNAME'] = '10stars.scheduling@gmail.com'
+    # app.config['MAIL_PASSWORD'] = 'ScottDaBeast2023^'
+    # app.config['MAIL_DEFAULT_SENDER'] = '10stars.scheduling@gmail.com'
+
+    # mail = Mail(app)
 
     return app
 

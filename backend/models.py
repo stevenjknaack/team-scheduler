@@ -48,6 +48,8 @@ https://docs.sqlalchemy.org/en/20/orm/queryguide/index.html
 
 :author: Steven Knaack
 """
+# mypy: disable-error-code="assignment"
+# TODO fix the above mypy error in a more useful way
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -120,7 +122,7 @@ class Membership(Base) :
 
     # define column properties
     user_email: Mapped[str] = __table__.columns['user_email']
-    group_id: Mapped[str] = __table__.columns['group_id']
+    group_id: Mapped[int] = __table__.columns['group_id']
     role: Mapped[str] = __table__.columns['role']
 
     # define relationship properties
@@ -223,14 +225,15 @@ class Group(Base) :
         """ Returns a List of just the group-level events """
         group_level_events: List['Event'] = []
 
-        for event in self.all_events :
+        for event in self.events :
             # filter out group level events
             if event.team_id is None :
                 group_level_events.append(event)
 
         return group_level_events
     
-    def __init__(self, name: str = 'Unnamed Group', description: str = None) -> None:
+    def __init__(self, name: str = 'Unnamed Group', 
+                 description: str = 'No description provided') -> None:
         self.name = name
         self.description = description
 
@@ -258,7 +261,11 @@ class Team(Base) :
     
     # methods
     def __init__(self, id: int, 
-                 name: str = 'Unnamed Team', description: str = None) -> None :
+                 name: str = 'Unnamed Team', 
+                 description: str = 'No description provided.') -> None :
+        """
+        id: steven
+        """
         self.id = id
         self.name = name
         self.description = description
@@ -284,7 +291,7 @@ class Event(Base) :
     start_time: Mapped[time] = __table__.columns['start_time']
     end_time: Mapped[time] = __table__.columns['end_time']
     edit_permission: Mapped[str] = __table__.columns['edit_permission']
-    group_id: Mapped[int] = __table__.columns['group_id']
+    group_id: Mapped[Optional[int]] = __table__.columns['group_id']
     team_id: Mapped[Optional[int]] = __table__.columns['team_id']
 
     # define relationship properties
@@ -303,9 +310,9 @@ class Event(Base) :
 
     def __init__(self, start_date: date, end_date: date, 
                  start_time: time, end_time: time, group_id: int,
-                 team_id: int = None, name: str = 'Unnamed Event',
-                 description: str = None, reg_start_day: str = None,
-                 reg_end_day: str = None, edit_permission: str = 'group_admin') -> None :
+                 team_id: Optional[int] = None, name: str = 'Unnamed Event',
+                 description: Optional[str] = None, reg_start_day: Optional[str] = None,
+                 reg_end_day: Optional[str] = None, edit_permission: str = 'group_admin') -> None :
         """ 
         Note edit_permission must be in 
             ['member', 'group_admin']

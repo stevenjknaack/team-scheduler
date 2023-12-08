@@ -32,8 +32,7 @@ def create_app() -> Flask:
     app.secret_key = os.getenv('SECRET_KEY')
     
     # initialize database
-    app.db: SQLAlchemy =\
-            configure_flask_sqlalchemy(app)
+    app.db = configure_flask_sqlalchemy(app)
     
     # register blueprints
     app.register_blueprint(auth_blueprint)
@@ -47,6 +46,6 @@ def create_app() -> Flask:
 # create and run app
 if __name__ == '__main__':
     app: Flask = create_app()
-    app.run(debug=True, port=os.getenv('FLASK_PORT'))
+    app.run(debug=True, port=int(os.getenv('FLASK_PORT')))
 
 

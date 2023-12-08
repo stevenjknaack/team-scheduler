@@ -20,7 +20,6 @@ def create_event(group_id) -> str | Response :
 
 @events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
 def create_event_request(group_id) -> Response :
-    from blueprints.groups import is_group_admin
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -30,6 +29,7 @@ def create_event_request(group_id) -> Response :
     :author: Dante Katz Andrade
     :version: 2023.10.19
     """
+    from blueprints.groups import is_group_admin
     # Get event data from the HTML form 
     event_type = request.args.get('type', 'group')
 

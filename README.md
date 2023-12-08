@@ -20,6 +20,7 @@ and [mypy](#install-mypy)
 ## to run the unit testing
   - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)
   - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
+  - `python -m backend.tests.test_name` (for running individual tests)
 
 ## to run the tests for blueprints files
   - `pytest -m pytests backend/tests ` 
@@ -51,6 +52,7 @@ and [mypy](#install-mypy)
   ```
   pip install -U Flask
   pip install flask flask-cors
+  pip install types-Flask-Cors
   pip install -U Flask-SQLAlchemy
   ```
 

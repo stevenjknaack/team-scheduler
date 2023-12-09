@@ -1,5 +1,3 @@
-""" Test routes and functions of auth.py """
-
 import pytest
 from flask import session, g, url_for
 from flask.testing import FlaskClient
@@ -10,15 +8,22 @@ from app import create_app
 from blueprints.auth import auth_blueprint # import obj rather than module
 from unittest.mock import patch
 from werkzeug.security import generate_password_hash
-from blueprints.auth import auth_blueprint
-# Assuming auth.py is in the same directory as this test file
+from models import User 
+import time
+import bcrypt
 
+# A fixture is where a client is define, we want to simulate requests to the app
 @pytest.fixture
 def client_and_app() -> None :
     app = create_app()
-    app.register_blueprint(auth_blueprint)
+    app.config['TESTING'] = True
+    app.config['SERVER_NAME'] = 'localhost:6969'
+    app.config['APPLICATION_ROOT'] = '/'
+    app.config['PREFERRED_URL_SCHEME'] = 'http'
+
     with app.test_client() as client:
-        yield client
+        with app.app_context():
+            yield client, app
 
 # Test the redirection behavior of the index route
 @pytest.mark.pytests

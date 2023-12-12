@@ -1,10 +1,9 @@
 """ Defines group related routes """
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
-from models import *
-# from app import create_app
+from ..models import *
 from flask_mail import Mail, Message
-from blueprints.events import create_event, add_participant_to_event
+from ..blueprints.events import create_event, add_participant_to_event
 from sqlalchemy import select
 
 from sqlalchemy.orm import selectinload

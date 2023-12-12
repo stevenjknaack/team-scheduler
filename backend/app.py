@@ -10,13 +10,13 @@
 """
 from flask import Flask
 from flask_mail import Mail
-from blueprints.auth import auth_blueprint
-from blueprints.events import events_blueprint
-from blueprints.groups import groups_blueprint
-from blueprints.profile import profile_blueprint
-from blueprints.teams import teams_blueprint
+from .blueprints.auth import auth_blueprint
+from .blueprints.events import events_blueprint
+from .blueprints.groups import groups_blueprint
+from .blueprints.profile import profile_blueprint
+from .blueprints.teams import teams_blueprint
 
-from models import configure_flask_sqlalchemy, SQLAlchemy
+from .models import configure_flask_sqlalchemy, SQLAlchemy
 import os
 from dotenv import load_dotenv
 

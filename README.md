@@ -54,6 +54,7 @@ and [mypy](#install-mypy)
   pip install flask flask-cors
   pip install types-Flask-Cors
   pip install -U Flask-SQLAlchemy
+  pip install flask_mail
   ```
 
 - ### install cryptographic dependencies (in venv)
@@ -82,6 +83,7 @@ and [mypy](#install-mypy)
       - [recs/specs](https://docs.google.com/document/d/1mabdPAdAYkwTHhWAPKwwtpW1em9ZWwXFY0fU4rzcjpQ/edit?usp=sharing) 
   - flask help:
       - [flask megatutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) 
+      - [flask mail docs](https://flask-mail.readthedocs.io/en/latest/)
   - flask-sqlalchemy help: 
       - [quick start](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/quickstart/) 
       - [ORM basics](https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html#) 

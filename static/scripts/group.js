@@ -119,10 +119,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         var currentUrl = window.location.href;
         var eventId = this.getAttribute("data-event-id");
+        console.log("EVENT ID: " + eventId);
         var groupId = currentUrl.match(/\/group\/(\d+)/);
+        console.log("GROUP ID: " + groupId[1]);
 
         // make HTTP request to the Flask backend
-        fetch(`/send-invitations/${eventId}/${groupId}`, {
+        fetch(`/send-invitations/${groupId[1]}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

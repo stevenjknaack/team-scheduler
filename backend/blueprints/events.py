@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from ..models import *
 from typing import List, Tuple
 from sqlalchemy import text
+from datetime import datetime
 
 
 events_blueprint: Blueprint = Blueprint('events', __name__, 
@@ -72,12 +73,12 @@ def create_event_request(group_id) -> Response :
         new_event = Event(
             name=event_name,
             description=event_description,
-            start_date=datetime.strpdate(start_date) date(),
-            end_date=datetime.strpdate(end_date) date(),
+            start_date=datetime.strptime(start_date, '%Y-%m-%d').date(), #
+            end_date=datetime.strptime(end_date, '%Y-%m-%d').date(),#
             reg_start_day = reg_start_day,
             reg_end_day = reg_end_day if reg_start_day else None,
-            start_time=datetime.strptime(start_time) time(),
-            end_time=datetime.strptime(end_time) time(),
+            start_time=datetime.strptime(start_time, '%H:%M:%S').time(),# TODO
+            end_time=datetime.strptime(end_time, '%H:%M:%S').time(),# TODO
             edit_permission=edit_permission,
             group_id=group_id,
             team_id=team_id

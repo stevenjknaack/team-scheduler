@@ -35,6 +35,9 @@
                 <button id="createGroupButton" class="btn btn-danger" style="display: block">
                     Create Groups
                 </button>
+                <button id="joinGroupButton" class="btn btn-danger" style="display: block">
+                    Join Group
+                </button>
 
                 <!-- notification button -->
                 <div class="notification-container">
@@ -115,6 +118,18 @@
                     <textarea id="groupDescription" name="groupDescription" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-danger btn-create-group" >Create Group</button>
+            </form>
+        </div>
+    </div>
+    <div id="joinGroupModal" class="modal">
+        <div class="modal-content">
+            <span class="jclose">&times;</span>
+            <h2>Join Group Via Code</h2>
+            <form id="joinGroupForm" action="{{ url_for('groups.join_group') }}">
+                <div class="form-group">
+                    <input type="text" id="groupCode" name="groupCode" required />
+                </div>
+                <button type="submit" class="btn btn-danger btn-create-group" >Join Group</button>
             </form>
         </div>
     </div>

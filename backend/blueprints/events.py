@@ -70,17 +70,22 @@ def create_event_request(group_id) -> Response :
             edit_permission = 'group_admin'
         else:
             return redirect(url_for('auth.home'))
+        
+        # update reg_start_day and reg_end_day to be None if invalid
+        if not reg_start_day or not reg_end_day :
+            reg_start_day = None
+            reg_end_day = None
 
-        # Create and add the Event to the session #TODO changed date() and time() see if still works
+        # Create and add the Event to the session
         new_event = Event(
             name=event_name,
             description=event_description,
-            start_date=datetime.strptime(start_date, '%Y-%m-%d').date(), #
-            end_date=datetime.strptime(end_date, '%Y-%m-%d').date(),#
-            reg_start_day = reg_start_day if reg_start_day else None,
-            reg_end_day = reg_end_day if reg_start_day and reg_end_day else None, # TODO fix null logic
-            start_time=datetime.strptime(start_time, '%H:%M').time(),# TODO
-            end_time=datetime.strptime(end_time, '%H:%M').time(),# TODO
+            start_date=datetime.strptime(start_date, '%Y-%m-%d').date(), 
+            end_date=datetime.strptime(end_date, '%Y-%m-%d').date(),
+            reg_start_day = reg_start_day,
+            reg_end_day = reg_end_day, 
+            start_time=datetime.strptime(start_time, '%H:%M').time(),
+            end_time=datetime.strptime(end_time, '%H:%M').time(),
             edit_permission=edit_permission,
             group_id=group_id,
             team_id=team_id

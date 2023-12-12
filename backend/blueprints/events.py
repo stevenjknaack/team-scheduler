@@ -43,6 +43,8 @@ def create_event_request(group_id) -> Response :
     start_time: str | None = request.form.get('start_time') 
     end_time: str | None = request.form.get('end_time') 
 
+    print(start_date, end_date, start_time, end_time)
+
 
     # Retrieve user's email 
     user_email: str | None = session.get('email') 
@@ -75,10 +77,10 @@ def create_event_request(group_id) -> Response :
             description=event_description,
             start_date=datetime.strptime(start_date, '%Y-%m-%d').date(), #
             end_date=datetime.strptime(end_date, '%Y-%m-%d').date(),#
-            reg_start_day = reg_start_day,
-            reg_end_day = reg_end_day if reg_start_day else None,
-            start_time=datetime.strptime(start_time, '%H:%M:%S').time(),# TODO
-            end_time=datetime.strptime(end_time, '%H:%M:%S').time(),# TODO
+            reg_start_day = reg_start_day if reg_start_day else None,
+            reg_end_day = reg_end_day if reg_start_day and reg_end_day else None, # TODO fix null logic
+            start_time=datetime.strptime(start_time, '%H:%M').time(),# TODO
+            end_time=datetime.strptime(end_time, '%H:%M').time(),# TODO
             edit_permission=edit_permission,
             group_id=group_id,
             team_id=team_id

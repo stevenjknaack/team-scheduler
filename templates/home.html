@@ -125,11 +125,11 @@
         <div class="modal-content">
             <span class="jclose">&times;</span>
             <h2>Join Group Via Code</h2>
-            <form id="joinGroupForm" action="{{ url_for('groups.join_group') }}">
+            <form id="joinGroupForm" action="{{ url_for('groups.join_group') }}", method="POST">
                 <div class="form-group">
                     <input type="text" id="groupCode" name="groupCode" required />
                 </div>
-                <button type="submit" class="btn btn-danger btn-create-group" >Join Group</button>
+                <button id = "joinGroup" type="submit" class="btn btn-danger btn-join-group" >Join Group</button>
             </form>
         </div>
     </div>

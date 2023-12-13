@@ -130,13 +130,18 @@ $(document).ready(function () {
     jspan.onclick = function () {
         jmodal.style.display = "none";
     };
-
+    
     // handle 3: When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == jmodal) {
             jmodal.style.display = "none";
         }
     };
+
+    $("#joinGroup").on("click", function (event) {
+        // Hide the dropdown if clicking outside of it
+        location.reload();
+    });
 
     /**
      * Functionality redirect to group page when group box clicked

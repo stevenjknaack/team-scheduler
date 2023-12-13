@@ -95,7 +95,7 @@ $(document).ready(function () {
                 console.log(group)
                 notificationBar.innerHTML += `<div class="notification-item">\n`
                     + `<p>You're invited to ${group['name'] || 'Unnamed Group'}</p>\n`
-                    + `<p class="notify-id">Id: <span class="group_id_box">${group['id']}<span></p>`
+                    + `<p class="notify-id">Id: <span class="group_id_box">${group['id']}</span></p>`
                     + `<button class="accept-btn" onclick="handleInvite(${group['id']}, this.parentElement)">Accept</button>\n`
                     + `<button class="decline-btn" onclick="handleInvite(${group['id']}, this.parentElement, false)">Decline</button>\n`
                     + '</div>'

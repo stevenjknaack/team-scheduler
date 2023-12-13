@@ -353,4 +353,4 @@ def delete_group(group_id: int) -> Response:
             return jsonify(status='fail', error='Error during deletion'), 500
     
     # If the user is not the owner, do not delete
-    return jsonify(status='fail')
+    return jsonify(status='fail'), 500

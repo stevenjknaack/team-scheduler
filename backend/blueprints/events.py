@@ -30,7 +30,7 @@ def create_event_request(group_id) -> Response :
     :author: Dante Katz Andrade
     :version: 2023.10.19
     """
-    from ..blueprints.groups import is_group_admin
+    #from ..blueprints.groups import is_group_admin
     # Get event data from the HTML form 
     event_type = request.args.get('type', 'group')
 
@@ -43,7 +43,6 @@ def create_event_request(group_id) -> Response :
     start_time: str | None = request.form.get('start_time') 
     end_time: str | None = request.form.get('end_time') 
 
-    print(start_date, end_date, start_time, end_time)
 
 
     # Retrieve user's email 

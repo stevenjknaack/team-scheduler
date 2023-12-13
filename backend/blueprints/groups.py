@@ -12,9 +12,7 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
                                         template_folder='../../templates', 
                                         static_folder='../../static')
 
-#@groups_blueprint.route('/group')
-#def go_to_group_page() -> Response:
-#    return render_template('group.html')
+
 
 @groups_blueprint.route('/create_team')
 def create_teams() -> Response:
@@ -197,6 +195,40 @@ def create_group_event(group_id: int) -> Response:
         return jsonify({"status": "success", "message": "Group event created successfully."}), 201
     else:
         return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500
+@groups_blueprint.route('/join_group/', methods = ['GET', 'POST'])
+def join_group()-> Response:
+    """ This method is being written to handle the functionality of joining a group from a members side, by inputting
+        a valid group ID. The user will still need to be allowed in by the owner/admins of the group, and we assume the
+        user has been sent the valid group ID, and is a valid member.
+    """
+    user_email = session.get('email')
+    # step 1: check that group_id is valid and exists, and that user is not member of the group else show error message
+    group_id = request.form.get('groupCode')
+    valid_group =  current_app.db.session.get(Group, group_id)
+    membership = current_app.db.session.query(Membership).filter_by(group_id=group_id, user_email=user_email).first()
+    print("group_id:", group_id)
+    print("membership:", membership)
+    if((not valid_group) or membership):   
+        return jsonify(status='error',  message='Group ID incorrect or group does not exist'), 401
+    # step2: if valid, send notification to group admin where they can accept or deny the request
+    else:
+        # Add user to database with role requester
+        new_membership = Membership(user_email=user_email, group_id=group_id, role='requester')
+        # Get Owner of groups ID
+        # membership = current_app.db.session.query(Membership).filter_by(group_id=group_id).first()
+        # owner = membership.user_email
+        # # Send message to owner of group with requester ID
+        # group_name = valid_group.name
+        # message = Message(subject='A new User wants to join your group!', recipients=[owner])
+        # message.body = f'User {user_email} wants to join group {group_name} with ID {group_id}. Please log into the Scheduler App to review this request!'
+        current_app.db.session.add(new_membership)
+        current_app.db.session.commit()
+        # try:
+        #     mail.send(message)
+        # except Exception as e:
+        #     print(f'Error sending request, try again please')
+        return redirect(url_for('auth.home'))
+    # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
 
 @groups_blueprint.route('/group/<int:group_id>')
 def group_page(group_id):

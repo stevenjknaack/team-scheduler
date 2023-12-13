@@ -158,3 +158,30 @@ def signup_request() -> Response:
     return jsonify(status='success'), 201
 
 
+@auth_blueprint.route('/get-notifications',  methods=['GET'])
+def get_user_notifications() -> Response :
+    """ 
+    Returns all the notifications associated with the current user.
+    Currently, just returns the group invites
+    """
+    # get the user's email from session
+    user_email: str | None = session.get('email')
+
+    # check if user_email exists
+    if not user_email :
+        return jsonify(status='failure'), 500
+    
+    # get and validate user
+    user: User | None = current_app.db.session.get(User, user_email)
+
+    if not user :
+        return jsonify(status='failure'), 500
+
+    # get users group invites
+    inviting_groups: List[Group] = user.get_group_invites()
+    print(inviting_groups)
+    # return
+    return jsonify([{'id': group.id, 'name': group.name} for group in inviting_groups]), 200
+
+
+

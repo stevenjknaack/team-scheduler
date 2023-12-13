@@ -128,7 +128,10 @@ def send_invitations(group_id: int) -> Response :
    # Extract email addresses
    emails = data.get('emails', [])
 
-   for email in emails:
+   for email in emails :
+       # check if user exists
+       if not current_app.db.session.get(User, email) :
+           continue
        # check if the user is already a member of the group
        existing_membership = current_app.db.session.get(Membership, (email, group_id))
 
@@ -146,7 +149,8 @@ def send_invitations(group_id: int) -> Response :
 
    # sending invitation email functionality through Flask-Mail API
 
-   # for each email in email list, send an invitation email
+   # for each email in email list, send an invitation email 
+   """
    for email in emails:
        message = Message(subject='You have been invited to a group!', recipients=[email])
        message.body = f'You are invited to a group with ID {group_id}. Please log into the Scheduler App to accept your invitation!'
@@ -154,8 +158,10 @@ def send_invitations(group_id: int) -> Response :
            mail.send(message)
        except Exception as e:
            print(f'Error sending invitation email to {email}: {str(e)}')
+        """
+           
 
-   return jsonify(status='success', message='Invitations sent successfully!'), 20
+   return jsonify(status='success', message='Invitations sent successfully!'), 201
 
 #@events_blueprint.route('/group/<int:group_id>/create-event', methods=['POST'])
 def create_group_event(group_id: int) -> Response:

@@ -61,14 +61,51 @@ $(document).ready(function () {
     /**
      * functionality for notification button 
      * handle:
+     * 0. get notifications from backend
      * 1. display the dropdown when click 
      * 2. hide the drop down if clicking outside of it
      */
 
     // handle 1: display the dropdown when click 
     $(".notification-btn").on("click", function () {
-        // toggles the display of the dropdown between hide and show
-        $(".notification-dropdown").toggle();
+        // make HTTP request to the Flask backend
+        fetch(`/get-notifications`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // get notificiation bar and empty it
+            let notificationBar = document.querySelector('.notification-dropdown')
+            notificationBar.innerHTML = '';
+            
+            // display empty message if there are no notifications
+            if (data.length === 0) {
+                notificationBar.innerHTML = `<div class="notification-item">\n`
+                + `<p>No notifications yet!</p>`
+                + '</div>'
+            }
+
+            // populate the bar 
+            for (let key in data) {
+                let group = data[key]
+                console.log(group)
+                notificationBar.innerHTML += `<div class="notification-item">\n`
+                                          + `<p>You're invited to ${group['name'] || 'Unnamed Group'}</p>\n`
+                                          + `<p>Id: <span class="group_id_box">${group['id']}<span></p>`
+                                          + `<button class="accept-btn">Accept</button>\n`
+                                          + `<button class="decline-btn">Decline</button>\n`
+                                          + '</div>'
+            }
+
+            // toggles the display of the dropdown between hide and show
+            $(".notification-dropdown").toggle();
+        })
+        .catch(error => {
+            console.error('Error: ', error); // if error, print out error
+        });
     });
 
     // handle 2: hide the drop down if clicking outside of it

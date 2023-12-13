@@ -168,6 +168,14 @@ class User(Base) :
     
     def __repr__(self) -> str :
         return f'User(name: {self.username}; email: {self.email})'
+    
+    def get_group_invites(self) -> List['Group'] :
+        """:returns: list of groups that are inviting the user"""
+        group_invites: List['Group'] = []
+        for membership in self.memberships :
+            if membership.role == 'invitee' :
+                group_invites.append(membership.group)
+        return group_invites
   
 class AvailabilityBlock(Base) :
     """ Model of the `availability_block` table. """

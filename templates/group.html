@@ -27,9 +27,19 @@
                     People
                 </button>
                 <!-- create event button -->
-                <button id="createGroupButton" class="btn btn-danger" style="display: block" onclick="window.location.href='/create_team';">
-                    Create Teams
-                </button>
+                <div class="create-team-dropdown">
+                    <!-- Create Teams Button -->
+                    <button id="createTeamButton" class="btn btn-danger">
+                        Create Teams
+                    </button>
+
+                    <!-- Dropdown for Create Team Options -->
+                    <div id="createTeamOptions" class="create-team-options" style="display: none;">
+                        <button id="partitionTeamButton" class="btn btn-info">Partition Team</button>
+                        <button id="manualCreateTeamButton" class="btn btn-info">Manual Create Team</button>
+                    </div>
+                </div>
+
                 <button id="createEventButton" class="btn btn-danger" style="display: block">
                     Create Event
                 </button>
@@ -49,85 +59,51 @@
 
             <div class="group-events">
                 <h2>Events</h2>
-                    {% if user_events %}
-                        <ul>
-                            <div class="event-box-container">
-                                {% for event in user_events %}
-                                    <div class="event-box">
-                                        <h3 class="event-name">{{ event.name }}</h3>
-                                        <div class="event-members">
-                                            <p>{{ event.description }}</p>
-                                        </div>
-                                        <div class="event-dates">
-                                            <p>Start Date: {{ event.start_date }}</p>
-                                            <p>End Date: {{ event.end_date }}</p>
-                                        </div>
-                                        <div class="navbar-right">
-                                            <button class="navbar-right" data-event-id="{{ event.id }}">Delete Event</button>
-                                        </div>
-                                       
-                                    </div>
-                                {% endfor %}
+                {% if user_events %}
+                <ul>
+                    <div class="event-box-container">
+                        {% for event in user_events %}
+                        <div class="event-box">
+                            <h3 class="event-name">{{ event.name }}</h3>
+                            <div class="event-members">
+                                <p>{{ event.description }}</p>
                             </div>
-                        </ul>
-                    {% else %}
-                        <p>No events</p>
-                    {% endif %}
+                            <div class="event-dates">
+                                <p>Start Date: {{ event.start_date }}</p>
+                                <p>End Date: {{ event.end_date }}</p>
+                            </div>
+                            <div class="navbar-right">
+                                <button class="navbar-right" data-event-id="{{ event.id }}">Delete Event</button>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </ul>
+                {% else %}
+                <p>No events</p>
+                {% endif %}
             </div>
 
             <div class="group-teams">
                 <h2>Teams</h2>
                 <div class="team-box-container">
-                    <!-- Example Team Box -->
-                    <div class="team-box" data-team-url="/team">
-                        <h3 class="team-name">Team 10</h3>
+                    {% for team in teams %}
+                    <!-- Each team has its own team-box within the same container -->
+                    <div class="team-box" data-team-url="/team/{{ team.id }}">
+                        <h3 class="team-name">{{ team.name }}</h3>
                         <div class="team-members">
-                            <span class="member">Tony</span>
-                            <span class="member">Steven</span>
-                            <span class="member">Kyle</span>
-                            <span class="member">Dante</span>
-                            <span class="member">Georgia</span>
-                            <span class="member">Anwita</span>
-                            <!-- ... other team members ... -->
+                            {% for member in team.members %}
+                            <span class="member">{{ member }}</span>
+                            {% endfor %}
                         </div>
                     </div>
-                    <div class="team-box">
-                        <h3 class="team-name">Team 2</h3>
-                        <div class="team-members">
-                            <span class="member">Member 1</span>
-                            <span class="member">Member 2</span>
-                            <span class="member">Member 3</span>
-                            <span class="member">Member 4</span>
-                            <span class="member">Member 5</span>
-                            <!-- ... other team members ... -->
-                        </div>
-                    </div>
-                    <div class="team-box">
-                        <h3 class="team-name">Team 3</h3>
-                        <div class="team-members">
-                            <span class="member">Member 1</span>
-                            <span class="member">Member 2</span>
-                            <span class="member">Member 3</span>
-                            <span class="member">Member 4</span>
-                            <span class="member">Member 5</span>
-                            <!-- ... other team members ... -->
-                        </div>
-                    </div>
-                    <div class="team-box">
-                        <h3 class="team-name">Team 4</h3>
-                        <div class="team-members">
-                            <span class="member">Member 1</span>
-                            <span class="member">Member 2</span>
-                            <span class="member">Member 3</span>
-                            <span class="member">Member 4</span>
-                            <span class="member">Member 5</span>
-                            <!-- ... other team members ... -->
-                        </div>
-                    </div>
-                    <!-- Repeat for other teams -->
+                    {% endfor %}
                 </div>
-            </div>
+            </div>            
+            
         </div>
+
 
         <!-- Invite Modal -->
         <div id="inviteModal" class="modal">
@@ -225,9 +201,10 @@
                     <label for="event_name">Event Name:</label>
                     <input type="text" id="event_name" name="event_name" placeholder="Enter event name" required>
                 </div>
-                    <div class="form-group">
+                <div class="form-group">
                     <label for="event_description">Event Description:</label>
-                    <input type="text" id="event_description" name="event_description" placeholder="Enter event Description" required>
+                    <input type="text" id="event_description" name="event_description"
+                        placeholder="Enter event Description" required>
                 </div>
                 <div class="form-group">
                     <label for="start_date">From:</label>
@@ -264,11 +241,12 @@
 
                     <label for="avail-start" class="start-time-label">Start Time:</label>
                     <br>
-                    <input id="start_time", name="start_time" type="time" id="avail-start" name="avail-start" required />
+                    <input id="start_time" , name="start_time" type="time" id="avail-start" name="avail-start"
+                        required />
                     <br>
                     <label for="avail-end" class="end-time-label">End Time:</label>
                     <br>
-                    <input id="end_time", name="end_time" type="time" id="avail-end" name="avail-end" required />
+                    <input id="end_time" , name="end_time" type="time" id="avail-end" name="avail-end" required />
                 </div>
                 <div class="navbar-right">
                     <button type="submit" id="save" class="btn btn-danger">Save Event</button>

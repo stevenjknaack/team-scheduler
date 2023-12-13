@@ -8,8 +8,8 @@ global.document = dom.window.document;
 global.$ = jquery(global.window);
 
 // Now import your script that depends on the document object
-global.toggleVisibility = require("./create_teams.js").toggleVisibility;
-global.createCustomEvent = require("./create_teams.js").createCustomEvent;
+global.toggleVisibility = require("./partition_teams.js").toggleVisibility;
+global.createCustomEvent = require("./partition_teams.js").createCustomEvent;
 
 // Mocking jQuery functions that may be used in the functions being tested
 console.error = jest.fn();

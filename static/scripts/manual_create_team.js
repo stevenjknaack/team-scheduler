@@ -142,6 +142,25 @@ function createTeam() {
     // Retrieve the team name and description from input fields
     var teamName = document.getElementById('teamName').value.trim();
     var teamDescription = document.getElementById('teamDescription').value.trim();
+    var uniqueId = Date.now();
+
+    // Function to get query parameter by name
+    function getQueryParamByName(name) {
+        var url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    var groupId = getQueryParamByName('group_id');
+    // Check if group ID is available
+    if (!groupId) {
+        console.error('Group ID not found');
+        return; // Optionally, handle this scenario appropriately
+    }
+
 
     // Check if team name or description is empty and alert the user
     if (!teamName || !teamDescription) {
@@ -161,14 +180,32 @@ function createTeam() {
 
     // Create a team object with the provided details
     var team = {
+        id: uniqueId,
         name: teamName,
         description: teamDescription,
-        participants: participants
+        participants: participants,
+        group_id: groupId
     };
+
+    $.ajax({
+        url: '/manual_create_teams',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(team),
+        success: function(data) {
+            console.log(data); // Log the response from the server
+            alert("Team created successfully.");
+            window.location.href = '/group/' + team.group_id;
+            // You can also redirect or update the UI based on the response here
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
 
     // Log the created team for review or further processing
     console.log("Created Team:", team);
-    
+
     // Optionally, here you can do something with the created team object,
     // such as displaying it on the page, or sending it to a server.
 }

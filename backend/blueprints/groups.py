@@ -16,15 +16,6 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
 #def go_to_group_page() -> Response:
 #    return render_template('group.html')
 
-@groups_blueprint.route('/create_team')
-def create_teams() -> Response:
-    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
-    return render_template('create_teams.html', people=people)
-
-@groups_blueprint.route('/manual_create_team')
-def manual_create_teams() -> Response:
-    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
-    return render_template('manual_create_team.html', people=people)
 
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
@@ -208,23 +199,29 @@ def group_page(group_id):
         :version: 2023.10.19
         """
     if 'email' not in session:
-        # Redirect to the home page
         return redirect(url_for('auth.home'))
     user_email = session['email']
 
-    # Fetch the group details based on the group_id
-    group = current_app.db.session.get(Group, group_id)
+    # Fetch the group and its teams with eager loading to optimize queries
+    group = current_app.db.session.query(Group).options(selectinload(Group.teams)).get(group_id)
+
+    if not group:
+        return redirect(url_for('auth.home'))  # Group not found
 
     # Check that user is a member of the group
     is_member = current_app.db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
+    if not is_member:
+        return redirect(url_for('auth.home'))  # User is not a member of the group
 
-    if group and is_member:
-        # Render the group page with the group details
-        user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id = group_id))
-           
-        user_events = [event for event in user_events_result]
+    # Prepare team data
+    team_data = []
+    for team in group.teams:
+        members = [member.username for member in team.members]
+        members = ['Member 1', 'Member 2', 'Member 3', 'Member 4', 'Member 5']
+        team_data.append({'name': team.name, 'members': members})
 
-        return render_template('group.html', group=group, user_events=user_events, group_id=group_id)
-    else:
-    # Redirect to the home page or show an error page
-        return redirect(url_for('auth.home'))
+
+    user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id=group_id))
+    user_events = [event for event in user_events_result]
+
+    return render_template('group.html', group=group, user_events=user_events, group_id=group_id, teams=team_data)

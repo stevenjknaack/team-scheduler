@@ -13,9 +13,7 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
                                         template_folder='../../templates', 
                                         static_folder='../../static')
 
-#@groups_blueprint.route('/group')
-#def go_to_group_page() -> Response:
-#    return render_template('group.html')
+
 
 @groups_blueprint.route('/create_team')
 def create_teams() -> Response:
@@ -209,6 +207,21 @@ def create_group_event(group_id: int) -> Response:
         return jsonify({"status": "success", "message": "Group event created successfully."}), 201
     else:
         return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500
+# @groups_blueprint.route('/join_group/<int:group_id>', methods = ['POST'])
+# def join_group()-> Union[str , Response]:
+#     """ This method is being written to handle the functionality of joining a group from a members side, by inputting
+#         a valid group ID. The user will still need to be allowed in by the owner/admins of the group, and we assume the
+#         user has been sent the valid group ID, and is a valid member.
+#     """
+#     # step 1: check that group_id is valid and exists, else show error message
+#     group_id = request.form.get('group_id')
+#     valid_group =  current_app.db.session.get(Group, group_id)
+#     if(not valid_group):
+#         return jsonify(status='error',  message='Group ID incorrect or group does not exist'), 401
+#     # step2: if valid, send notification to group admin where they can accept or deny the request
+#     else:
+#         return jsonify(status='success')
+#     # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
 
 @groups_blueprint.route('/group/<int:group_id>')
 def group_page(group_id):

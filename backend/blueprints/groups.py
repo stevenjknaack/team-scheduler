@@ -324,8 +324,18 @@ def delete_group(group_id: int) -> Response:
         # Query the group to delete
         group = db_session.get(Group, group_id)
         try:
+            # Delete associated teams
+            for team in group.teams :
+                for event in team.events :
+                    db_session.delete(event)
+                db_session.delete(team)
+            
+            # Delete events
+            for event in group.events :
+                db_session.delete(event)
+
             # Delete associated memberships
-            for membership in group.memberships:
+            for membership in group.memberships :
                 db_session.delete(membership)
 
             # Delete the group
@@ -335,9 +345,9 @@ def delete_group(group_id: int) -> Response:
             db_session.commit()
             return jsonify(status='success')
 
-        except SQLAlchemyError as e:
+        except Exception as e:
             # Print failure
-            print(f"Exception during commit")
+            print(f"Exception during commit ${str(e)}")
             # Rollback changes to avoid leaving the database in an inconsistent state
             db_session.rollback()  
             return jsonify(status='fail', error='Error during deletion'), 500

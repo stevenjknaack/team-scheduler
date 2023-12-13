@@ -137,3 +137,40 @@ function toggleVisibility(elementId) {
     var element = document.getElementById(elementId);
     element.style.display = (element.style.display === 'none') ? 'block' : 'none';
 }
+
+function createTeam() {
+    // Retrieve the team name and description from input fields
+    var teamName = document.getElementById('teamName').value.trim();
+    var teamDescription = document.getElementById('teamDescription').value.trim();
+
+    // Check if team name or description is empty and alert the user
+    if (!teamName || !teamDescription) {
+        alert("Please enter both team name and description.");
+        return;
+    }
+
+    // Find all elements representing selected participants and extract their text content
+    var selectedParticipantElements = document.querySelectorAll('#selectedParticipants .participant');
+    var participants = Array.from(selectedParticipantElements).map(element => element.textContent);
+
+    // Check if any participants are selected and alert if none are found
+    if (participants.length === 0) {
+        alert("Please select at least one participant.");
+        return;
+    }
+
+    // Create a team object with the provided details
+    var team = {
+        name: teamName,
+        description: teamDescription,
+        participants: participants
+    };
+
+    // Log the created team for review or further processing
+    console.log("Created Team:", team);
+    
+    // Optionally, here you can do something with the created team object,
+    // such as displaying it on the page, or sending it to a server.
+}
+
+// The function is now ready to be called when needed, such as on a button click event.

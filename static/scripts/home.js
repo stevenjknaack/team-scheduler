@@ -149,12 +149,36 @@ $(document).ready(function () {
         modal.style.display = "none";
     };
 
+    // Get the modal for joining
+    var jmodal = document.getElementById("joinGroupModal");
+
+    // Get the button that opens the modal
+    var jbtn = document.getElementById("joinGroupButton");
+
+    // Get the <span> element that closes the modal
+    var jspan = document.getElementsByClassName("jclose")[0];
+
+    // handle 1: When the user clicks the button, open the modal
+    jbtn.onclick = function () {
+        jmodal.style.display = "block";
+    };
+
+    // handle 2: When the user clicks on <span> (x), close the modal
+    jspan.onclick = function () {
+        jmodal.style.display = "none";
+    };
+    
     // handle 3: When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == jmodal) {
+            jmodal.style.display = "none";
         }
     };
+
+    $("#joinGroup").on("click", function (event) {
+        // Hide the dropdown if clicking outside of it
+        location.reload();
+    });
 
     /**
      * Functionality redirect to group page when group box clicked

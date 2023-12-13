@@ -62,8 +62,12 @@
                                             <p>Start Date: {{ event.start_date }}</p>
                                             <p>End Date: {{ event.end_date }}</p>
                                         </div>
+                                        <div class="event-times">
+                                            <p>Start Time: {{event.start_time}}</p>
+                                            <p>End Time: {{ event.end_time }}</p>
+                                        </div>
                                         <div class="navbar-right">
-                                            <button class="navbar-right" data-event-id="{{ event.id }}">Delete Event</button>
+                                            <button class="navbar-right delete-event-btn" data-event-id="{{ event.id }}">Delete Event</button>
                                         </div>
                                        
                                     </div>

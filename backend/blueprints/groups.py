@@ -191,6 +191,7 @@ def create_group_event(group_id: int) -> Response:
         return jsonify({"status": "success", "message": "Group event created successfully."}), 201
     else:
         return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500
+        
 @groups_blueprint.route('/join_group/', methods = ['GET', 'POST'])
 def join_group()-> Response:
     """ This method is being written to handle the functionality of joining a group from a members side, by inputting
@@ -202,6 +203,7 @@ def join_group()-> Response:
     group_id = request.form.get('groupCode')
     valid_group =  current_app.db.session.get(Group, group_id)
     membership = current_app.db.session.query(Membership).filter_by(group_id=group_id, user_email=user_email).first()
+    membership = current_app.db.session.query(Membership).filter_by(group_id=group_id, user_email=user_email).first()
     print("group_id:", group_id)
     print("membership:", membership)
     if((not valid_group) or membership):   
@@ -209,10 +211,14 @@ def join_group()-> Response:
     # step2: if valid, send notification to group admin where they can accept or deny the request
     else:
         # Add user to database with role requester
+        print(user_email)
+        membership = current_app.db.session.query(Membership).filter_by(group_id=group_id).first()
+        owner = membership.user_email
+        print(owner)
         new_membership = Membership(user_email=user_email, group_id=group_id, role='requester')
         # Get Owner of groups ID
-        # membership = current_app.db.session.query(Membership).filter_by(group_id=group_id).first()
-        # owner = membership.user_email
+        #membership = current_app.db.session.query(Membership).filter_by(group_id=group_id).first()
+        #owner = membership.user_email
         # # Send message to owner of group with requester ID
         # group_name = valid_group.name
         # message = Message(subject='A new User wants to join your group!', recipients=[owner])

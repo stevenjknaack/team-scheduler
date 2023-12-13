@@ -57,17 +57,19 @@
             </div>
             <!-- Box to display the groups -->
             {% for group in user_groups %}
-            {% if group.memberships[0].role != 'invitee' and group.memberships[0].role != 'requester' %}
-            <div class="group {% if group.memberships[0].role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{ url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
-                <h2>{{ group.name }}</h2>
-                <p>Members: {{ group.memberships | length }}</p>
-                <p>group ID: {{ group.id }}</p>
-                {% if group.memberships[0].role == 'owner' %}
-                <!-- Add the delete button with data-group-id attribute -->
-                    <button class="delete-group-btn" data-group-id="{{ group.id }}">Delete Group</button>
-                {% endif %}
-            </div>
-            {% endif %}
+                {% for membership in group.memberships %}
+                    {% if membership.user_email == session.get('email') and membership.role != 'invitee' and membership.role != 'requester' %}
+                        <div class="group {% if membership.role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
+                            <h2>{{group.name}}</h2>
+                            <p>Members: {{ group.memberships | length }}</p>
+                            <p>group ID: {{ group.id }}</p>
+                            {% if membership.role == 'owner' %}
+                                <!-- Add the delete button with data-group-id attribute -->
+                                <button class="delete-group-btn" data-group-id="{{ group.id }}">Delete Group</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
             <!-- Box to display the events -->
             {% if user_events %}

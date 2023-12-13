@@ -152,7 +152,7 @@ $(document).ready(function () {
         modal.style.display = "none";
     };
 
-    // Get the modal for joining
+    // Get the modal for joining group
     var jmodal = document.getElementById("joinGroupModal");
 
     // Get the button that opens the modal
@@ -207,6 +207,7 @@ $(document).ready(function () {
 
     // Event delegation for dynamically added delete buttons
     $(document).on("click", ".delete-group-btn", function(event) {
+        // default is redirecting to group page, so we prevent that, and check that the button clicked is delete
         event.preventDefault();
         var groupId = $(this).data("group-id");
         deleteGroup(groupId);

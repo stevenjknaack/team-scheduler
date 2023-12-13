@@ -45,21 +45,6 @@
                     <!-- Notification dropdown -->
                     <div class="notification-dropdown" style="display: none">
                         <!-- Sample notification item -->
-                        <div class="notification-item">
-                            <p>You're invited to GRo</p>
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline-btn">Decline</button>
-                        </div>
-                        <div class="notification-item">
-                            <p>You're invited to [Event Name]</p>
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline-btn">Decline</button>
-                        </div>
-                        <div class="notification-item">
-                            <p>You're invited to [Event Name]</p>
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline-btn">Decline</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -72,6 +57,7 @@
             </div>
             <!-- Box to display the groups -->
             {% for group in user_groups %}
+            {% if group.memberships[0].role != 'invitee' and group.memberships[0].role != 'requester' %}
             <div class="group {% if group.memberships[0].role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{ url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
                 <h2>{{ group.name }}</h2>
                 <p>Members: {{ group.memberships | length }}</p>
@@ -81,6 +67,7 @@
                     <button class="delete-group-btn" data-group-id="{{ group.id }}">Delete Group</button>
                 {% endif %}
             </div>
+            {% endif %}
             {% endfor %}
             <!-- Box to display the events -->
             {% if user_events %}

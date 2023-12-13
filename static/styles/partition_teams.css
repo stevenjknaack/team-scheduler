@@ -230,7 +230,8 @@ body {
     max-height: 200px;
     overflow-y: auto;
     flex-wrap: wrap;
-    width: 80%;
+    width: auto;
+    max-width: 80%;
     background: #273553;
 }
 
@@ -280,7 +281,7 @@ body {
 }
 
 /* Style for the dropdowns and inputs */
-#createEvent select, #createEvent input[type="text"] {
+#createEvent select, #createEvent input[type="text"], #createEvent textarea[id="eventDescription"] {
     width: 100%; /* Full width for better responsiveness */
     padding: 8px 10px;
     margin-bottom: 10px; /* Spacing between fields */

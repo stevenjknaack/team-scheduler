@@ -120,6 +120,7 @@ h1 {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
+    max-width: 300px;
 }
 
 .team-box,
@@ -309,4 +310,15 @@ input[type="text"] {
     border-radius: 5px; /* Rounded corners for each member name */
     border: 1px solid #ddd; /* Border for each member name */
     margin-bottom: 5px; /* Margin at the bottom of each member name */
+}
+
+.create-team-options {
+    /* Add your styling here */
+    position: absolute; /* or fixed, depending on your layout */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000; /* Ensure it appears above other content */
 }

@@ -14,10 +14,6 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
 
 
 
-@groups_blueprint.route('/create_team')
-def create_teams() -> Response:
-    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
-    return render_template('create_teams.html', people=people)
 
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
@@ -126,7 +122,10 @@ def send_invitations(group_id: int) -> Response :
    # Extract email addresses
    emails = data.get('emails', [])
 
-   for email in emails:
+   for email in emails :
+       # check if user exists
+       if not current_app.db.session.get(User, email) :
+           continue
        # check if the user is already a member of the group
        existing_membership = current_app.db.session.get(Membership, (email, group_id))
 
@@ -144,7 +143,8 @@ def send_invitations(group_id: int) -> Response :
 
    # sending invitation email functionality through Flask-Mail API
 
-   # for each email in email list, send an invitation email
+   # for each email in email list, send an invitation email 
+   """
    for email in emails:
        message = Message(subject='You have been invited to a group!', recipients=[email])
        message.body = f'You are invited to a group with ID {group_id}. Please log into the Scheduler App to accept your invitation!'
@@ -152,8 +152,10 @@ def send_invitations(group_id: int) -> Response :
            mail.send(message)
        except Exception as e:
            print(f'Error sending invitation email to {email}: {str(e)}')
+        """
+           
 
-   return jsonify(status='success', message='Invitations sent successfully!'), 20
+   return jsonify(status='success', message='Invitations sent successfully!'), 201
 
 #@events_blueprint.route('/group/<int:group_id>/create-event', methods=['POST'])
 def create_group_event(group_id: int) -> Response:
@@ -170,7 +172,7 @@ def create_group_event(group_id: int) -> Response:
     event_description = data.get('event_description')
     start_date = data.get('start_date')
     end_date = data.get('end_date')
-    recurring = data.get('recurring')  # True or False
+    recurring = data.get('recurring')  # TODO: false type, look at the db and start_day and end_date
 
     # Retrieve the list of group members
     group_members = get_group_members(group_id)
@@ -224,7 +226,7 @@ def join_group()-> Response:
         return redirect(url_for('auth.home'))
     # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
 
-@groups_blueprint.route('/group/<int:group_id>')
+@groups_blueprint.route('/group/<int:group_id>') 
 def group_page(group_id):
     """ This method is used to redirect from the home page to a group page, when the user clicks
         on a group in their home page. The user must be a part of the group, whether a member or admin,
@@ -235,26 +237,77 @@ def group_page(group_id):
         :version: 2023.10.19
         """
     if 'email' not in session:
-        # Redirect to the home page
         return redirect(url_for('auth.home'))
     user_email = session['email']
 
-    # Fetch the group details based on the group_id
-    group = current_app.db.session.get(Group, group_id)
+    # Fetch the group and its teams with eager loading to optimize queries
+    group = current_app.db.session.query(Group).options(selectinload(Group.teams)).get(group_id)
+
+    if not group:
+        return redirect(url_for('auth.home'))  # Group not found
 
     # Check that user is a member of the group
     is_member = current_app.db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
+    if not is_member:
+        return redirect(url_for('auth.home'))  # User is not a member of the group
 
-    if group and is_member:
-        # Render the group page with the group details
-        user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id = group_id))
-           
-        user_events = [event for event in user_events_result]
+    # Prepare team data
+    team_data = []
+    for team in group.teams:
+        members = [member.username for member in team.members]
+        team_data.append({'name': team.name, 'members': members})
 
-        return render_template('group.html', group=group, user_events=user_events, group_id=group_id)
-    else:
-    # Redirect to the home page or show an error page
-        return redirect(url_for('auth.home'))
+
+    user_events_result = current_app.db.session.scalars(select(Event).filter_by(group_id=group_id))
+    user_events = [event for event in user_events_result]
+
+    return render_template('group.html', group=group, user_events=user_events, group_id=group_id, teams=team_data)
+    
+@groups_blueprint.route('/delete_from_group/<int:group_id>', methods=['POST'])
+def delete_user_from_group(group_id: int) -> Response :
+    """
+    Deletes the current user from a specified group
+
+    :group_id: the id of the group to delete the current user from
+    """
+    # get user email from session
+    user_email: str | None = session.get('email')
+
+    # get and validate membership
+    membership: Membership = current_app.db.session.get(Membership, (user_email, group_id))
+    
+    if not membership :
+        return jsonify(status='error', message='user is not in group'), 401
+    
+    # delete user and return successful
+    current_app.db.session.delete(membership)
+    current_app.db.session.commit()
+
+    return jsonify(status='success'), 201
+
+@groups_blueprint.route('/change_group_role/<int:group_id>/<string:role>', methods=['POST'])
+def change_user_group_role(group_id: int, role: str) -> Response :
+    """
+    Update a user's role in a group
+
+    :group_id: the id of the group to change the current user's role in
+    """
+    # get user email from session
+    user_email: str | None = session.get('email')
+
+    # get and validate membership
+    membership: Membership = current_app.db.session.get(Membership, (user_email, group_id))
+    
+    if not membership :
+        return jsonify(status='error', message='user is not in group'), 401
+    
+    # update membership role
+    membership.role = role
+    current_app.db.session.commit()
+
+    # return success
+    return jsonify(status='success'), 201
+    
 
 @groups_blueprint.route('/delete-group/<int:group_id>', methods=['DELETE'])
 def delete_group(group_id: int) -> Response:

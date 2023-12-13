@@ -32,7 +32,7 @@ def save_schedule() -> tuple[Response, int]:
 
         # If existing availability blocks are found, delete them
         if existing_blocks:
-            current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).delete()
+            current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).delete() #TODO: update the outdated query
 
         # Insert new availability blocks
         for schedule in schedules:
@@ -54,7 +54,7 @@ def save_schedule() -> tuple[Response, int]:
         return jsonify({'error': str(e)}), 500
 
     # Return a successful response
-    return jsonify({'message': 'Schedule saved successfully'}), 200
+    return jsonify({'message': 'Schedule saved successfully'}), 201  #TODO: sync the change
 
 
 @profile_blueprint.route('/get_schedule', methods=['GET'])
@@ -75,7 +75,7 @@ def get_schedule() -> tuple[Response, int]:
 
     try:
         # Query for getting the availability blocks of the current user
-        avail_blocks = current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all()
+        avail_blocks = current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all() #TODO: update? see the models.py
 
         # Initialize an empty list for the formatted data
         avail_blocks_data = []

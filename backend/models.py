@@ -168,6 +168,14 @@ class User(Base) :
     
     def __repr__(self) -> str :
         return f'User(name: {self.username}; email: {self.email})'
+    
+    def get_group_invites(self) -> List['Group'] :
+        """:returns: list of groups that are inviting the user"""
+        group_invites: List['Group'] = []
+        for membership in self.memberships :
+            if membership.role == 'invitee' :
+                group_invites.append(membership.group)
+        return group_invites
   
 class AvailabilityBlock(Base) :
     """ Model of the `availability_block` table. """
@@ -260,13 +268,13 @@ class Team(Base) :
         relationship('User', secondary=user_team_channel, back_populates='teams')
     
     # methods
-    def __init__(self, id: int, 
+    def __init__(self, group_id: int, 
                  name: str = 'Unnamed Team', 
                  description: str = 'No description provided.') -> None :
         """
         id: steven
         """
-        self.id = id
+        self.group_id = group_id
         self.name = name
         self.description = description
     

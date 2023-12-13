@@ -97,6 +97,11 @@ function createCustomEvent() {
     var eventName = document.getElementById('eventName').value.trim();
     var eventDescription = document.getElementById('eventDescription').value.trim();
     var duration = parseInt(document.getElementById('eventDuration').value, 10);
+
+    // Retrieve the selected event type from the dropdown
+    var typeSelect = document.getElementById('type');
+    var eventType = typeSelect.options[typeSelect.selectedIndex].value;
+
     var createdEventsContainer = document.getElementById('createdEvents');
 
     // Perform basic validation on input fields
@@ -119,21 +124,20 @@ function createCustomEvent() {
     // Create a new div element to display the event details
     var newEventDiv = document.createElement('div');
     newEventDiv.className = 'event';
-    newEventDiv.innerHTML = `<strong>${eventName}</strong><br>Description: ${eventDescription}<br>Duration: ${duration} minutes`;
+    newEventDiv.innerHTML = `<strong>${eventName}</strong><br>Description: ${eventDescription}<br>Duration: ${duration} minutes<br>Type: ${eventType}`;
 
     // Set data attributes for each event detail
     newEventDiv.setAttribute('data-name', eventName);
     newEventDiv.setAttribute('data-description', eventDescription);
     newEventDiv.setAttribute('data-duration', duration);
+    newEventDiv.setAttribute('data-type', eventType);
 
     // Create and configure a delete button for each event
     var deleteBtn = document.createElement('span');
     deleteBtn.textContent = 'X';
     deleteBtn.className = 'delete-btn';
     deleteBtn.onclick = function () {
-        // Remove the event element from the container
         this.parentElement.remove();
-        // Hide the container if there are no more events
         if (createdEventsContainer.children.length === 0) {
             createdEventsContainer.style.display = 'none';
         }
@@ -147,8 +151,10 @@ function createCustomEvent() {
     document.getElementById('eventName').value = '';
     document.getElementById('eventDescription').value = '';
     document.getElementById('eventDuration').value = '';
-    toggleVisibility('createEvent')
+    document.getElementById('type').selectedIndex = 0; // Reset dropdown to the first option
+    toggleVisibility('createEvent');
 }
+
 
 
 

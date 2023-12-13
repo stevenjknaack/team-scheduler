@@ -39,6 +39,7 @@
                 <span class="section-text" onclick="toggleVisibility('memberSelection')">Select Participants</span>
                 <!-- The rest of your content -->
                 <div id="memberSelection" style="display: none;">
+                    
                     <div class="search-bar">
                         <input type="text" id="searchPeople" placeholder="Search people..." onkeyup="searchPeople()">
                         <button id="checkAll">Check All</button>
@@ -72,6 +73,13 @@
                     <!-- Inputs for creating an event -->
                     <!-- Input for event duration in minutes -->
                     <input type="number" id="eventDuration" placeholder="Duration in minutes">
+                    <!-- Radio buttons for selecting Individual or Team event -->
+                    <select id="type">
+                        <option value="Individual">Individual</option>
+                        <option value="Team">Team</option>
+                        <!-- Add more options as needed -->
+                    </select>
+
 
                     <button onclick="createCustomEvent()">Create Event</button>
 

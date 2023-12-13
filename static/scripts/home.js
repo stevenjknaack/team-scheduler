@@ -61,14 +61,51 @@ $(document).ready(function () {
     /**
      * functionality for notification button 
      * handle:
+     * 0. get notifications from backend
      * 1. display the dropdown when click 
      * 2. hide the drop down if clicking outside of it
      */
 
     // handle 1: display the dropdown when click 
     $(".notification-btn").on("click", function () {
-        // toggles the display of the dropdown between hide and show
-        $(".notification-dropdown").toggle();
+        // make HTTP request to the Flask backend
+        fetch(`/get-notifications`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // get notificiation bar and empty it
+            let notificationBar = document.querySelector('.notification-dropdown')
+            notificationBar.innerHTML = '';
+            
+            // display empty message if there are no notifications
+            if (data.length === 0) {
+                notificationBar.innerHTML = `<div class="notification-item">\n`
+                + `<p>No notifications yet!</p>`
+                + '</div>'
+            }
+
+            // populate the bar 
+            for (let key in data) {
+                let group = data[key]
+                console.log(group)
+                notificationBar.innerHTML += `<div class="notification-item">\n`
+                    + `<p>You're invited to ${group['name'] || 'Unnamed Group'}</p>\n`
+                    + `<p class="notify-id">Id: <span class="group_id_box">${group['id']}<span></p>`
+                    + `<button class="accept-btn" onclick="handleInvite(${group['id']}, this.parentElement)">Accept</button>\n`
+                    + `<button class="decline-btn" onclick="handleInvite(${group['id']}, this.parentElement, false)">Decline</button>\n`
+                    + '</div>'
+            }
+
+            // toggles the display of the dropdown between hide and show
+            $(".notification-dropdown").toggle();
+        })
+        .catch(error => {
+            console.error('Error: ', error); // if error, print out error
+        });
     });
 
     // handle 2: hide the drop down if clicking outside of it
@@ -78,6 +115,8 @@ $(document).ready(function () {
             $(".notification-dropdown").hide();
         }
     });
+
+    
 
     // link profile button to profile page
     $("#editProfile").on("click", function (event) {
@@ -112,12 +151,36 @@ $(document).ready(function () {
         modal.style.display = "none";
     };
 
+    // Get the modal for joining
+    var jmodal = document.getElementById("joinGroupModal");
+
+    // Get the button that opens the modal
+    var jbtn = document.getElementById("joinGroupButton");
+
+    // Get the <span> element that closes the modal
+    var jspan = document.getElementsByClassName("jclose")[0];
+
+    // handle 1: When the user clicks the button, open the modal
+    jbtn.onclick = function () {
+        jmodal.style.display = "block";
+    };
+
+    // handle 2: When the user clicks on <span> (x), close the modal
+    jspan.onclick = function () {
+        jmodal.style.display = "none";
+    };
+    
     // handle 3: When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == jmodal) {
+            jmodal.style.display = "none";
         }
     };
+
+    $("#joinGroup").on("click", function (event) {
+        // Hide the dropdown if clicking outside of it
+        location.reload();
+    });
 
     /**
      * Functionality redirect to group page when group box clicked
@@ -136,5 +199,29 @@ $(document).ready(function () {
     });
 });
 
+/**
+  * Handles a group invite
+  * 
+  * @param group_id id of the group to make the user a participant of
+  * @param notificationItem the item containing the invite
+  * @param acceptInvite true means accept, false means decline
+  */
+function handleInvite(group_id, notificationItem, acceptInvite = true) {
+    // decide route
+    let route = `/change_group_role/${group_id}/participant`;
+    if (!acceptInvite) route = `/delete_from_group/${group_id}`
+    
+    // complete POST
+    fetch(route, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .catch(error => {
+        console.error('Error: ', error); // if error, print out error
+    });
 
-
+    // remove invite from notifications
+    notificationItem.style.display = 'none';
+}

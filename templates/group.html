@@ -59,30 +59,34 @@
 
             <div class="group-events">
                 <h2>Events</h2>
-                {% if user_events %}
-                <ul>
-                    <div class="event-box-container">
-                        {% for event in user_events %}
-                        <div class="event-box">
-                            <h3 class="event-name">{{ event.name }}</h3>
-                            <div class="event-members">
-                                <p>{{ event.description }}</p>
+                    {% if user_events %}
+                        <ul>
+                            <div class="event-box-container">
+                                {% for event in user_events %}
+                                    <div class="event-box">
+                                        <h3 class="event-name">{{ event.name }}</h3>
+                                        <div class="event-members">
+                                            <p>{{ event.description }}</p>
+                                        </div>
+                                        <div class="event-dates">
+                                            <p>Start Date: {{ event.start_date }}</p>
+                                            <p>End Date: {{ event.end_date }}</p>
+                                        </div>
+                                        <div class="event-times">
+                                            <p>Start Time: {{event.start_time}}</p>
+                                            <p>End Time: {{ event.end_time }}</p>
+                                        </div>
+                                        <div class="navbar-right">
+                                            <button class="navbar-right delete-event-btn" data-event-id="{{ event.id }}">Delete Event</button>
+                                        </div>
+                                       
+                                    </div>
+                                {% endfor %}
                             </div>
-                            <div class="event-dates">
-                                <p>Start Date: {{ event.start_date }}</p>
-                                <p>End Date: {{ event.end_date }}</p>
-                            </div>
-                            <div class="navbar-right">
-                                <button class="navbar-right" data-event-id="{{ event.id }}">Delete Event</button>
-                            </div>
-
-                        </div>
-                        {% endfor %}
-                    </div>
-                </ul>
-                {% else %}
-                <p>No events</p>
-                {% endif %}
+                        </ul>
+                    {% else %}
+                        <p>No events</p>
+                    {% endif %}
             </div>
 
             <div class="group-teams">

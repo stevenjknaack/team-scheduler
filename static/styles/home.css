@@ -118,6 +118,8 @@ h1 {
   border-radius: 8px;
   width: 250px; /* or whatever width you prefer */
   z-index: 10; /* ensures the dropdown appears on top */
+  overflow-y: scroll;
+  max-height: 450px;
 }
 
 .notification-item {
@@ -261,4 +263,8 @@ h1 {
     /* Larger font size for the team name */
     margin-bottom: 20px;
     /* Space below the team name */
+}
+
+.hidden {
+  display: none;
 }

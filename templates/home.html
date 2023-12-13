@@ -35,6 +35,9 @@
                 <button id="createGroupButton" class="btn btn-danger" style="display: block">
                     Create Groups
                 </button>
+                <button id="joinGroupButton" class="btn btn-danger" style="display: block">
+                    Join Group
+                </button>
 
                 <!-- notification button -->
                 <div class="notification-container">
@@ -42,21 +45,6 @@
                     <!-- Notification dropdown -->
                     <div class="notification-dropdown" style="display: none">
                         <!-- Sample notification item -->
-                        <div class="notification-item">
-                            <p>You're invited to GRo</p>
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline-btn">Decline</button>
-                        </div>
-                        <div class="notification-item">
-                            <p>You're invited to [Event Name]</p>
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline-btn">Decline</button>
-                        </div>
-                        <div class="notification-item">
-                            <p>You're invited to [Event Name]</p>
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline-btn">Decline</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -69,11 +57,13 @@
             </div>
             <!-- Box to display the groups -->
             {% for group in user_groups %}
+            {% if group.memberships[0].role != 'invitee' and group.memberships[0].role != 'requester' %}
             <div class="group {% if group.memberships[0].role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{ url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
                 <h2>{{ group.name }}</h2>
                 <p>Members: {{ group.memberships | length }}</p>
                 <p>group ID: {{ group.id }}</p>
             </div>
+            {% endif %}
             {% endfor %}
             <!-- Box to display the events -->
             {% if user_events %}
@@ -115,6 +105,18 @@
                     <textarea id="groupDescription" name="groupDescription" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-danger btn-create-group" >Create Group</button>
+            </form>
+        </div>
+    </div>
+    <div id="joinGroupModal" class="modal">
+        <div class="modal-content">
+            <span class="jclose">&times;</span>
+            <h2>Join Group Via Code</h2>
+            <form id="joinGroupForm" action="{{ url_for('groups.join_group') }}", method="POST">
+                <div class="form-group">
+                    <input type="text" id="groupCode" name="groupCode" required />
+                </div>
+                <button id = "joinGroup" type="submit" class="btn btn-danger btn-join-group" >Join Group</button>
             </form>
         </div>
     </div>

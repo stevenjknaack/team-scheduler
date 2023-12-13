@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     };
 
-
     // Inviting participants
     const emailInput = document.getElementById("invite-email");
     const invitedParticipants = document.getElementById("invited-participants");

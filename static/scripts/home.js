@@ -60,6 +60,7 @@ $(document).ready(function () {
 
     /**
      * functionality for notification button 
+     * @todo look into making the notification bar a flask template
      * handle:
      * 0. get notifications from backend
      * 1. display the dropdown when click 

@@ -151,7 +151,6 @@ function createTeam() {
     // Retrieve the team name and description from input fields
     var teamName = document.getElementById('teamName').value.trim();
     var teamDescription = document.getElementById('teamDescription').value.trim();
-    var uniqueId = Date.now();
 
     // Function to get query parameter by name
     function getQueryParamByName(name) {
@@ -164,6 +163,7 @@ function createTeam() {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
     var groupId = getQueryParamByName('group_id');
+
     // Check if group ID is available
     if (!groupId) {
         console.error('Group ID not found');
@@ -186,7 +186,6 @@ function createTeam() {
 
     // Create a team object with the provided details
     var team = {
-        id: uniqueId,
         name: teamName,
         description: teamDescription,
         participants: participants,

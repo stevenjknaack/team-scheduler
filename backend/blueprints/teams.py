@@ -68,27 +68,22 @@ def create_team() -> str | Response:
     print("Received data:", data)  # Log the received data
 
     # Extract team details
-    team_id = int(time.time())
     team_name = data.get('name')
     team_description = data.get('description')
     group_id = data.get('group_id')
     participants = data.get('participants')  # List of participant emails
     print(participants)
 
-    print(f"Creating team with ID {team_id}, Name {team_name}, Description {team_description}, Group ID {group_id}")
-
-    # Create a new Team instance without group_id
-    new_team = Team(id=team_id, name=team_name, description=team_description)
-    new_team.group_id = group_id  # Set group_id after instance creation
+    # Create a new Team instance
+    new_team = Team(group_id=group_id, name=team_name, description=team_description)
 
     try:
         # Add the new team to the session
         current_app.db.session.add(new_team)
 
-        
         # Add participants to the team
         for email in participants:
-            user = current_app.db.session.query(User).filter_by(email=email).first()
+            user = current_app.db.session.get(User, email)
             if user:
                 new_team.members.append(user)
             else:
@@ -97,7 +92,11 @@ def create_team() -> str | Response:
 
         # Commit changes to the database
         current_app.db.session.commit()
-        return jsonify({"message": "Team created successfully", "team_id": team_id})
+        print(f"Created team with ID {new_team.id}, Name {new_team.name}, Description {new_team.description}, Group ID {new_team.group_id}")
+
+        return jsonify({"message": "Team created successfully", "team_id": new_team.id}), 201
+    
     except Exception as e:
         current_app.db.session.rollback()
+        print(str(e))
         return jsonify({"error": str(e)}), 500

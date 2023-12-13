@@ -268,13 +268,13 @@ class Team(Base) :
         relationship('User', secondary=user_team_channel, back_populates='teams')
     
     # methods
-    def __init__(self, id: int, 
+    def __init__(self, group_id: int, 
                  name: str = 'Unnamed Team', 
                  description: str = 'No description provided.') -> None :
         """
         id: steven
         """
-        self.id = id
+        self.group_id = group_id
         self.name = name
         self.description = description
     

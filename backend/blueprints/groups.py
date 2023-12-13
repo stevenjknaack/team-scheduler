@@ -20,6 +20,11 @@ def create_teams() -> Response:
     people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
     return render_template('create_teams.html', people=people)
 
+@groups_blueprint.route('/manual_create_team')
+def manual_create_teams() -> Response:
+    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
+    return render_template('manual_create_team.html', people=people)
+
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
     """ 
@@ -148,7 +153,7 @@ def create_group_event(group_id: int) -> Response:
     event_description = data.get('event_description')
     start_date = data.get('start_date')
     end_date = data.get('end_date')
-    recurring = data.get('recurring')  # True or False
+    recurring = data.get('recurring')  # TODO: false type, look at the db and start_day and end_date
 
     # Retrieve the list of group members
     group_members = get_group_members(group_id)
@@ -168,16 +173,16 @@ def create_group_event(group_id: int) -> Response:
     else:
         return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500
 
-@groups_blueprint.route('/group/<int:group_id>')
+@groups_blueprint.route('/group/<int:group_id>') 
 def group_page(group_id):
     # Fetch the group details based on the group_id
     group = current_app.db.session.get(Group, group_id)
     
-    if 'email' in session:
+    if 'email' in session: # TODO: check if email is in the session first and combine redundant not checking
         user_email = session['email']
 
         # Check if the user is a member of the group
-        is_member = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+        is_member = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first() #TODO: update the outdated query
 
         if group and is_member:
             # Render the group page with the group details
@@ -186,8 +191,8 @@ def group_page(group_id):
            
             user_events = [event for event in user_events_result]
 
-            return render_template('group.html', group=group, user=user_email, user_events=user_events)
-        else:
+            return render_template('group.html', group=group, user_events=user_events)
+        else: 
         # Redirect to the home page or show an error page
             return redirect(url_for('auth.home'))
     else:

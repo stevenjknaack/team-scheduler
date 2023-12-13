@@ -11,6 +11,7 @@
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
@@ -35,7 +36,7 @@
             <!-- Other Sections -->
             <!-- Expandable Member Selection Section -->
             <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleMemberSelection()">Select Participants</span>
+                <span class="section-text" onclick="toggleVisibility('memberSelection')">Select Participants</span>
                 <!-- The rest of your content -->
                 <div id="memberSelection" style="display: none;">
                     <div class="search-bar">
@@ -60,44 +61,18 @@
                 </div>
             </div>
             <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleCreateEvents()">Create Events</span>
+                <span class="section-text" onclick="toggleVisibility('createEvent')">Create Events</span>
                 <div id="createEvent" style="display: none;">
+
+                    <!-- Input for event name -->
+                    <input type="text" id="eventName" placeholder="Event Name">
+
+                    <!-- Input for event description -->
+                    <textarea id="eventDescription" placeholder="Event Description" style="height: 100px;"></textarea>
                     <!-- Inputs for creating an event -->
-                    <select id="eventDuration">
-                        <option value="5">5 minutes</option>
-                        <option value="10">10 minutes</option>
-                        <option value="15">15 minutes</option>
-                        <option value="30">30 minutes</option>
-                        <option value="45">45 minutes</option>
-                        <option value="60">1 hour</option>
-                        <!-- Add more options as needed -->
-                    </select>
-                    <select id="eventStartDay">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Wednesday">Thursday</option>
-                        <option value="Wednesday">Friday</option>
-                        <option value="Wednesday">Saturday</option>
-                        <option value="Wednesday">Sunday</option>
-                    </select>
+                    <!-- Input for event duration in minutes -->
+                    <input type="number" id="eventDuration" placeholder="Duration in minutes">
 
-                    <!-- Dropdown for end day -->
-                    <select id="eventEndDay">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Wednesday">Thursday</option>
-                        <option value="Wednesday">Friday</option>
-                        <option value="Wednesday">Saturday</option>
-                        <option value="Wednesday">Sunday</option>
-                    </select>
-
-                    <!-- Input for start time -->
-                    <input type="text" id="eventStartTime" placeholder="Start Time (e.g., 9:00 AM)">
-
-                    <!-- Input for end time -->
-                    <input type="text" id="eventEndTime" placeholder="End Time (e.g., 6:00 PM)">
                     <button onclick="createCustomEvent()">Create Event</button>
 
                 </div>
@@ -106,7 +81,7 @@
                 </div>
             </div>
             <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleRangeOfPeople()">Range of People</span>
+                <span class="section-text" onclick="toggleVisibility('rangeSelection')">Range of People</span>
                 <div id="rangeSelection" style="display: none;">
                     <label for="minPeople">Minimum:</label>
                     <select id="minPeople">
@@ -147,8 +122,10 @@
                     <!-- Confirmed range will be listed here -->
                 </div>
             </div>
+
+            <!--
             <div class="section" style="position: relative;">
-                <span class="section-text" onclick=" toggleProjectOptions()">Project Options</span>
+                <span class="section-text" onclick=" toggleVisibility('projectOptions')">Project Options</span>
                 <div id="projectOptions" style="display: none;">
                     <div id="projectInput">
                         <input type="text" id="projectName" placeholder="Project Name">
@@ -157,9 +134,8 @@
                     </div>
                 </div>
                 <div id="projectList" style="display: none;">
-                    <!-- Added projects will be listed here -->
                 </div>
-            </div>
+            </div> -->
             <div id="finalButton">
                 <button onclick="createTeams()">Create Teams</button>
             </div>

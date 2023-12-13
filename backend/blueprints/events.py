@@ -109,7 +109,6 @@ def delete_event(event_id: int, group_id: int) -> Response:
     and then proceeds to execute the query command to delete the event selected.
     """
     # Authenticate the user and check if they are the group admin
-    print("here")
     user_email: str = session.get('email')
 
     membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
@@ -123,8 +122,8 @@ def delete_event(event_id: int, group_id: int) -> Response:
         db_session.delete(event)
         db_session.commit()
         return jsonify(status='success')
+        
     # If user is not owner, do not delete.
-    print("here2")
     return jsonify(status='fail')
 
 @events_blueprint.route('/get-event/<int:event_id>', methods=['GET'])

@@ -120,6 +120,7 @@ h1 {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
+    max-width: 300px;
 }
 
 .team-box,

@@ -95,8 +95,8 @@ $(document).ready(function () {
                 notificationBar.innerHTML += `<div class="notification-item">\n`
                                           + `<p>You're invited to ${group['name'] || 'Unnamed Group'}</p>\n`
                                           + `<p>Id: <span class="group_id_box">${group['id']}<span></p>`
-                                          + `<button class="accept-btn">Accept</button>\n`
-                                          + `<button class="decline-btn">Decline</button>\n`
+                                          + `<button class="accept-btn" onclick="declineInvite()">Accept</button>\n`
+                                          + `<button class="decline-btn" onclick="acceptInvite()">Decline</button>\n`
                                           + '</div>'
             }
 
@@ -115,6 +115,8 @@ $(document).ready(function () {
             $(".notification-dropdown").hide();
         }
     });
+
+    
 
     // link profile button to profile page
     $("#editProfile").on("click", function (event) {
@@ -174,4 +176,9 @@ $(document).ready(function () {
 });
 
 
-
+/**
+  * decline an group invite
+  */
+function declineInvite(arg) {
+    console.log(arg)
+}

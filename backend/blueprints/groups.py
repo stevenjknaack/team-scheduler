@@ -229,3 +229,49 @@ def group_page(group_id):
     else:
     # Redirect to the home page or show an error page
         return redirect(url_for('auth.home'))
+    
+@groups_blueprint.route('/delete_from_group/<int:group_id>', methods=['POST'])
+def delete_user_from_group(group_id: int) -> Response :
+    """
+    Deletes the current user from a specified group
+
+    :group_id: the id of the group to delete the current user from
+    """
+    # get user email from session
+    user_email: str | None = session.get('email')
+
+    # get and validate membership
+    membership: Membership = current_app.db.session.get(Membership, (user_email, group_id))
+    
+    if not membership :
+        return jsonify(status='error', message='user is not in group'), 401
+    
+    # delete user and return successful
+    current_app.db.session.delete(membership)
+    current_app.db.session.commit()
+
+    return jsonify(status='success'), 201
+
+@groups_blueprint.route('/change_group_role/<int:group_id>', methods=['POST'])
+def change_user_group_role(group_id: int, role: str) -> Response :
+    """
+    Update a user's role in a group
+
+    :group_id: the id of the group to change the current user's role in
+    """
+    # get user email from session
+    user_email: str | None = session.get('email')
+
+    # get and validate membership
+    membership: Membership = current_app.db.session.get(Membership, (user_email, group_id))
+    
+    if not membership :
+        return jsonify(status='error', message='user is not in group'), 401
+    
+    # update membership role
+    membership.role = role
+    current_app.db.session.commit()
+
+    # return success
+    return jsonify(status='success'), 201
+    

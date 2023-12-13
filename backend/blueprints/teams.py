@@ -2,6 +2,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 from ..models import *
+import time
 
 teams_blueprint: Blueprint = Blueprint('teams', __name__, 
                             template_folder='../../templates', 
@@ -10,6 +11,34 @@ teams_blueprint: Blueprint = Blueprint('teams', __name__,
 @teams_blueprint.route('/team')
 def go_to_team_page() -> str | Response:
     return render_template('team.html')
+
+@teams_blueprint.route('/partition_team_page')
+def create_teams() -> Response:
+    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
+    
+    # Retrieve group_id from query parameters
+    group_id = request.args.get('group_id')
+    
+    return render_template('partition_teams.html', people=people, group_id=group_id)
+
+@teams_blueprint.route('/manual_create_team_page')
+def manual_create_teams():
+    group_id = request.args.get('group_id')
+
+    # Ensure group_id is provided
+    if not group_id:
+        # Handle the case where group_id is not provided
+        return redirect(url_for('some_default_route'))  # Redirect to a default route or error page
+
+    # Query for all users in the specified group
+    users_query = current_app.db.session.query(User).join(Membership).filter(Membership.group_id == group_id)
+    users = users_query.all()
+
+    # Extract usernames and emails
+    people = [{'email': user.email, 'username': user.username} for user in users]
+
+    return render_template('manual_create_team.html', people=people, group_id=group_id)
+
 
 @teams_blueprint.route('/generate_teams', methods=['POST'])
 def generate_teams() -> Response :
@@ -31,14 +60,44 @@ def generate_teams() -> Response :
 @teams_blueprint.route('/manual_create_teams', methods=['POST'])
 def create_team() -> str | Response:
     """
-    This Method will allow for creating a team manually, without needing time availabilty. A user who 
-    creates a team can give a name to the team and insert people manually into it by providing their email.
-    Other USers who have been invited will get a notification which will allow them to accept or deny invitation.
+    Create a team manually and add participants.
     """
-    # Creates a team with team name and size. 
-    # Get information from group participant via email from DB
-    # Commit team to DB 
-    # Commit participants into DB 
-    # Return succesful JQuery 
-    return Response(status=501) # not implemented
-  
+    # Parse incoming JSON data
+    data = request.get_json()
+
+    print("Received data:", data)  # Log the received data
+
+    # Extract team details
+    team_id = int(time.time())
+    team_name = data.get('name')
+    team_description = data.get('description')
+    group_id = data.get('group_id')
+    participants = data.get('participants')  # List of participant emails
+    print(participants)
+
+    print(f"Creating team with ID {team_id}, Name {team_name}, Description {team_description}, Group ID {group_id}")
+
+    # Create a new Team instance without group_id
+    new_team = Team(id=team_id, name=team_name, description=team_description)
+    new_team.group_id = group_id  # Set group_id after instance creation
+
+    try:
+        # Add the new team to the session
+        current_app.db.session.add(new_team)
+
+        
+        # Add participants to the team
+        for email in participants:
+            user = current_app.db.session.query(User).filter_by(email=email).first()
+            if user:
+                new_team.members.append(user)
+            else:
+                # Handle the case where the user is not found
+                print(f"User with email {email} not found")
+
+        # Commit changes to the database
+        current_app.db.session.commit()
+        return jsonify({"message": "Team created successfully", "team_id": team_id})
+    except Exception as e:
+        current_app.db.session.rollback()
+        return jsonify({"error": str(e)}), 500

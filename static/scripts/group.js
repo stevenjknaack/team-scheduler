@@ -7,8 +7,8 @@
 var invitationCodeGenerated = null;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    
-    
+
+
     /**
      * Functionality: Team box click
      * Attaches click event listeners to all elements with class 'team-box'.
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             window.location.href = teamUrl;
         });
     });
-    
+
     /**
      * Functionality: Inivte Button click
      * Handle 1: closing modal when click (x) or "esc" button
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var btn = document.getElementById('invite-btn');
     var span = document.getElementsByClassName('close-btn')[0];
     var invitationCodeInput = document.getElementById('invitationCode');
-    
+
     /**
      * Handle 1
      * Closes the invite modal when the close button (span) is clicked.
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
      * Closes the invite modal when the Escape key is pressed, provided the modal is currently displayed.
      * @param {object} event - an KeyBoardEvent
      */
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         // Check if the key pressed is the Escape key and if the modal is displayed
         if (event.key === 'Escape' && inviteModal.style.display === 'block') {
             inviteModal.style.display = 'none';
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     });
-    
+
     /**
      * Handle 4
      * Gathers and logs the emails of all invited participants when the submit button is clicked.
@@ -130,18 +130,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
             },
             body: JSON.stringify({ emails: emails }),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // return JSON response
-        })
-        .catch(error => {
-            console.error('Error: ', error); // if error, print out error
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // return JSON response
+            })
+            .catch(error => {
+                console.error('Error: ', error); // if error, print out error
+            });
         // console.log(emails);
         inviteModal.style.display = "none"; // close the invite modal
     });
-    
-    
+
+
     /**
      * Functionality: People modal 
      * Handle 1: opening the modal when people button clicked
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     peopleBtn.onclick = function () {
         peopleModal.style.display = 'block';
     };
-    
+
     /**
      * Handle 2
      * Closes the people modal when the close button (span) is clicked.
@@ -171,19 +171,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
     spanClosePeople.onclick = function () {
         peopleModal.style.display = 'none';
     };
-    
+
     /**
      * Handle 2
      * Closes the people modal when the Escape key is pressed
      * @param {object} event - an KeyBoardEvent
      */
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         // Check if the key pressed is the Escape key and if the modal is displayed
         if (event.key === 'Escape' && peopleModal.style.display === 'block') {
             peopleModal.style.display = 'none';
         }
     });
-    
+
     /**
      * Handle 3
      * Filters and displays email entries in 'emailList' that match the search criteria entered in 'searchEmail'.
@@ -236,8 +236,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     };
 
-    document.querySelectorAll(".delete-event-btn").forEach(function(btn) {
-        btn.addEventListener("click", function() {
+    document.querySelectorAll(".delete-event-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
             console.log("button clicked")
             var eventId = this.getAttribute("data-event-id");
             delete_event(eventId);
@@ -252,13 +252,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // Make sure that there is an element there and that there is an id element
         if (groupIdMatch && groupIdMatch[1]) {
             var group_id = groupIdMatch[1];
-                        // Redirect to create-event with the extracted group ID
+            // Redirect to create-event with the extracted group ID
         }
         // Send a request to the server to delete the event
         fetch(`/delete-event/${eventId}/${group_id}`, {
             method: "DELETE",
         })
-            .then(function(response) {
+            .then(function (response) {
                 if (response.ok) {
                     // Reload the page to reflect the changes
                     location.reload();
@@ -266,20 +266,54 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     console.log("Failed to delete the event.");
                 }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error("Error:", error);
             });
     }
 
-    // Had to name it like this because of HTML. TODO: Change HTML and JS to have better representation of buttons
-    var createTeamEventBtn = document.getElementById('createTeamEventButton');
-    // Check if the element is not null before adding the event listener
-    if (createTeamEventBtn) {
-        createTeamEventBtn.addEventListener('click', function () {
-            // Redirect to create-event route with a parameter indicating it's a team event
-            window.location.href = '/create-event?type=team';
-        });
-    } 
+    var createTeamButton = document.getElementById('createTeamButton');
+    var createTeamOptions = document.getElementById('createTeamOptions');
+    var partitionTeamButton = document.getElementById('partitionTeamButton');
+    var manualCreateTeamButton = document.getElementById('manualCreateTeamButton');
+
+    createTeamButton.addEventListener('click', function(event) {
+        // Toggle the dropdown display
+        createTeamOptions.style.display = createTeamOptions.style.display === 'block' ? 'none' : 'block';
+        event.stopPropagation(); // Prevent the click from propagating to the window
+    });
+
+    partitionTeamButton.addEventListener('click', function() {
+        var currentUrl = window.location.href;
+        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+
+        if (groupIdMatch && groupIdMatch[1]) {
+            var groupId = groupIdMatch[1];
+            window.location.href = '/partition_team_page?group_id=' + groupId;
+        } else {
+            console.error('Group ID not found in the URL');
+        }
+        createTeamOptions.style.display = 'none'; // Hide the options
+    });
+
+    manualCreateTeamButton.addEventListener('click', function() {
+        var currentUrl = window.location.href;
+        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+
+        if (groupIdMatch && groupIdMatch[1]) {
+            var groupId = groupIdMatch[1];
+            window.location.href = '/manual_create_team_page?group_id=' + groupId;
+        } else {
+            console.error('Group ID not found in the URL');
+        }
+        createTeamOptions.style.display = 'none'; // Hide the options
+    });
+
+    // Optional: Hide the dropdown if clicked outside
+    window.addEventListener('click', function(event) {
+        if (event.target !== createTeamButton && event.target !== createTeamOptions) {
+            createTeamOptions.style.display = 'none';
+        }
+    });
 
     // TODO: Add functionality for promote and demote buttons
     /*

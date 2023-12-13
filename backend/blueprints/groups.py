@@ -191,6 +191,7 @@ def create_group_event(group_id: int) -> Response:
         return jsonify({"status": "success", "message": "Group event created successfully."}), 201
     else:
         return jsonify({"status": "error", "message": "Event creation failed. Please check your input."}), 500
+        
 @groups_blueprint.route('/join_group/', methods = ['GET', 'POST'])
 def join_group()-> Response:
     """ This method is being written to handle the functionality of joining a group from a members side, by inputting

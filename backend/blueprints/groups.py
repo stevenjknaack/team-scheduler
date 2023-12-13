@@ -119,80 +119,32 @@ def get_group_id() -> Response :
 @groups_blueprint.route('/send-invitations/<int:group_id>', methods=['POST'])
 def send_invitations(group_id: int) -> Response :
    """ Sends group invitations to users via email using Flask-Mail API """
-
-
-   # configure Flask-Mail API
-   current_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-   current_app.config['MAIL_PORT'] = 587
-   current_app.config['MAIL_USE_TLS'] = True
-   current_app.config['MAIL_USE_SSL'] = False
-   current_app.config['MAIL_USERNAME'] = '10stars.scheduling@gmail.com'
-   current_app.config['MAIL_PASSWORD'] = 'ScottDaBeast2023^'
-   current_app.config['MAIL_DEFAULT_SENDER'] = '10stars.scheduling@gmail.com'
-
-
+   # get Mail instance
    mail = Mail(current_app)
-
 
    # Get JSON data (list of emails), sent from the frontend
    data = request.get_json()
 
-
    # Extract email addresses
    emails = data.get('emails', [])
 
-
-   # TODO: fetch event id instead of this placeholder
-   # event_id = 5
-
-
-   # connect to database
-   db = current_app
-
-
-   # create a cursor
-   # cursor = db.cursor()
-
-
    for email in emails:
        # check if the user is already a member of the group
-       existing_membership = current_app.db.session.execute(select(Membership).filter_by(user_email=email, group_id=group_id)).scalar()
-
+       existing_membership = current_app.db.session.scalars(select(Membership).filter_by(user_email=email, group_id=group_id))
 
        # if user is not already a member, add them as an invitee
        if not existing_membership:
-           new_membership = Membership(user_email=email, group_id=group_id, role="invitee")
+           new_membership = Membership(user_email=email, group_id=group_id, role='invitee')
 
-
-           # add the new invitee to the session
+           # add the new invitee to the session and commit
            current_app.db.session.add(new_membership)
-
-
-           # commit the changes to the db
            current_app.db.session.commit()
-
-
-
-
-   # # add all emails into the invitee list for the specific group
-   # for email in emails:
-   #     query = "INSERT INTO invitee (event_id, email) VALUES (%s, %s)"
-   #     values = (event_id, email)
-   #     cursor.execute(query, values)
-   #     db.commit()
-  
-   # close cursor and database
-   # cursor.close()
-   # db.close()
-
 
    # TODO: Process the emails, e.g., send invitation emails, save to the database, etc.
    # For now, let's just print them for demonstration purposes
    print(emails)
 
-
    # sending invitation email functionality through Flask-Mail API
-
 
    # for each email in email list, send an invitation email
    for email in emails:

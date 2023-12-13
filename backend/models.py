@@ -133,7 +133,7 @@ class Membership(Base) :
 
     # methods
     def __init__(self, user_email: str, group_id: int, role: str = 'invitee') -> None:
-        """ role must be in ['invitee', 'participant', 'admin', 'owner'] """
+        """:role: must be in ['invitee', 'requester', 'participant', 'admin', 'owner'] """
         self.user_email = user_email
         self.group_id = group_id
         self.role = role

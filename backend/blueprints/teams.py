@@ -22,10 +22,21 @@ def create_teams() -> Response:
     return render_template('partition_teams.html', people=people, group_id=group_id)
 
 @teams_blueprint.route('/manual_create_team_page')
-def manual_create_teams() -> Response:
-    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
+def manual_create_teams():
     group_id = request.args.get('group_id')
-    
+
+    # Ensure group_id is provided
+    if not group_id:
+        # Handle the case where group_id is not provided
+        return redirect(url_for('some_default_route'))  # Redirect to a default route or error page
+
+    # Query for all users in the specified group
+    users_query = current_app.db.session.query(User).join(Membership).filter(Membership.group_id == group_id)
+    users = users_query.all()
+
+    # Extract usernames and emails
+    people = [{'email': user.email, 'username': user.username} for user in users]
+
     return render_template('manual_create_team.html', people=people, group_id=group_id)
 
 
@@ -62,6 +73,7 @@ def create_team() -> str | Response:
     team_description = data.get('description')
     group_id = data.get('group_id')
     participants = data.get('participants')  # List of participant emails
+    print(participants)
 
     print(f"Creating team with ID {team_id}, Name {team_name}, Description {team_description}, Group ID {group_id}")
 
@@ -75,15 +87,13 @@ def create_team() -> str | Response:
 
         
         # Add participants to the team
-        """
         for email in participants:
-            user = User.query.filter_by(email=email).first()
+            user = current_app.db.session.query(User).filter_by(email=email).first()
             if user:
                 new_team.members.append(user)
             else:
                 # Handle the case where the user is not found
                 print(f"User with email {email} not found")
-        """
 
         # Commit changes to the database
         current_app.db.session.commit()

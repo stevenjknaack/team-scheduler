@@ -255,7 +255,6 @@ def group_page(group_id):
     team_data = []
     for team in group.teams:
         members = [member.username for member in team.members]
-        members = ['Member 1', 'Member 2', 'Member 3', 'Member 4', 'Member 5']
         team_data.append({'name': team.name, 'members': members})
 
 

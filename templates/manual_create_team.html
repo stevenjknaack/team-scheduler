@@ -50,10 +50,10 @@
                     </div>
                     <div class="team-members" id="peopleContainer">
                         {% for person in people %}
-                        <label class="member" for="chk{{ person }}">
-                            <input type="checkbox" id="chk{{ person }}" value="{{ person }}">
+                        <label class="member" for="chk{{ person['username'] }}">
+                            <input type="checkbox" id="chk{{ person['username'] }}" value="{{ person['username'] }}" data-email="{{ person['email'] }}">
                             <span class="checkmark"></span>
-                            {{ person }}
+                            {{ person['username'] }}
                         </label>
                         {% endfor %}
                     </div>

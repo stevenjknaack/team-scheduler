@@ -138,6 +138,15 @@ function toggleVisibility(elementId) {
     element.style.display = (element.style.display === 'none') ? 'block' : 'none';
 }
 
+function collectSelectedParticipants() {
+    const selectedEmails = [];
+    document.querySelectorAll('#peopleContainer input[type="checkbox"]:checked').forEach(function(checkbox) {
+        selectedEmails.push(checkbox.getAttribute('data-email'));
+    });
+    return selectedEmails;
+}
+
+
 function createTeam() {
     // Retrieve the team name and description from input fields
     var teamName = document.getElementById('teamName').value.trim();
@@ -168,11 +177,8 @@ function createTeam() {
         return;
     }
 
-    // Find all elements representing selected participants and extract their text content
-    var selectedParticipantElements = document.querySelectorAll('#selectedParticipants .participant');
-    var participants = Array.from(selectedParticipantElements).map(element => element.textContent);
-
-    // Check if any participants are selected and alert if none are found
+    // Collect selected participant emails
+    var participants = collectSelectedParticipants();
     if (participants.length === 0) {
         alert("Please select at least one participant.");
         return;
@@ -186,6 +192,8 @@ function createTeam() {
         participants: participants,
         group_id: groupId
     };
+
+    console.log(team)
 
     $.ajax({
         url: '/manual_create_teams',

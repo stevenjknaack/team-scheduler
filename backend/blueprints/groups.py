@@ -284,7 +284,7 @@ def delete_user_from_group(group_id: int) -> Response :
 
     return jsonify(status='success'), 201
 
-@groups_blueprint.route('/change_group_role/<int:group_id>', methods=['POST'])
+@groups_blueprint.route('/change_group_role/<int:group_id>/<string:role>', methods=['POST'])
 def change_user_group_role(group_id: int, role: str) -> Response :
     """
     Update a user's role in a group

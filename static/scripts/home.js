@@ -93,11 +93,11 @@ $(document).ready(function () {
                 let group = data[key]
                 console.log(group)
                 notificationBar.innerHTML += `<div class="notification-item">\n`
-                                          + `<p>You're invited to ${group['name'] || 'Unnamed Group'}</p>\n`
-                                          + `<p>Id: <span class="group_id_box">${group['id']}<span></p>`
-                                          + `<button class="accept-btn" onclick="declineInvite()">Accept</button>\n`
-                                          + `<button class="decline-btn" onclick="acceptInvite()">Decline</button>\n`
-                                          + '</div>'
+                    + `<p>You're invited to ${group['name'] || 'Unnamed Group'}</p>\n`
+                    + `<p class="notify-id">Id: <span class="group_id_box">${group['id']}<span></p>`
+                    + `<button class="accept-btn" onclick="handleInvite(${group['id']}, this.parentElement)">Accept</button>\n`
+                    + `<button class="decline-btn" onclick="handleInvite(${group['id']}, this.parentElement, false)">Decline</button>\n`
+                    + '</div>'
             }
 
             // toggles the display of the dropdown between hide and show
@@ -199,10 +199,29 @@ $(document).ready(function () {
     });
 });
 
-
 /**
-  * decline an group invite
+  * Handles a group invite
+  * 
+  * @param group_id id of the group to make the user a participant of
+  * @param notificationItem the item containing the invite
+  * @param acceptInvite true means accept, false means decline
   */
-function declineInvite(arg) {
-    console.log(arg)
+function handleInvite(group_id, notificationItem, acceptInvite = true) {
+    // decide route
+    let route = `/change_group_role/${group_id}/participant`;
+    if (!acceptInvite) route = `/delete_from_group/${group_id}`
+    
+    // complete POST
+    fetch(route, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .catch(error => {
+        console.error('Error: ', error); // if error, print out error
+    });
+
+    // remove invite from notifications
+    notificationItem.style.display = 'none';
 }

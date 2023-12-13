@@ -264,3 +264,7 @@ h1 {
     margin-bottom: 20px;
     /* Space below the team name */
 }
+
+.hidden {
+  display: none;
+}

@@ -62,6 +62,10 @@
                 <h2>{{ group.name }}</h2>
                 <p>Members: {{ group.memberships | length }}</p>
                 <p>group ID: {{ group.id }}</p>
+                {% if group.memberships[0].role == 'owner' %}
+                <!-- Add the delete button with data-group-id attribute -->
+                    <button class="delete-group-btn" data-group-id="{{ group.id }}">Delete Group</button>
+                {% endif %}
             </div>
             {% endif %}
             {% endfor %}

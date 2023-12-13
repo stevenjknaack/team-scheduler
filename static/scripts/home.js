@@ -183,6 +183,34 @@ $(document).ready(function () {
         location.reload();
     });
 
+
+
+    /**
+     * Functionality for handling delete button on groups
+     */
+    function deleteGroup(groupId) {
+        fetch(`/delete-group/${groupId}`, {
+            method: "DELETE",
+        })
+        .then(function(response) {
+            if (response.ok) {
+                // Reload the page to reflect the changes
+                location.reload();
+            } else {
+                console.log("Failed to delete the group.");
+            }
+        })
+        .catch(function(error) {
+            console.error("Error:", error);
+        });
+    }
+
+    // Event delegation for dynamically added delete buttons
+    $(document).on("click", ".delete-group-btn", function(event) {
+        event.preventDefault();
+        var groupId = $(this).data("group-id");
+        deleteGroup(groupId);
+    });
     /**
      * Functionality redirect to group page when group box clicked
      */
@@ -192,10 +220,13 @@ $(document).ready(function () {
 
     // Add click event listener to each admin group div
     adminGroups.forEach(function (group) {
-        group.addEventListener('click', function () {
-            // Redirect to the group's page
-            var groupUrl = group.getAttribute('data-group-url');
-            window.location.href = groupUrl;
+        group.addEventListener('click', function (event) {
+            // Check if the clicked element is the delete button
+            if (!event.target.classList.contains('delete-group-btn')) {
+                // Redirect to the group's page
+                var groupUrl = group.getAttribute('data-group-url');
+                window.location.href = groupUrl;
+            }
         });
     });
 });

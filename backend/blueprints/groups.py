@@ -308,3 +308,39 @@ def change_user_group_role(group_id: int, role: str) -> Response :
     # return success
     return jsonify(status='success'), 201
     
+
+@groups_blueprint.route('/delete-group/<int:group_id>', methods=['DELETE'])
+def delete_group(group_id: int) -> Response:
+    """
+    This method deletes groups. It checks that the group is owned by the active user.
+    """
+    # Authenticate the user and check if they are the group admin
+    user_email: str = session.get('email')
+    membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+
+    # Check if the user is the owner of the group
+    if membership and membership.role == 'owner':
+        db_session = current_app.db.session
+        # Query the group to delete
+        group = db_session.get(Group, group_id)
+        try:
+            # Delete associated memberships
+            for membership in group.memberships:
+                db_session.delete(membership)
+
+            # Delete the group
+            db_session.delete(group)
+
+            # Commit changes to the database
+            db_session.commit()
+            return jsonify(status='success')
+
+        except SQLAlchemyError as e:
+            # Print failure
+            print(f"Exception during commit")
+            # Rollback changes to avoid leaving the database in an inconsistent state
+            db_session.rollback()  
+            return jsonify(status='fail', error='Error during deletion'), 500
+    
+    # If the user is not the owner, do not delete
+    return jsonify(status='fail')

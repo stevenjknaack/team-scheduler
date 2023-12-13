@@ -1,89 +1,69 @@
-""" Test routes and functions of events.py """
 import pytest
-from flask import url_for, Flask
+from flask import url_for
 from flask.testing import FlaskClient
 from unittest.mock import patch
-from app import create_app 
+import sys
+sys.path.append('./backend')
+from ..app import create_app
+from ..blueprints.events import events_blueprint # import obj rather than module
+import tempfile
+from flask.sessions import SecureCookieSessionInterface
+import json
 
+# Setup the Flask test client
 @pytest.fixture
-def client() -> None :
-    """ Setup the Flask test client """
-    app: Flask = create_app()
-
-    # Use the TEST configuration if available
-    app.config.update({
-        "TESTING": True,
-    })
+def test_client() -> None :
+    app = create_app()
+    app.config['TESTING'] = True
+    app.config['SERVER_NAME'] = 'localhost:6969'
+    app.config['APPLICATION_ROOT'] = '/'
+    app.config['PREFERRED_URL_SCHEME'] = 'http'
 
     with app.test_client() as client:
         with app.app_context():
-            # Initialize the test database here
-            init_db_for_tests(app)
-        yield client
+            yield app.test_client()
 
-def test_event_creation_page(client: FlaskClient) -> None :
-    """ Test the GET request for the event creation page """
-    # Simulate a logged-in user
-    with client.session_transaction() as sess:
-        sess['user_id'] = 1  
-    response = client.get(url_for('events.create_event'))
-    assert response.status_code == 200
-    assert b'Event Creation Form' in response.data  # Check for form content
+@pytest.mark.pytests
+def test_create_event_get(test_client: FlaskClient) -> None:
+        # Mock the session
+        with test_client.session_transaction() as sess:
+            sess['username'] = 'testuser'
 
-@patch('events.get_db')
-def test_create_event(mock_get_db, client: FlaskClient) -> None :
-    """ Test the POST request for creating an event """
-    # Setup the mock to simulate a database
-    mock_cursor = mock_get_db.return_value.cursor.return_value
-    mock_cursor.execute.return_value = None
-    mock_cursor.fetchone.return_value = None  # Simulate no return value for insert operations
-    
-    # Simulate a logged-in user
-    with client.session_transaction() as sess:
-        sess['user_id'] = 1
-    
-    # Simulate form data for creating an event
-    form_data = {
-        'title': 'Test Event',
-        'description': 'This is a test event',
-        # Add other form fields as necessary
-    }
-    
-    response = client.post(url_for('events.create_event_request'), data=form_data)
-    assert response.status_code == 302  # Assuming redirect after event creation
-    assert url_for('events.view_event') in response.location  # Assuming there is a route to view the event
+        # Send a GET request to the route
+        response = test_client.get('/create-event/1')
 
-def init_db_for_tests(app: Flask) -> None:
-    """ Initializing the db connection """
-    app.config['DB_HOST'] = 'test_db_host'
-    app.config['DB_PORT'] = 'test_db_port'
-    app.config['DB_USER'] = 'test_db_user'
-    app.config['DB_PASSWORD'] = 'test_db_password'
-    app.config['DB_NAME'] = 'test_db_name'
+        # Assert the response
+        assert response.status_code == 200
+        assert 'create_event' in response.data.decode() 
 
-def create_test_db_schema(db) -> None :
-    """ Create the schema for test """
-    with db.cursor() as cursor:
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS `event` (
-                `event_id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-                `event_name` VARCHAR(255) NOT NULL DEFAULT 'Unnamed Event',
-                `start_date` DATE NOT NULL,
-                `end_date` DATE NOT NULL,
-                `reg_start_day` ENUM('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
-                `reg_end_day` ENUM('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
-                `start_time` TIME NOT NULL,
-                `end_time` TIME NOT NULL,
-                `event_description` TEXT,
-                `edit_permission` ENUM('member', 'group_admin') NOT NULL DEFAULT 'group_admin',
-                `group_id` INTEGER NOT NULL,
-                `team_id` INTEGER,
-                CHECK ((`reg_start_day` IS NULL AND `reg_end_day` IS NULL)
-                XOR (`reg_start_day` IS NOT NULL AND `reg_end_day` IS NOT NULL)),
-                FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`)
-                ON UPDATE CASCADE ON DELETE CASCADE,
-                FOREIGN KEY (`team_id`, `group_id`) REFERENCES `team` (`team_id`, `group_id`)
-                ON UPDATE CASCADE ON DELETE CASCADE
-            );
-        """)
-        db.commit()
+@pytest.mark.pytests
+def test_create_event_request_post(test_client: FlaskClient) -> None:
+    with test_client as client:
+        # Mock the session
+        with client.session_transaction() as sess:
+            sess['username'] = 'testuser'
+            sess['email'] = 'testuser@example.com'
+
+        # Prepare mock data for the POST request
+        data = {
+            'event_name': 'Test Event',
+            'event_description': 'Description of Test Event',
+            'start_day': '01',
+            'start_month': '01',
+            'start_year': '2023',
+            'end_day': '02',
+            'end_month': '01',
+            'end_year': '2023',
+            'start_time': '08:00',
+            'end_time': '17:00',
+        }
+
+        # Send a POST request to the route
+        response = client.post('/create-event-request/1', data=data)
+
+        # Assert the response
+        assert response.status_code == 302  
+        assert url_for('auth.home') in response.location
+
+
+

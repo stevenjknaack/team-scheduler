@@ -1,7 +1,7 @@
 "use strict";
 
 $(document).ready(function () {
-
+    $(".event-box").hide();
     /** functionality for logout function  
      * handle:
      * 1. when welcome is click, the function will become logut
@@ -43,8 +43,8 @@ $(document).ready(function () {
         // show events
         $(this).addClass("active").addClass("selected");
         $("#showGroups").removeClass("active").removeClass("selected");
-        $(".groups-box").hide();
-        $(".events-box").show();
+        $(".group").hide();
+        $(".event-box").show();
     });
     // handle 2: group is click 
     $("#showGroups").click(function () {
@@ -54,8 +54,8 @@ $(document).ready(function () {
         // show group
         $(this).addClass("active").addClass("selected");
         $("#showEvents").removeClass("active").removeClass("selected");
-        $(".events-box").hide();
-        $(".groups-box").show();
+        $(".event-box").hide();
+        $(".group").show();
     });
 
     /**

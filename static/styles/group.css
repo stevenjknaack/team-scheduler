@@ -94,16 +94,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-.event-box {
-    background-color: #0f3460;
-    padding: 20px;
-    margin: 10px;
-    width: calc(33% - 20px);
-    /* three boxes per row with margins */
-    text-align: center;
-    border-radius: 10px;
-}
-
 .group-teams,
 .group-events,
 .team-events {
@@ -121,28 +111,25 @@ h1 {
 
 .team-box,
 .event-box {
-    flex: 0 0 auto;
-    /* Do not grow, do not shrink, and base the size on the width property */
-    width: calc(33.333% - 20px);
-    /* You can set a fixed width for the boxes */
-    margin-right: 10px;
-    /* Add margin between boxes */
-    background-color: #0f3460;
-    padding: 20px;
+    flex: 1 0 30%; /* Grow, do not shrink, with an initial width of 30% */
     margin: 10px;
-    width: calc(33% - 20px);
-    /* three boxes per row with margins */
+    padding: 20px;
     text-align: center;
+    background-color: #0f3460;
     border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
 }
 
-.team-box{
+.team-box,
+.event-box {
     cursor: pointer; /* Change cursor to indicate the item is clickable */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
 }
 
 
-.team-box:hover {
+.team-box, .event-box:hover {
 transform: translateY(-5px); /* Slightly raise the box to give a lifting effect */
 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Increase shadow for depth perception */
 }
@@ -302,6 +289,11 @@ input[type="text"] {
     background-color: #e2e2e2; /* Slightly darker shade on hover for visual feedback */
 }
 
+.btn-container, .switch-container {
+    display: flex;
+    justify-content: center; /* Centers the content horizontally */
+    margin-top: 15px;
+}
 
 .team-members {
     display: flex; /* Use flexbox to layout team member names */

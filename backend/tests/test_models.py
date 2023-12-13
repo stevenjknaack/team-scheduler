@@ -2,12 +2,13 @@
 Unit testing for models.py 
 
 :author: Steven Knaack
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 """
-
-from models import *
+print("In module products __package__, __name__ ==", __package__, __name__)
+from ..models import *
 import unittest
 import os
-from models import *
 from datetime import time
 from flask_cors import CORS
 from flask import Flask
@@ -28,39 +29,104 @@ class MyTestCase(unittest.TestCase) :
         self.real_app = Flask(__name__)
         CORS(self.real_app)
         self.real_app.testing = True
-        #self.db: SQLAlchemy =\
-        #    models.configure_flask_sqlalchemy(self.real_app)
 
         # set up SQLAlchemy object
-        """
         self.db: SQLAlchemy =\
             configure_flask_sqlalchemy(self.real_app)
-            """
+            
         self.app = self.real_app.test_client()
     
     def test_membership(self) -> None :
         """ test the Membership model """
-        """
         with self.app.application.app_context() :
-            steven = self.db.session.get(User, 'sjk@gmail.com')
-            print(steven.memberships)
-            """
-        
-    def test_user(self) -> None :
-        """ test the User model """
-        """
-        with self.app.application.app_context() : 
-            steven: User =\
-                self.db.session.get(User, 'sjk@gmail.com')
-            print(steven)
-            steven.username = 'knaack'
+            # pre
+            user_create_email = 'testuser@gmail.com'
+            user_create_username = 'testuser'
+            user_create_password = 'password'
+            user_create = User(user_create_email, user_create_username, user_create_password)
+            self.db.session.add(user_create)
             self.db.session.commit()
 
-            knaack: User =\
-                self.db.session.get(User, 'sjk@gmail.com')
-            print(knaack)
-            """
-        pass
+            fail_membership = Membership('', 0)
+
+            # test create
+            membership_create_email = 'testuser@gmail.com'
+            membership_create_group_id = 10000
+            membership_create_role = 'owner'
+            membership_create = Membership(membership_create_email,
+                                            membership_create_group_id, membership_create_role)
+            self.db.session.add(membership_create)
+            self.db.session.commit()
+
+            # test read 
+            membership_read = self.db.session.get(Membership, membership_create_email) or fail_membership
+            self.assertEqual(membership_create_email, membership_read.user_email)
+            self.assertEqual(membership_create_group_id, membership_read.group_id)
+            self.assertEqual(membership_create_role, membership_read.role)
+
+            # test update
+            new_membership_read_role = 'invitee'
+            membership_read.role = new_membership_read_role
+            self.db.session.commit()
+            membership_read = self.db.session.get(Membership, new_membership_read_role) or fail_membership
+            self.assertEqual(membership_read.role, new_membership_read_role)
+
+            # test delete
+            self.db.session.delete(membership_read)
+            self.db.session.commit()
+            
+            self.assertIsNone(self.db.session.get(Membership, membership_create_email))
+           
+
+    def test_user(self) -> None :
+        """ test the User model """
+        with self.app.application.app_context() :
+            # define a fail user
+            fail_user = User('fail', 'fail', 'fail')
+
+            # test create
+            user_create_email = 'testuser@gmail.com'
+            user_create_username = 'testuser'
+            user_create_password = 'password'
+            user_create = User(user_create_email, user_create_username, user_create_password)
+            self.db.session.add(user_create)
+            self.db.session.commit()
+
+            # test read 
+            user_read = self.db.session.get(User, user_create_email) or fail_user
+            self.assertEqual(user_create_email, user_read.email)
+            self.assertEqual(user_create_username, user_read.username)
+            self.assertEqual(user_create_password, user_read.password)
+
+            # test update
+            new_user_read_email = 'newtestuser@gmail.com'
+            user_read.email = new_user_read_email
+            self.db.session.commit()
+            user_read = self.db.session.get(User, new_user_read_email) or fail_user
+            self.assertEqual(user_read.email, new_user_read_email)
+
+            new_user_read_username = 'newtestuser'
+            user_read.username = new_user_read_username
+            self.db.session.commit()
+            user_read = self.db.session.get(User, new_user_read_email) or fail_user
+            self.assertEqual(user_read.username, new_user_read_username)
+
+            new_user_read_password = 'newpassword'
+            user_read.password = new_user_read_password
+            self.db.session.commit()
+            user_read = self.db.session.get(User, new_user_read_email) or fail_user
+            self.assertEqual(user_read.password, new_user_read_password)
+
+            # test delete
+            user_delete_email = 't@email.com'
+            user_delete = User(user_delete_email, 't', 't')
+            self.db.session.add(user_delete)
+            self.db.session.commit()
+
+            self.db.session.delete(user_delete)
+            self.db.session.commit()
+            
+            self.assertIsNone(self.db.session.get(User, user_delete_email))
 
     def test_availability_block(self) -> None :
         """ test the Availability model """

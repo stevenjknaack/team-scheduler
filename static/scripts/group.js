@@ -55,19 +55,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
             inviteModal.style.display = 'none';
         }
     });
-    
+
     /**
      * Handle 2
-     * Opens the invite modal and generates an invitation code if it hasn't been generated already.
+     * Opens the inviteModal and sets the invitation code as the group ID for the specific group the user has navigated to
+     * 
+     * @author Kyle
      */
     btn.onclick = function () {
+        // display the inviteModal
         inviteModal.style.display = 'block';
-        if (!invitationCodeGenerated) {
-            invitationCodeGenerated = Math.random().toString(36).substring(2, 10);
-            invitationCodeInput.value = invitationCodeGenerated;
+
+        // get current URL
+        var currentURL = window.location.href;
+
+        // extract the group ID from the URL using regex
+        var match = currentURL.match(/\/group\/(\d+)/);
+
+        // check if a match is found
+        if (match) {
+            var groupId = match[1];
+            invitationCodeInput.value = groupId; // set value of invitation code to extracted group ID
+        } else {
+            console.error('Group ID not found in the URL');
         }
     };
-
 
     // Inviting participants
     const emailInput = document.getElementById("invite-email");
@@ -95,15 +107,38 @@ document.addEventListener('DOMContentLoaded', (event) => {
      * Handle 4
      * Gathers and logs the emails of all invited participants when the submit button is clicked.
      * Closes the invite modal afterwards.
+     * 
+     * @author Kyle
      */
     inviteSubmitBtn.addEventListener("click", function () {
         const emails = [];
         for (let i = 0; i < invitedParticipants.children.length; i++) {
             emails.push(invitedParticipants.children[i].innerText);
         }
-        // TODO use ajax to connect to database 
-        console.log(emails);
-        inviteModal.style.display = "none";
+
+        var currentUrl = window.location.href;
+        var eventId = this.getAttribute("data-event-id");
+        console.log("EVENT ID: " + eventId);
+        var groupId = currentUrl.match(/\/group\/(\d+)/);
+        console.log("GROUP ID: " + groupId[1]);
+
+        // make HTTP request to the Flask backend
+        fetch(`/send-invitations/${groupId[1]}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ emails: emails }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // return JSON response
+        })
+        .catch(error => {
+            console.error('Error: ', error); // if error, print out error
+        });
+        // console.log(emails);
+        inviteModal.style.display = "none"; // close the invite modal
     });
     
     
@@ -184,23 +219,56 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     };
-    var createGroupEventBtn = document.getElementById('createGroupEventButton');
-    if (createGroupEventBtn) {
-        createGroupEventBtn.addEventListener('click', function () {
-            // Extract the group ID from the current URL
-            var currentUrl = window.location.href;
-            var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+    // Creates Modal for creating event button
+    $("#createEventButton").click(function () {
+        $("#createEventModal").css("display", "block");
+    });
 
-            if (groupIdMatch && groupIdMatch[1]) {
-                var group_id = groupIdMatch[1];
+    // Close create event modal
+    $(".close-btn").click(function () {
+        $("#createEventModal").css("display", "none");
+    });
 
-                // Redirect to create-event with the extracted group ID
-                window.location.href = `/create-event/${group_id}?type=group`;
-            } else {
-                console.error('Group ID not found in the URL.');
-                // Handle the case where group ID is not found in the URL
-            }
+    // Close create event modal if clicked outside the modal
+    window.onclick = function (event) {
+        if (event.target === $("#createEventModal")[0]) {
+            $("#createEventModal").css("display", "none");
+        }
+    };
+
+    document.querySelectorAll(".delete-event-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            console.log("button clicked")
+            var eventId = this.getAttribute("data-event-id");
+            delete_event(eventId);
         });
+    });
+    // Function to delete an event
+    function delete_event(eventId) {
+        // Extract the group ID from the current URL
+        var currentUrl = window.location.href;
+        // Extract from the url 'group/id' (localhost:6969/group/id)
+        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+        // Make sure that there is an element there and that there is an id element
+        if (groupIdMatch && groupIdMatch[1]) {
+            var group_id = groupIdMatch[1];
+                        // Redirect to create-event with the extracted group ID
+        }
+        // Send a request to the server to delete the event
+        fetch(`/delete-event/${eventId}/${group_id}`, {
+            method: "DELETE",
+        })
+            .then(function(response) {
+                if (response.ok) {
+                    // Reload the page to reflect the changes
+                    location.reload();
+                } else {
+                    console.log("Failed to delete the event.");
+                }
+            })
+            .catch(function(error) {
+                console.error("Error:", error);
+            });
     }
 
     // Had to name it like this because of HTML. TODO: Change HTML and JS to have better representation of buttons

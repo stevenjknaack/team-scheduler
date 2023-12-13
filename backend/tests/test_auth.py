@@ -1,104 +1,142 @@
-""" Test routes and functions of auth.py """
-
 import pytest
-from flask import session, g, url_for, FlaskClient
+from flask import session, g, url_for
+from flask.testing import FlaskClient
+import sys
+import os
+sys.path.append('./backend')
+from app import create_app
+from ..blueprints.auth import auth_blueprint # import obj rather than module
 from unittest.mock import patch
 from werkzeug.security import generate_password_hash
-from blueprints.auth import auth_blueprint
-# Assuming auth.py is in the same directory as this test file
+from models import User 
+import time
+import bcrypt
 
+# A fixture is where a client is define, we want to simulate requests to the app
 @pytest.fixture
-def client() -> None :
-    """ Setup the Flask test client """
+def client_and_app() -> None :
     app = create_app()
-    app.register_blueprint(auth_blueprint)
+    app.config['TESTING'] = True
+    app.config['SERVER_NAME'] = 'localhost:6969'
+    app.config['APPLICATION_ROOT'] = '/'
+    app.config['PREFERRED_URL_SCHEME'] = 'http'
+
     with app.test_client() as client:
-        yield client
+        with app.app_context():
+            yield client, app
 
-def test_index_route(client: FlaskClient) -> None :
-    """ Test the redirection behavior of the index route """
-    with client:
-        # Simulate a user not in session
-        response = client.get('/')
-        assert response.status_code == 302
-        assert url_for('auth.login') in response.location
+# Test the redirection behavior of the index route
+@pytest.mark.pytests
+def test_index_route(client_and_app: FlaskClient) -> None:
+    client, app = client_and_app
+    # Simulate a user not in session (commented out)
+    response = client.get('/')
+    # expect a redirection
+    assert response.status_code == 302
+    assert url_for('auth.login') in response.location
 
-        # Simulate a user in session
-        with client.session_transaction() as sess:
-            sess['username'] = 'testuser'
-        response = client.get('/')
-        assert response.status_code == 302
-        assert url_for('profile') in response.location
-
-def test_login_get(client: FlaskClient) -> None :
-    """ Test the login GET request """
+# Test the login GET request
+@pytest.mark.pytests
+def test_login_get(client_and_app: FlaskClient) -> None :
+    client, app=client_and_app 
     response = client.get(url_for('auth.login'))
     assert response.status_code == 200
-    assert b'login.html' in response.data
+    assert b'loginForm' in response.data 
 
-@patch('auth.get_db')
-def test_login_post(mock_get_db, client: FlaskClient) -> None:
-    """ Test the login POST request """
-    mock_cursor = mock_get_db.return_value.cursor.return_value
-    mock_cursor.execute.return_value = None
-    mock_cursor.fetchone.return_value = {
-        'id': 1, 'username': 'testuser', 'password': generate_password_hash('testpass')
-    }
-    
+# Test the login POST request
+@pytest.mark.pytests
+def test_login_post(client_and_app: FlaskClient) -> None :
+    client, app = client_and_app
+
+    # Generate unique test data
+    unique_suffix = str(int(time.time()))
+    test_email = f"testuser{unique_suffix}@example.com"
+    test_username = f"testuser{unique_suffix}"
+    test_password = "testpass"
+
+    # Hash the password using bcrypt
+    hashed_password = bcrypt.hashpw(test_password.encode('utf-8'), bcrypt.gensalt())
+
+    # Ensure the database is in a clean state
+    with app.app_context():
+        existing_user = app.db.session.execute(
+            app.db.select(User).filter_by(email=test_email)
+        ).scalar_one_or_none()
+
+        if existing_user:
+            app.db.session.delete(existing_user)
+            app.db.session.commit()
+
+        # Create a test user in the database
+        new_user = User(email=test_email, username=test_username, password=hashed_password)
+        app.db.session.add(new_user)
+        app.db.session.commit()
+
+    # Attempt to login with the test user credentials
     response = client.post(url_for('auth.login'), data={
-        'username': 'testuser',
-        'password': 'testpass'
+        'email': test_email,
+        'password': test_password
     })
-    
-    with client.session_transaction() as sess:
-        assert sess['username'] == 'testuser'
-    
-    assert response.status_code == 302
-    assert url_for('profile') in response.location
 
-def test_signup_get(client) -> None :
-    """ Test the signup GET request """
+    assert response.status_code == 200
+
+    # Clean up test data by removing the user
+    with app.app_context():
+        app.db.session.delete(new_user)
+        app.db.session.commit()
+
+# Test the signup GET request
+def test_signup_get(client_and_app: FlaskClient) -> None :
+    client, app=client_and_app
     response = client.get(url_for('auth.signup'))
     assert response.status_code == 200
-    assert b'signup.html' in response.data
+    assert b'signupForm' in response.data 
 
-@patch('auth.get_db')
-def test_signup_post(mock_get_db, client: FlaskClient) -> None :
-    """ Test the signup POST request """
-    # Simulate a successful signup by not throwing any database errors
-    response = client.post(url_for('auth.signup'), data={
-        'username': 'newuser',
-        'password': 'newpass'
+# # Test the signup POST request
+#@patch('blueprints.auth.get_db')
+@pytest.mark.pytests
+def test_signup_post(client_and_app):
+    client, app = client_and_app
+
+    # Create test data
+    test_email = "newuser@example.com"
+    test_username = "newuser"
+    test_password = "newpassword"
+
+    # Test signup POST request
+    response = client.post(url_for('auth.signup_request'), data={
+        'email': test_email,
+        'username': test_username,
+        'password': test_password
     })
+
+    # Verify response for successful signup
+    assert response.status_code == 200
+
+    # Clean up test data
+    with app.app_context():
+        user = app.db.session.execute(
+            app.db.select(User).filter_by(email=test_email)
+        ).scalar_one_or_none()
+        if user:
+            app.db.session.delete(user)
+            app.db.session.commit()
+
+    # Test for duplicate signup attempt
+    response = client.post(url_for('auth.signup_request'), data={
+        'email': test_email,
+        'username': test_username,
+        'password': test_password
+    })
+
+    # Verify response for duplicate signup
+    assert response.status_code == 200  
+
+# # Test the logout
+@pytest.mark.pytests
+def test_logout(client_and_app: FlaskClient) -> None :
+    client, app = client_and_app
+    # simualte a "POST" request to logout route
+    response = client.post(url_for('auth.logout'))
     assert response.status_code == 302
-    assert url_for('auth.login') in response.location
-
-def test_logout(client: FlaskClient) -> None:
-    """ Test the logout """
-    with client.session_transaction() as sess:
-        sess['username'] = 'testuser'
-    response = client.get(url_for('auth.logout'))
-    assert response.status_code == 302
-    assert url_for('auth.login') in response.location
-    with client.session_transaction() as sess:
-        assert 'username' not in sess
-
-def create_app() -> None :
-    """ Create an mock app """
-    from flask import Flask
-    app = Flask(__name__)
-    app.secret_key = 'testsecretkey'
-    return app
-
-def create_test_db_schema(db):
-    """ Create a mock db """
-    with db.cursor() as cursor:
-        # Create the `user` table.
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS `user` (
-                `email` VARCHAR(255) PRIMARY KEY,
-                `username` VARCHAR(255) NOT NULL,
-                `password` VARCHAR(255) NOT NULL
-            );
-        """)
-        db.commit()
+    assert url_for('auth.index') in response.location

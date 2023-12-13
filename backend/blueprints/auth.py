@@ -2,7 +2,8 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 import bcrypt
-from models import *
+from ..models import *
+from typing import Union
 
 auth_blueprint: Blueprint = Blueprint('auth', __name__, 
                                       template_folder='../../templates', 
@@ -26,7 +27,7 @@ def index() -> Response:
     return redirect(url_for('auth.login'))
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
-def login() -> str | Response:
+def login() -> Union[str , Response]:
     """
     GET:
         render the login page
@@ -55,7 +56,7 @@ def login() -> str | Response:
                             stored_hashed_password.encode('utf-8')):
                 session['email'] = user.email
                 session['username'] = user.email
-                return jsonify(status='success')
+                return jsonify(status='success'), 200
             else:
                 return jsonify(status='error',  message='Incorrect email or password'), 401
         else:
@@ -89,13 +90,22 @@ def home() -> Response:
     user_memberships = current_app.db.session.scalars(current_app.db.select(Membership).filter_by(user_email=email))
     if user_memberships:
         user_groups = [membership.group for membership in user_memberships]
-        return render_template('home.html', username=session.get('username'), user_groups=user_groups)
+        # initiate list of events to render in home.html
+        user_events=[]
+        # Loop through groups, and get each event to display in the home page
+        for group in user_groups:
+            group_id = group.id
+            user_events_result = current_app.db.session.scalars(current_app.db.select(Event).filter_by(group_id = group_id))
+
+            for event in user_events_result:
+                # Only append valid events, no null events
+                if event:
+                    user_events.append(event)
+        # Render home.html with username from session, groups and events the user participates in.
+        return render_template('home.html', username=session.get('username'), user_groups=user_groups, user_events=user_events)
     else: 
         return render_template('home.html', username=session['username'])
     
-
-
-
 @auth_blueprint.route('/signup')
 def signup() -> str | Response :
     """
@@ -132,7 +142,7 @@ def signup_request() -> Response:
     # check if user already exists
     if current_app.db.session.get(User, email) :
         return jsonify(status='error',  
-                    message='An account is already associated with the provided email')
+                    message='An account is already associated with the provided email'), 412
 
     # hashed_password  # make sure also encry at the frontend
     hashed_password: bytes = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -145,6 +155,6 @@ def signup_request() -> Response:
     current_app.db.session.commit()
 
     # notify success
-    return jsonify(status='success')
+    return jsonify(status='success'), 201
 
 

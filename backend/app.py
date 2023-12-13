@@ -9,13 +9,14 @@
 :author : Anwita
 """
 from flask import Flask
-from blueprints.auth import auth_blueprint
-from blueprints.events import events_blueprint
-from blueprints.groups import groups_blueprint
-from blueprints.profile import profile_blueprint
-from blueprints.teams import teams_blueprint
+from flask_mail import Mail
+from .blueprints.auth import auth_blueprint
+from .blueprints.events import events_blueprint
+from .blueprints.groups import groups_blueprint
+from .blueprints.profile import profile_blueprint
+from .blueprints.teams import teams_blueprint
 
-from models import configure_flask_sqlalchemy, SQLAlchemy
+from .models import configure_flask_sqlalchemy, SQLAlchemy
 import os
 from dotenv import load_dotenv
 
@@ -32,8 +33,7 @@ def create_app() -> Flask:
     app.secret_key = os.getenv('SECRET_KEY')
     
     # initialize database
-    app.db: SQLAlchemy =\
-            configure_flask_sqlalchemy(app)
+    app.db = configure_flask_sqlalchemy(app)
     
     # register blueprints
     app.register_blueprint(auth_blueprint)
@@ -42,11 +42,23 @@ def create_app() -> Flask:
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(teams_blueprint)
 
+
+    # configure Flask-Mail API
+    app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+    app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
+    # mail = Mail(app)
+
     return app
 
 # create and run app
 if __name__ == '__main__':
     app: Flask = create_app()
-    app.run(debug=True, port=os.getenv('FLASK_PORT'))
+    app.run(debug=True, port=int(os.getenv('FLASK_PORT')))
 
 

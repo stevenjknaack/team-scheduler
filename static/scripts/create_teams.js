@@ -96,7 +96,7 @@ function toggleProjectOptions() {
     projectOptions.style.display = projectOptions.style.display === 'block' ? 'none' : 'block';
 }
 
-
+// TO DO: if wanted include name and description, should include year start and end.
 // Function to create a custom event and display it
 function createCustomEvent() {
     // Get event details from input fields

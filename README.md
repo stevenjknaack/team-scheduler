@@ -14,12 +14,13 @@ and [mypy](#install-mypy)
  1. open visual studio terminal
  2. [activate venv](#starting-venv-in-windows-with-powershellvisual-studio-terminal) if not active
  3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
- 4. use `py backend/app.py` to launch backend (or with python3: `python3 backend/app.py`)
+ 4. use `python -m backend.app` to launch backend (or with python3: `python3 -m backend.app`)
  5. open up `localhost:<flask_port>` in a browser
 
 ## to run the unit testing
   - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)
   - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
+  - `python -m backend.tests.test_name` (for running individual tests)
 
 ## to run the tests for blueprints files
   - `pytest -m pytests backend/tests ` 
@@ -51,7 +52,9 @@ and [mypy](#install-mypy)
   ```
   pip install -U Flask
   pip install flask flask-cors
+  pip install types-Flask-Cors
   pip install -U Flask-SQLAlchemy
+  pip install flask_mail
   ```
 
 - ### install cryptographic dependencies (in venv)
@@ -80,6 +83,7 @@ and [mypy](#install-mypy)
       - [recs/specs](https://docs.google.com/document/d/1mabdPAdAYkwTHhWAPKwwtpW1em9ZWwXFY0fU4rzcjpQ/edit?usp=sharing) 
   - flask help:
       - [flask megatutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) 
+      - [flask mail docs](https://flask-mail.readthedocs.io/en/latest/)
   - flask-sqlalchemy help: 
       - [quick start](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/quickstart/) 
       - [ORM basics](https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html#) 

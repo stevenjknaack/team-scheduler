@@ -5,7 +5,7 @@ import sys
 import os
 sys.path.append('./backend')
 from app import create_app
-from blueprints.auth import auth_blueprint # import obj rather than module
+from ..blueprints.auth import auth_blueprint # import obj rather than module
 from unittest.mock import patch
 from werkzeug.security import generate_password_hash
 from models import User 

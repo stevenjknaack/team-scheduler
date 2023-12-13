@@ -11,6 +11,7 @@ myvenv
 # don't push intermidiate files
 *.pyc
 __pycache__
+.mypy_cache
 
 # dependencies
 /node_modules
@@ -18,6 +19,8 @@ __pycache__
 # don't push scripts
 *.sh
 *.ps1
+scripts
+makefile
 
 # don't push unneeded data files
 .DS_Store

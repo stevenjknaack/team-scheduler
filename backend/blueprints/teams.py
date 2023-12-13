@@ -1,14 +1,14 @@
 """ Defines routes related to teams """
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
-from models import *
+from ..models import *
 
 teams_blueprint: Blueprint = Blueprint('teams', __name__, 
                             template_folder='../../templates', 
                             static_folder='../../static')
 
 @teams_blueprint.route('/team')
-def go_to_team_page() -> Response:
+def go_to_team_page() -> str | Response:
     return render_template('team.html')
 
 @teams_blueprint.route('/generate_teams', methods=['POST'])
@@ -26,9 +26,10 @@ def generate_teams() -> Response :
     # Send invite to all users in group to their respective teams 
 
     # return succesful Jquery 
+    return Response(status=501) # not implemented
 
 @teams_blueprint.route('/manual_create_teams', methods=['POST'])
-def create_team() -> Response:
+def create_team() -> str | Response:
     """
     This Method will allow for creating a team manually, without needing time availabilty. A user who 
     creates a team can give a name to the team and insert people manually into it by providing their email.
@@ -39,4 +40,5 @@ def create_team() -> Response:
     # Commit team to DB 
     # Commit participants into DB 
     # Return succesful JQuery 
+    return Response(status=501) # not implemented
   

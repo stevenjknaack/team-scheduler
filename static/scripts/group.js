@@ -55,19 +55,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
             inviteModal.style.display = 'none';
         }
     });
-    
+
     /**
      * Handle 2
-     * Opens the invite modal and generates an invitation code if it hasn't been generated already.
+     * Opens the inviteModal and sets the invitation code as the group ID for the specific group the user has navigated to
+     * 
+     * @author Kyle
      */
     btn.onclick = function () {
+        // display the inviteModal
         inviteModal.style.display = 'block';
-        if (!invitationCodeGenerated) {
-            invitationCodeGenerated = Math.random().toString(36).substring(2, 10);
-            invitationCodeInput.value = invitationCodeGenerated;
+
+        // get current URL
+        var currentURL = window.location.href;
+
+        // extract the group ID from the URL using regex
+        var match = currentURL.match(/\/group\/(\d+)/);
+
+        // check if a match is found
+        if (match) {
+            var groupId = match[1];
+            invitationCodeInput.value = groupId; // set value of invitation code to extracted group ID
+        } else {
+            console.error('Group ID not found in the URL');
         }
     };
-
 
     // Inviting participants
     const emailInput = document.getElementById("invite-email");
@@ -95,6 +107,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
      * Handle 4
      * Gathers and logs the emails of all invited participants when the submit button is clicked.
      * Closes the invite modal afterwards.
+     * 
+     * @author Kyle
      */
     inviteSubmitBtn.addEventListener("click", function () {
         const emails = [];
@@ -102,8 +116,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
             emails.push(invitedParticipants.children[i].innerText);
         }
 
+        var currentUrl = window.location.href;
+        var eventId = this.getAttribute("data-event-id");
+        console.log("EVENT ID: " + eventId);
+        var groupId = currentUrl.match(/\/group\/(\d+)/);
+        console.log("GROUP ID: " + groupId[1]);
+
         // make HTTP request to the Flask backend
-        fetch('/send-invitations', {
+        fetch(`/send-invitations/${groupId[1]}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

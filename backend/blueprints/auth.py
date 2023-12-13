@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
 import bcrypt
-from models import *
+from ..models import *
 from typing import Union
 
 auth_blueprint: Blueprint = Blueprint('auth', __name__, 
@@ -56,7 +56,7 @@ def login() -> Union[str , Response]:
                             stored_hashed_password.encode('utf-8')):
                 session['email'] = user.email
                 session['username'] = user.email
-                return jsonify(status='success')
+                return jsonify(status='success'), 200
             else:
                 return jsonify(status='error',  message='Incorrect email or password'), 401
         else:
@@ -106,9 +106,6 @@ def home() -> Response:
     else: 
         return render_template('home.html', username=session['username'])
     
-
-
-
 @auth_blueprint.route('/signup')
 def signup() -> str | Response :
     """
@@ -145,7 +142,7 @@ def signup_request() -> Response:
     # check if user already exists
     if current_app.db.session.get(User, email) :
         return jsonify(status='error',  
-                    message='An account is already associated with the provided email')
+                    message='An account is already associated with the provided email'), 412
 
     # hashed_password  # make sure also encry at the frontend
     hashed_password: bytes = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -158,6 +155,6 @@ def signup_request() -> Response:
     current_app.db.session.commit()
 
     # notify success
-    return jsonify(status='success')
+    return jsonify(status='success'), 201
 
 

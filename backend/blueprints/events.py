@@ -1,9 +1,10 @@
 """ Defines routes for the events """
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
-from models import *
+from ..models import *
 from typing import List, Tuple
 from sqlalchemy import text
+from datetime import datetime
 
 
 events_blueprint: Blueprint = Blueprint('events', __name__, 
@@ -20,7 +21,6 @@ def create_event(group_id) -> str | Response :
 
 @events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
 def create_event_request(group_id) -> Response :
-    from blueprints.groups import is_group_admin
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -30,21 +30,24 @@ def create_event_request(group_id) -> Response :
     :author: Dante Katz Andrade
     :version: 2023.10.19
     """
+    from ..blueprints.groups import is_group_admin
     # Get event data from the HTML form 
     event_type = request.args.get('type', 'group')
 
-    event_name: str = request.form.get('event_name')
-    event_description: str = request.form.get('event_description')
-    start_date: str = request.form.get('start_date')  # Updated
-    end_date: str = request.form.get('end_date')  # Updated
-    reg_start_day: str = request.form.get('eventStartDay')
-    reg_end_day: str = request.form.get('eventEndDay')
-    start_time = request.form.get('start_time')
-    end_time = request.form.get('end_time')
+    event_name: str = request.form.get('event_name') or 'Unnamed Group'
+    event_description: str = request.form.get('event_description') or 'No description'
+    start_date: str | None = request.form.get('start_date') # Updated
+    end_date: str | None = request.form.get('end_date')  # Updated
+    reg_start_day: str | None = request.form.get('eventStartDay') 
+    reg_end_day: str | None = request.form.get('eventEndDay') 
+    start_time: str | None = request.form.get('start_time') 
+    end_time: str | None = request.form.get('end_time') 
+
+    print(start_date, end_date, start_time, end_time)
 
 
     # Retrieve user's email 
-    user_email: str = session.get('email')
+    user_email: str | None = session.get('email') 
     if user_email:
         db_session = current_app.db.session
 
@@ -67,17 +70,22 @@ def create_event_request(group_id) -> Response :
             edit_permission = 'group_admin'
         else:
             return redirect(url_for('auth.home'))
+        
+        # update reg_start_day and reg_end_day to be None if invalid
+        if not reg_start_day or not reg_end_day :
+            reg_start_day = None
+            reg_end_day = None
 
         # Create and add the Event to the session
         new_event = Event(
             name=event_name,
             description=event_description,
-            start_date=start_date,
-            end_date=end_date,
-            reg_start_day = reg_start_day if reg_start_day else None,
-            reg_end_day = reg_end_day if reg_end_day else None,
-            start_time=start_time if start_time else None,
-            end_time=end_time if start_time else None,
+            start_date=datetime.strptime(start_date, '%Y-%m-%d').date(), 
+            end_date=datetime.strptime(end_date, '%Y-%m-%d').date(),
+            reg_start_day = reg_start_day,
+            reg_end_day = reg_end_day, 
+            start_time=datetime.strptime(start_time, '%H:%M').time(),
+            end_time=datetime.strptime(end_time, '%H:%M').time(),
             edit_permission=edit_permission,
             group_id=group_id,
             team_id=team_id

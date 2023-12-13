@@ -1,7 +1,7 @@
 """ Defines routes for the profile page """
 
 from flask import Blueprint, request, jsonify, session, current_app, Response
-from models import *
+from ..models import *
 from sqlalchemy import select
 
 profile_blueprint = Blueprint('profile', __name__, 
@@ -9,7 +9,7 @@ profile_blueprint = Blueprint('profile', __name__,
                               static_folder='../../static')
 
 @profile_blueprint.route('/save_schedule', methods=['POST'])
-def save_schedule() -> Response:
+def save_schedule() -> tuple[Response, int]:
     """
     Handles a POST request to save a user's schedule availability.
     It first retrieves the schedule data from the request, checks for any existing availability blocks for the user, 
@@ -24,7 +24,7 @@ def save_schedule() -> Response:
     # Get information from the user
     data = request.get_json()
     schedules = data['schedule']
-    user_email = session.get('email') 
+    user_email = session.get('email') or 'no_email'
     try:
         # Check for existing availability blocks for the user
         existing_blocks = current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all()
@@ -58,7 +58,7 @@ def save_schedule() -> Response:
 
 
 @profile_blueprint.route('/get_schedule', methods=['GET'])
-def get_schedule() -> Response:
+def get_schedule() -> tuple[Response, int]:
     """
     Handles a GET request to retrieve the schedule availability of the current logged-in user.
     It queries the database for availability blocks associated with the user's email.

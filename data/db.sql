@@ -47,7 +47,7 @@ ON `group` (`id`);
 CREATE TABLE `in_group` (
   `user_email` VARCHAR(255) NOT NULL,
   `group_id` INTEGER NOT NULL,
-  `role` ENUM('invitee', 'participant', 'admin', 'owner') NOT NULL DEFAULT 'invitee',
+  `role` ENUM('invitee', 'requester', 'participant', 'admin', 'owner') NOT NULL DEFAULT 'invitee',
   PRIMARY KEY (`user_email`, `group_id`),
   FOREIGN KEY (`user_email`) REFERENCES `user` (`email`)
   ON UPDATE CASCADE ON DELETE CASCADE,

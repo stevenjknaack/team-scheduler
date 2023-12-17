@@ -1,8 +1,8 @@
 """ Defines routes for the profile page """
 
-from flask import Blueprint, request, jsonify, session, current_app, Response
-from ..models import *
-from sqlalchemy import select
+from flask import Blueprint, request, jsonify, session, Response
+from ..extensions import db
+from ..models.availablity_block import AvailabilityBlock
 
 profile_blueprint = Blueprint('profile', __name__, 
                               template_folder='../../templates', 
@@ -27,12 +27,12 @@ def save_schedule() -> tuple[Response, int]:
     user_email = session.get('email') or 'no_email'
     try:
         # Check for existing availability blocks for the user
-        existing_blocks = current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all()
+        existing_blocks = db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all()
 
 
         # If existing availability blocks are found, delete them
         if existing_blocks:
-            current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).delete() #TODO: update the outdated query
+            db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).delete() #TODO: update the outdated query
 
         # Insert new availability blocks
         for schedule in schedules:
@@ -43,14 +43,14 @@ def save_schedule() -> tuple[Response, int]:
                 end_time=schedule['endTime'],
                 user_email=user_email
             )
-            current_app.db.session.add(new_availability)
+            db.session.add(new_availability)
 
         # Commit changes to the database
-        current_app.db.session.commit()
+        db.session.commit()
 
     except Exception as e:
         print(f"Exception occurred: {e}")
-        current_app.db.session.rollback()
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
     # Return a successful response
@@ -75,7 +75,7 @@ def get_schedule() -> tuple[Response, int]:
 
     try:
         # Query for getting the availability blocks of the current user
-        avail_blocks = current_app.db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all() #TODO: update? see the models.py
+        avail_blocks = db.session.query(AvailabilityBlock).filter(AvailabilityBlock.user_email == user_email).all() #TODO: update? see the models.py
 
         # Initialize an empty list for the formatted data
         avail_blocks_data = []

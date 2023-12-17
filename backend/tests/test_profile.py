@@ -7,7 +7,7 @@ from ..app import create_app
 from ..blueprints.auth import auth_blueprint # import obj rather than module
 from unittest.mock import patch
 from werkzeug.security import generate_password_hash
-from ..models import configure_flask_sqlalchemy, Base, User,AvailabilityBlock
+from ..models.models import configure_flask_sqlalchemy, Base, User,AvailabilityBlock
 import time
 import uuid
 

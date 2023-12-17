@@ -9,14 +9,13 @@
 :author : Anwita
 """
 from flask import Flask
-from flask_mail import Mail
 from .blueprints.auth import auth_blueprint
 from .blueprints.events import events_blueprint
 from .blueprints.groups import groups_blueprint
 from .blueprints.profile import profile_blueprint
 from .blueprints.teams import teams_blueprint
+from .extensions import db, mail
 
-from .models import configure_flask_sqlalchemy, SQLAlchemy
 import os
 from dotenv import load_dotenv
 
@@ -32,8 +31,15 @@ def create_app() -> Flask:
     app: Flask = Flask(__name__, root_path=path)
     app.secret_key = os.getenv('SECRET_KEY')
     
-    # initialize database
-    app.db = configure_flask_sqlalchemy(app)
+    # configure the MYSQL database, relative to the app instance
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # initialize the app with the extension
+    db.init_app(app)
+
+    # initialize mail with the app
+    mail.init_app(app)
     
     # register blueprints
     app.register_blueprint(auth_blueprint)
@@ -41,7 +47,6 @@ def create_app() -> Flask:
     app.register_blueprint(groups_blueprint)
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(teams_blueprint)
-
 
     # configure Flask-Mail API
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')

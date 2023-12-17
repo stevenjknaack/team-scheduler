@@ -1,11 +1,10 @@
 """ Defines routes for the events """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
-from ..models import *
-from typing import List, Tuple
-from sqlalchemy import text
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response
+from ..extensions import db
+from ..models.membership import Membership
+from ..models.event import Event
 from datetime import datetime
-
 
 events_blueprint: Blueprint = Blueprint('events', __name__, 
                                         template_folder='../../templates', 
@@ -20,7 +19,7 @@ def create_event(group_id) -> str | Response :
     return render_template('create_event.html', username=session['username'], event_type=event_type, group_id=group_id)
 
 @events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
-def create_event_request(group_id) -> Response :
+def create_event_request(group_id: int) -> Response :
     """
     This method collects the data inputed by the creator of an event and inserts the information
     into the database. It works by getting the values, creating a connection to the database,
@@ -43,13 +42,9 @@ def create_event_request(group_id) -> Response :
     start_time: str | None = request.form.get('start_time') 
     end_time: str | None = request.form.get('end_time') 
 
-
-
     # Retrieve user's email 
     user_email: str | None = session.get('email') 
     if user_email:
-        db_session = current_app.db.session
-
         if event_type == 'group':
             team_id = None
         #elif event_type == 'team':
@@ -64,7 +59,7 @@ def create_event_request(group_id) -> Response :
           #  else:
                 # Extract team_id from team_result
                 #team_id = team_result[0]
-        membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+        membership = db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
         if membership and membership.role == 'owner':
             edit_permission = 'group_admin'
         else:
@@ -89,10 +84,10 @@ def create_event_request(group_id) -> Response :
             group_id=group_id,
             team_id=team_id
         )
-        db_session.add(new_event)
+        db.session.add(new_event)
 
         # Commit the changes to the database
-        db_session.commit()
+        db.session.commit()
 
         # Redirect back to page
         return redirect(url_for('groups.group_page', group_id=group_id))
@@ -102,7 +97,7 @@ def create_event_request(group_id) -> Response :
         return redirect(url_for('auth.login'))
 
 
-@events_blueprint.route('/delete-event/<int:event_id>/<int:group_id>', methods=['DELETE'])
+@events_blueprint.route('/delete-event/<int:event_id>/<int:group_id>', methods=['DELETE']) #TODO this method should not require group_id
 def delete_event(event_id: int, group_id: int) -> Response:
     """
     This method deletes events. It checks that the event is owned by the active user (created by them)
@@ -111,100 +106,18 @@ def delete_event(event_id: int, group_id: int) -> Response:
     # Authenticate the user and check if they are the group admin
     user_email: str = session.get('email')
 
-    membership = current_app.db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
+    membership = db.session.query(Membership).filter_by(user_email=user_email, group_id=group_id).first()
     print(membership.role)
     # Check if the user is the owner of the event 
     if membership and membership.role == 'owner':
-        db_session = current_app.db.session
         # Query the event to delete
-        event = db_session.get(Event, event_id)
+        event = db.session.get(Event, event_id)
         # Delete and commit change to db
-        db_session.delete(event)
-        db_session.commit()
+        db.session.delete(event)
+        db.session.commit()
         return jsonify(status='success')
         
     # If user is not owner, do not delete.
     return jsonify(status='fail')
-
-@events_blueprint.route('/get-event/<int:event_id>', methods=['GET'])
-def get_event(event_id: int) -> Response:
-    """
-    This method works in tandem with get_user_events. It is called in the JS code after the profile page 
-    calls get_user_events and gets all the event id's back. This method then uses the event ID's provided
-    to get all the information from each event to display in the profile page.
-    """
-    db = None
-    cursor = db.cursor()
-
-    # Fetch event details using event_id 
-    cursor.execute("SELECT * FROM saved_event WHERE event_id = %s", (event_id,))
-    event = cursor.fetchone()
-
-    cursor.close()
-    db.close()
-
-    if event:
-        # return event details as a json object. Format the date as a string if it's a date object
-        event_details = {
-            "event_name": event[1],
-            "start_date": event[2].strftime('%Y-%m-%d'),  
-            "end_date": event[3].strftime('%Y-%m-%d'),
-            "event_description": event[6]
-        }
-        return jsonify(event_details)
-    else:
-        return jsonify(status='error', message='Event not found'), 404
-
-@events_blueprint.route('/get-user-event/<int:event_id>', methods=['GET'])
-def get_user_events(username: str) -> List[Tuple]:
-    """ Get the events associated with a user """
-    # Initiate a connection to the database.
-    db = None
-    cursor = db.cursor()
-
-    # Fetch user ID by username  
-    cursor.execute("SELECT user_id FROM user WHERE username = %s", (username,))
-    user = cursor.fetchone()
-
-    # Security check so that people cannot go into the user page without logging in. It may be 
-    # redundant with the security check in /profile, however too much security is not a bad thing.
-    if user is None:
-        cursor.close()
-        db.close()
-        return [] 
-
-    # Fetch events owned by the user 
-    user_id = user[0]
-    cursor.execute("SELECT * FROM saved_event WHERE owner_id = %s", (user_id,))
-    events = cursor.fetchall()
-
-    # Close connection to database and return all the fetched events.
-    cursor.close()
-    db.close()
-
-    return events
-
-def add_participant_to_event(event_id: int, user_id: int) -> bool :
-    """ Add a participant to an event"""
-    # Connect to the database
-    db = None
-    cursor = db.cursor()
-
-    try:
-        # Insert the participant into the event in the database
-        query = "INSERT INTO event_participants (event_id, user_id) VALUES (%s, %s)"
-        values = (event_id, user_id)
-        cursor.execute(query, values)
-        db.commit()  # Commit the changes to the database
-
-        return True  # Return True if the participant is added successfully
-    except Exception as e:
-        # Handle any potential errors, such as database connection issues or constraints
-        print(f"Error adding participant to event: {str(e)}")
-        db.rollback()  # Rollback the transaction in case of an error
-        return False  # Return False to indicate that adding the participant failed
-    finally:
-        cursor.close()
-        db.close()
 
 

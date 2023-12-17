@@ -1,8 +1,11 @@
 """ Defines routes related to teams """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
-from ..models import *
-import time
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, Response
+from ..extensions import db
+from ..models.user import User
+from ..models.team import Team
+from ..models.membership import Membership
+
 
 teams_blueprint: Blueprint = Blueprint('teams', __name__, 
                             template_folder='../../templates', 
@@ -31,7 +34,7 @@ def manual_create_teams():
         return redirect(url_for('some_default_route'))  # Redirect to a default route or error page
 
     # Query for all users in the specified group
-    users_query = current_app.db.session.query(User).join(Membership).filter(Membership.group_id == group_id)
+    users_query = db.session.query(User).join(Membership).filter(Membership.group_id == group_id)
     users = users_query.all()
 
     # Extract usernames and emails
@@ -79,11 +82,11 @@ def create_team() -> str | Response:
 
     try:
         # Add the new team to the session
-        current_app.db.session.add(new_team)
+        db.session.add(new_team)
 
         # Add participants to the team
         for email in participants:
-            user = current_app.db.session.get(User, email)
+            user = db.session.get(User, email)
             if user:
                 new_team.members.append(user)
             else:
@@ -91,12 +94,12 @@ def create_team() -> str | Response:
                 print(f"User with email {email} not found")
 
         # Commit changes to the database
-        current_app.db.session.commit()
+        db.session.commit()
         print(f"Created team with ID {new_team.id}, Name {new_team.name}, Description {new_team.description}, Group ID {new_team.group_id}")
 
         return jsonify({"message": "Team created successfully", "team_id": new_team.id}), 201
     
     except Exception as e:
-        current_app.db.session.rollback()
+        db.session.rollback()
         print(str(e))
         return jsonify({"error": str(e)}), 500

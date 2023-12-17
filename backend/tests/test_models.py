@@ -6,7 +6,7 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 """
 print("In module products __package__, __name__ ==", __package__, __name__)
-from ..models import *
+from ..models.models import *
 import unittest
 import os
 from datetime import time

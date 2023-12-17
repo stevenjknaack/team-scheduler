@@ -8,7 +8,7 @@ from app import create_app
 from ..blueprints.auth import auth_blueprint # import obj rather than module
 from unittest.mock import patch
 from werkzeug.security import generate_password_hash
-from models import User 
+from backend.models.models import User 
 import time
 import bcrypt
 

@@ -1,15 +1,17 @@
 """ Defines routes for user authentication """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response
 import bcrypt
-from ..models import *
-from typing import Union
+from ..extensions import db
+from ..models.user import User
+from ..models.membership import Membership
+from ..models.event import Event
+from ..models.group import Group
+from typing import Union, List
 
 auth_blueprint: Blueprint = Blueprint('auth', __name__, 
                                       template_folder='../../templates', 
                                       static_folder='../../static')
-
-#db: SQLAlchemy = current_app.db
 
 @auth_blueprint.route('/')
 def index() -> Response:
@@ -47,7 +49,7 @@ def login() -> Union[str , Response]:
         password: str = request.form.get('password')
 
         # get user from database 
-        user: User = current_app.db.session.get(User, email)
+        user: User = db.session.get(User, email)
 
         # Check if user's password is correct
         if user: # also encry on the frontend
@@ -55,7 +57,7 @@ def login() -> Union[str , Response]:
             if bcrypt.checkpw(password.encode('utf-8'),
                             stored_hashed_password.encode('utf-8')):
                 session['email'] = user.email
-                session['username'] = user.email
+                session['username'] = user.username
                 return jsonify(status='success'), 200
             else:
                 return jsonify(status='error',  message='Incorrect email or password'), 401
@@ -87,7 +89,7 @@ def home() -> Response:
     
     # Use the SQLAlchemy query attribute for Membership
 
-    user_memberships = current_app.db.session.scalars(current_app.db.select(Membership).filter_by(user_email=email))
+    user_memberships = db.session.scalars(db.select(Membership).filter_by(user_email=email))
     if user_memberships:
         user_groups = [membership.group for membership in user_memberships]
         # initiate list of events to render in home.html
@@ -95,7 +97,7 @@ def home() -> Response:
         # Loop through groups, and get each event to display in the home page
         for group in user_groups:
             group_id = group.id
-            user_events_result = current_app.db.session.scalars(current_app.db.select(Event).filter_by(group_id = group_id))
+            user_events_result = db.session.scalars(db.select(Event).filter_by(group_id = group_id))
 
             for event in user_events_result:
                 # Only append valid events, no null events
@@ -140,7 +142,7 @@ def signup_request() -> Response:
     password: str = request.form.get('password')
 
     # check if user already exists
-    if current_app.db.session.get(User, email) :
+    if db.session.get(User, email) :
         return jsonify(status='error',  
                     message='An account is already associated with the provided email'), 412
 
@@ -151,8 +153,8 @@ def signup_request() -> Response:
     new_user: User = User(email, username, hashed_password)
 
     # add new_user to db
-    current_app.db.session.add(new_user)
-    current_app.db.session.commit()
+    db.session.add(new_user)
+    db.session.commit()
 
     # notify success
     return jsonify(status='success'), 201
@@ -172,7 +174,7 @@ def get_user_notifications() -> Response :
         return jsonify(status='failure'), 500
     
     # get and validate user
-    user: User | None = current_app.db.session.get(User, user_email)
+    user: User | None = db.session.get(User, user_email)
 
     if not user :
         return jsonify(status='failure'), 500

@@ -24,7 +24,7 @@ load_dotenv() # load environment
 
 def create_app() -> Flask:
     """
-    Creates a 10stars Flask app
+    Creates a 10stars Flask app 
 
     :returns: a 10stars Flask app
     """

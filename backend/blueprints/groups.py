@@ -13,8 +13,6 @@ groups_blueprint: Blueprint = Blueprint('groups', __name__,
                                         static_folder='../../static')
 
 
-
-
 @groups_blueprint.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
     """ 
@@ -137,23 +135,17 @@ def send_invitations(group_id: int) -> Response :
            current_app.db.session.add(new_membership)
            current_app.db.session.commit()
 
-   # TODO: Process the emails, e.g., send invitation emails, save to the database, etc.
-   # For now, let's just print them for demonstration purposes
-   #print(emails)
-
-   # sending invitation email functionality through Flask-Mail API
-
    # for each email in email list, send an invitation email 
-   """
+   group = current_app.db.session.get(Group, group_id)
    for email in emails:
-       message = Message(subject='You have been invited to a group!', recipients=[email])
-       message.body = f'You are invited to a group with ID {group_id}. Please log into the Scheduler App to accept your invitation!'
+       message_body = f'You are invited to {f'group {group.name}' or 'an unnamed group'} with ID {group.id}.' +\
+                     '\nPlease log into the Scheduler App to accept your invitation!'
+       message = Message(subject=f'Invitation to group {group.id}!',body=message_body,recipients=[email])
+       
        try:
            mail.send(message)
        except Exception as e:
            print(f'Error sending invitation email to {email}: {str(e)}')
-        """
-           
 
    return jsonify(status='success', message='Invitations sent successfully!'), 201
 

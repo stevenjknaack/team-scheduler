@@ -20,7 +20,6 @@ from .blueprints.teams import teams_blueprint
 from .extensions import db, mail
 
 import os
-from dotenv import load_dotenv
 
 def create_app(config_class=Config) -> Flask:
     """
@@ -45,10 +44,5 @@ def create_app(config_class=Config) -> Flask:
     app.register_blueprint(teams_blueprint)
 
     return app
-
-# create and run app
-if __name__ == '__main__':
-    app: Flask = create_app()
-    app.run(port=int(os.getenv('FLASK_PORT')))
 
 

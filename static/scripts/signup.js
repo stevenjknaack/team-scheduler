@@ -13,7 +13,7 @@ $('#signupForm').submit(function(event) {
     // Make an AJAX POST request to the backend
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:6969/signup-request',
+        url: '../signup-request',
         data: formData,
         dataType: 'json',
         encode: true

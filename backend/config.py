@@ -20,5 +20,7 @@ class Config:
   MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
   MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
 
-  # move to development config later
-  FLASK_DEBUG = True
+  # TODO move to development config later
+  # FLASK_DEBUG = True
+
+  # TODO create testing config

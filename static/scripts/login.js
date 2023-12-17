@@ -12,7 +12,7 @@ $('#loginForm').submit(function(event) {
     // Make an AJAX POST request to the backend
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:6969/login',
+        url: './login',
         data: formData,
         dataType: 'json',
         encode: true
@@ -23,6 +23,9 @@ $('#loginForm').submit(function(event) {
         }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
-        $('#error-message').text('An error occurred during the login process: ' + textStatus);
+        console.log(jqXHR)
+        console.log(textStatus)
+        console.log(errorThrown)
+        $('#error-message').text('An error occurred during the login process: ' + jqXHR.responseJSON['message']);
     });
 });

@@ -14,8 +14,8 @@ and [mypy](#install-mypy)
  1. open visual studio terminal
  2. [activate venv](#starting-venv-in-windows-with-powershellvisual-studio-terminal) if not active
  3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
- 4. use `python -m backend.app` to launch backend (or with python3: `python3 -m backend.app`)
- 5. open up `localhost:<flask_port>` in a browser
+ 4. use `flask --app backend/app run --debug` to launch backend for development
+ 5. open up `127.0.0.1:5000` in a browser
 
 ## to run the unit testing
   - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)

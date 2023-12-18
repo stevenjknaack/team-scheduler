@@ -1,5 +1,5 @@
 """
-10stars Flask App Backend
+10stars Flask App 
 
 :author : Georgia
 :author : Tony
@@ -10,13 +10,13 @@
 """
 from flask import Flask
 
-from .config import Config
+from ..config import Config
 
-from .blueprints.auth import auth_blueprint
-from .blueprints.events import events_blueprint
-from .blueprints.groups import groups_blueprint
-from .blueprints.profile import profile_blueprint
-from .blueprints.teams import teams_blueprint
+from .auth.routes import auth_blueprint
+from .events.routes import events_blueprint
+from .groups.routes import groups_blueprint
+from .profile.routes import profile_blueprint
+from .teams.routes import teams_blueprint
 from .extensions import db, mail
 
 import os

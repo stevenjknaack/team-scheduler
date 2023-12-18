@@ -4,8 +4,8 @@ from flask.testing import FlaskClient
 from unittest.mock import patch
 import sys
 sys.path.append('./backend')
-from ..app import create_app
-from blueprints.groups import groups_blueprint
+from .. import create_app
+from app.groups.routes import groups_blueprint
 
 # Setup the Flask test client
 @pytest.fixture

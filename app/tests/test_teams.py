@@ -5,8 +5,8 @@ from flask.testing import FlaskClient
 from unittest.mock import patch
 import sys
 sys.path.append('./backend')
-from ..app import create_app
-from ..blueprints.teams import teams_blueprint # import obj rather than module
+from .. import create_app
+from ..teams.routes import teams_blueprint # import obj rather than module
 import tempfile
 from flask.sessions import SecureCookieSessionInterface
 import json

@@ -1,6 +1,6 @@
 """ Houses tests """
 
-from .. import app
+from ... import app
 import unittest
 
 class MyTestCase(unittest.TestCase):

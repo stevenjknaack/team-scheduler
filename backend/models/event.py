@@ -46,8 +46,7 @@ class Event(db.Model) :
                  description: Optional[str] = None, reg_start_day: Optional[str] = None,
                  reg_end_day: Optional[str] = None, edit_permission: str = 'group_admin') -> None :
         """ 
-        Note edit_permission must be in 
-            ['member', 'group_admin']
+        :edit_permission: must be in ['member', 'group_admin']
         and if defined reg_start_day and reg_end_day must be in 
             ['sunday', 'monday', 'tuesday', 
             'wednesday', 'thursday', 'friday', 'saturday']

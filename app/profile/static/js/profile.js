@@ -194,7 +194,7 @@ function saveAvailBlocks() {
 
     // AJAX request to send the schedule data to the server
     $.ajax({
-        url: "/save_schedule", // The URL to the Flask route
+        url: "./save_schedule", // The URL to the Flask route
         type: "POST", // Usually, data is sent with POST
         contentType: "application/json;charset=UTF-8", // The type of content being sent
         data: JSON.stringify({ schedule: scheduleData }), // The actual data
@@ -218,7 +218,7 @@ function saveAvailBlocks() {
  */
 function getAvailBlocks() {
     // Endpoint where the availability data is available, adjust the URL as needed
-    const url = `/get_schedule`;
+    const url = `./get_schedule`;
 
     // Make a GET request to the server using jQuery's Ajax
     $.ajax({

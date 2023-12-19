@@ -7,7 +7,7 @@
     <title>User Weekly Schedule</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('profile.static', filename='css/profile.css') }}" />
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     <nav class="navbar">
         <!-- on the left side there will be an iamge-->
         <div class="navbar-left">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo" />
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
         </div>
         <!-- on the right side there will be buttons-->
         <div class="navbar-right">
@@ -73,6 +73,6 @@
             </form>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
+    <script src="{{ url_for('profile.static', filename='js/profile.js') }}"></script>
 </body>
 </html>

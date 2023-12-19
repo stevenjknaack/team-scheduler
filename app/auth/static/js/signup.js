@@ -13,14 +13,14 @@ $('#signupForm').submit(function(event) {
     // Make an AJAX POST request to the backend
     $.ajax({
         type: 'POST',
-        url: '../signup-request',
+        url: './signup-request',
         data: formData,
         dataType: 'json',
         encode: true
     })
     .done(function(data) {
         if (data.status === 'success') {
-            window.location.href = '/login';  // Redirect to the profile page
+            window.location.href = './login';  // Redirect to the profile page
         }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

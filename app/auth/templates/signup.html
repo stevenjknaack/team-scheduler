@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ten Star Sign Up</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('auth.static', filename='css/styles.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo">
+        <img src="{{ url_for('auth.static', filename='img/logo.png') }}" alt="Ten Star Logo">
         <form id="signupForm"> <!-- add required keyword to forms; maybe use classes instead of other attributes-->
             <label for="username">Name</label>
             <input type="username" id="username" name="username" placeholder="Name">
@@ -25,6 +25,6 @@
             <p>ALREADY HAS AN ACCOUNT? <a href="login">LOG IN</a></p>
         <p id="error-message" style="color:red;"></p>
     </div>
-    <script src="{{ url_for('static', filename='scripts/signup.js') }}"></script>
+    <script src="{{ url_for('auth.static', filename='js/signup.js') }}"></script>
 </body>
 </html>

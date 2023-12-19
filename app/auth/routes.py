@@ -64,7 +64,7 @@ def logout() -> Response :
     if 'username' in session:
         session.pop('username', None)
         session.pop('email', None)
-    return redirect(url_for('auth.index'))
+    return redirect(url_for('main.index'))
 
 @bp.route('/signup-request',  methods=['POST'])
 def signup_request() -> Response:
@@ -83,7 +83,7 @@ def signup_request() -> Response:
         return jsonify(status='error',  
                     message='An account is already associated with the provided email'), 412
 
-    # hashed_password  # make sure also encry at the frontend
+    # hashed_password  # TODO make sure also encry at the frontend
     hashed_password: bytes = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     # create a User object

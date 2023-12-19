@@ -5,7 +5,7 @@ from ..extensions import db
 from ..models.availablity_block import AvailabilityBlock
 from ..profile import bp
 
-@bp.route('/profile') 
+@bp.route('/') 
 def profile() -> str | Response:
     """ 
     Gets events onwned by user (see get_user_events method) and returns to JS, which then executes

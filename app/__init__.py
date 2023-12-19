@@ -10,13 +10,15 @@
 """
 from flask import Flask
 
-from ..config import Config
+from config import Config
 
-from .auth.routes import auth_blueprint
-from .events.routes import events_blueprint
-from .groups.routes import groups_blueprint
-from .profile.routes import profile_blueprint
-from .teams.routes import teams_blueprint
+from .main import bp as main_bp
+from .auth import bp as auth_bp
+from .events import bp as events_bp
+from .groups import bp as groups_bp
+from .profile import bp as profile_bp
+from .teams import bp as teams_bp
+
 from .extensions import db, mail
 
 import os
@@ -28,20 +30,20 @@ def create_app(config_class=Config) -> Flask:
     :returns: a 10stars Flask app
     """
     # instantiate and configure app
-    path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-    app: Flask = Flask(__name__, root_path=path)
+    app: Flask = Flask(__name__)
     app.config.from_object(config_class)
 
-    # initialize the extensions with app
+    # initialize extensions with app
     db.init_app(app)
     mail.init_app(app)
     
     # register blueprints
-    app.register_blueprint(auth_blueprint)
-    app.register_blueprint(events_blueprint)
-    app.register_blueprint(groups_blueprint)
-    app.register_blueprint(profile_blueprint)
-    app.register_blueprint(teams_blueprint)
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(events_bp, url_prefix='/events')
+    app.register_blueprint(groups_bp, url_prefix='/groups')
+    app.register_blueprint(profile_bp, url_prefix='/profile')
+    app.register_blueprint(teams_bp, url_prefix='/teams')
 
     return app
 

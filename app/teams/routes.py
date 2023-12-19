@@ -1,21 +1,17 @@
 """ Defines routes related to teams """
 
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, Response
+from flask import render_template, request, redirect, url_for, jsonify, Response
 from ..extensions import db
 from ..models.user import User
 from ..models.team import Team
 from ..models.membership import Membership
+from ..teams import bp
 
-
-teams_blueprint: Blueprint = Blueprint('teams', __name__, 
-                            template_folder='../../templates', 
-                            static_folder='../../static')
-
-@teams_blueprint.route('/team')
+@bp.route('/team')
 def go_to_team_page() -> str | Response:
     return render_template('team.html')
 
-@teams_blueprint.route('/partition_team_page')
+@bp.route('/partition_team_page')
 def create_teams() -> Response:
     people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
     
@@ -24,7 +20,7 @@ def create_teams() -> Response:
     
     return render_template('partition_teams.html', people=people, group_id=group_id)
 
-@teams_blueprint.route('/manual_create_team_page')
+@bp.route('/manual_create_team_page')
 def manual_create_teams():
     group_id = request.args.get('group_id')
 
@@ -43,7 +39,7 @@ def manual_create_teams():
     return render_template('manual_create_team.html', people=people, group_id=group_id)
 
 
-@teams_blueprint.route('/generate_teams', methods=['POST'])
+@bp.route('/generate_teams', methods=['POST'])
 def generate_teams() -> Response :
     """
     This method will use an algorithm to generate teams within a group, such as T_1->T_10 part of 
@@ -60,7 +56,7 @@ def generate_teams() -> Response :
     # return succesful Jquery 
     return Response(status=501) # not implemented
 
-@teams_blueprint.route('/manual_create_teams', methods=['POST'])
+@bp.route('/manual_create_teams', methods=['POST'])
 def create_team() -> str | Response:
     """
     Create a team manually and add participants.

@@ -1,34 +1,13 @@
 """ Defines routes for user authentication """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response
+from flask import render_template, request, redirect, url_for, session, jsonify, Response
 import bcrypt
 from ..extensions import db
 from ..models.user import User
-from ..models.membership import Membership
-from ..models.event import Event
-from ..models.group import Group
-from typing import Union, List
+from typing import Union
+from ..auth import bp
 
-auth_blueprint: Blueprint = Blueprint('auth', __name__, 
-                                      template_folder='../../templates', 
-                                      static_folder='../../static')
-
-@auth_blueprint.route('/')
-def index() -> Response:
-    """
-    Home page
-
-    Currently redirects to 
-        -login page if not logged in
-        -user home page if logged in
-
-    :returns: Redirecting Response
-    """
-    if 'username' in session :
-        return redirect(url_for('auth.home'))
-    return redirect(url_for('auth.login'))
-
-@auth_blueprint.route('/login', methods=['GET', 'POST'])
+@bp.route('/login', methods=['GET', 'POST'])
 def login() -> Union[str , Response]:
     """
     GET:
@@ -42,7 +21,7 @@ def login() -> Union[str , Response]:
     if request.method == 'GET':
         # Render the login form template if not logged in
         if 'username' in session :
-            return redirect(url_for('auth.home'))
+            return redirect(url_for('main.home'))
         return render_template('login.html')
     elif request.method == 'POST':
         email: str = request.form.get('email')
@@ -65,60 +44,18 @@ def login() -> Union[str , Response]:
             return jsonify(status='error', message='Username not found'), 401
 
 
-@auth_blueprint.route('/profile') 
-def profile() -> str | Response:
-    """ 
-    Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
-    get_event to get the information from each event to display.
-    """
-    if 'username' not in session:
-        return redirect(url_for('auth.index'))
-    username: str = session['username']
-    events = None
-    return render_template('profile.html', username=username, events=events)
-
-@auth_blueprint.route('/home')
-def home() -> Response:
-    """
-    Gets groups and events owned by user (use get_user_events and get_user_groups) 
-    and return to JS, which then executes
-    """
-    if 'username' not in session:
-        return redirect(url_for('auth.index'))
-    email: str = session.get('email')
     
-    # Use the SQLAlchemy query attribute for Membership
-
-    user_memberships = db.session.scalars(db.select(Membership).filter_by(user_email=email))
-    if user_memberships:
-        user_groups = [membership.group for membership in user_memberships]
-        # initiate list of events to render in home.html
-        user_events=[]
-        # Loop through groups, and get each event to display in the home page
-        for group in user_groups:
-            group_id = group.id
-            user_events_result = db.session.scalars(db.select(Event).filter_by(group_id = group_id))
-
-            for event in user_events_result:
-                # Only append valid events, no null events
-                if event:
-                    user_events.append(event)
-        # Render home.html with username from session, groups and events the user participates in.
-        return render_template('home.html', username=session.get('username'), user_groups=user_groups, user_events=user_events)
-    else: 
-        return render_template('home.html', username=session['username'])
-    
-@auth_blueprint.route('/signup')
+@bp.route('/signup')
 def signup() -> str | Response :
     """
     Renders the signup.html page
         or redirects to user home if logged in
     """
     if 'username' in session :
-        return redirect(url_for('auth.home'))
+        return redirect(url_for('main.home'))
     return render_template('signup.html')
 
-@auth_blueprint.route('/logout', methods=['POST'])
+@bp.route('/logout', methods=['POST'])
 def logout() -> Response :
     """
     Logs user out by removing data from session
@@ -129,7 +66,7 @@ def logout() -> Response :
         session.pop('email', None)
     return redirect(url_for('auth.index'))
 
-@auth_blueprint.route('/signup-request',  methods=['POST'])
+@bp.route('/signup-request',  methods=['POST'])
 def signup_request() -> Response:
     """
     Processes a signup request from the signup page
@@ -158,32 +95,6 @@ def signup_request() -> Response:
 
     # notify success
     return jsonify(status='success'), 201
-
-
-@auth_blueprint.route('/get-notifications',  methods=['GET'])
-def get_user_notifications() -> Response :
-    """ 
-    Returns all the notifications associated with the current user.
-    Currently, just returns the group invites
-    """
-    # get the user's email from session
-    user_email: str | None = session.get('email')
-
-    # check if user_email exists
-    if not user_email :
-        return jsonify(status='failure'), 500
-    
-    # get and validate user
-    user: User | None = db.session.get(User, user_email)
-
-    if not user :
-        return jsonify(status='failure'), 500
-
-    # get users group invites
-    inviting_groups: List[Group] = user.get_group_invites()
-    print(inviting_groups)
-    # return
-    return jsonify([{'id': group.id, 'name': group.name} for group in inviting_groups]), 200
 
 
 

@@ -1,6 +1,6 @@
 """ Defines group related routes """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response
+from flask import render_template, request, redirect, url_for, session, jsonify, Response
 from ..extensions import db, mail
 from ..models.user import User
 from ..models.membership import Membership
@@ -9,14 +9,9 @@ from ..models.group import Group
 from flask_mail import Message
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+from ..groups import bp
 
-
-groups_blueprint: Blueprint = Blueprint('groups', __name__, 
-                                        template_folder='../../templates', 
-                                        static_folder='../../static')
-
-
-@groups_blueprint.route('/create_group', methods=['GET', 'POST'])
+@bp.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
     """ 
     This method will be made for creating groups. It'll allow for someone to make a group such as 
@@ -38,9 +33,9 @@ def create_group() -> Response:
     db.session.commit()
 
     # Step3: redirect to home page. 
-    return redirect(url_for('auth.home'))
+    return redirect(url_for('main.home'))
 
-@groups_blueprint.route('/send-invitations/<int:group_id>', methods=['POST'])
+@bp.route('/send-invitations/<int:group_id>', methods=['POST'])
 def send_invitations(group_id: int) -> Response :
    """ Sends group invitations to users via email using Flask-Mail API """
    # Get JSON data (list of emails), sent from the frontend
@@ -78,7 +73,7 @@ def send_invitations(group_id: int) -> Response :
 
    return jsonify(status='success', message='Invitations sent successfully!'), 201
         
-@groups_blueprint.route('/join_group/', methods = ['GET', 'POST'])
+@bp.route('/join_group/', methods = ['GET', 'POST'])
 def join_group()-> Response:
     """ This method is being written to handle the functionality of joining a group from a members side, by inputting
         a valid group ID. The user will still need to be allowed in by the owner/admins of the group, and we assume the
@@ -115,10 +110,10 @@ def join_group()-> Response:
         #     mail.send(message)
         # except Exception as e:
         #     print(f'Error sending request, try again please')
-        return redirect(url_for('auth.home'))
+        return redirect(url_for('main.home'))
     # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
 
-@groups_blueprint.route('/group/<int:group_id>') 
+@bp.route('/group/<int:group_id>') 
 def group_page(group_id: int) -> Response | str :
     """ This method is used to redirect from the home page to a group page, when the user clicks
         on a group in their home page. The user must be a part of the group, whether a member or admin,
@@ -129,19 +124,19 @@ def group_page(group_id: int) -> Response | str :
         :version: 2023.10.19
         """
     if 'email' not in session:
-        return redirect(url_for('auth.home'))
+        return redirect(url_for('main.home'))
     user_email = session['email']
 
     # Fetch the group and its teams with eager loading to optimize queries
     group = db.session.query(Group).options(selectinload(Group.teams)).get(group_id)
 
     if not group:
-        return redirect(url_for('auth.home'))  # Group not found
+        return redirect(url_for('main.home'))  # Group not found
 
     # Check that user is a member of the group
     is_member = db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
     if not is_member:
-        return redirect(url_for('auth.home'))  # User is not a member of the group
+        return redirect(url_for('main.home'))  # User is not a member of the group
 
     # Prepare team data
     team_data = []
@@ -155,7 +150,7 @@ def group_page(group_id: int) -> Response | str :
 
     return render_template('group.html', group=group, user_events=user_events, group_id=group_id, teams=team_data)
     
-@groups_blueprint.route('/delete_from_group/<int:group_id>', methods=['POST'])
+@bp.route('/delete_from_group/<int:group_id>', methods=['POST'])
 def delete_user_from_group(group_id: int) -> Response :
     """
     Deletes the current user from a specified group
@@ -177,7 +172,7 @@ def delete_user_from_group(group_id: int) -> Response :
 
     return jsonify(status='success'), 201
 
-@groups_blueprint.route('/change_group_role/<int:group_id>/<string:role>', methods=['POST'])
+@bp.route('/change_group_role/<int:group_id>/<string:role>', methods=['POST'])
 def change_user_group_role(group_id: int, role: str) -> Response :
     """
     Update a user's role in a group
@@ -201,7 +196,7 @@ def change_user_group_role(group_id: int, role: str) -> Response :
     return jsonify(status='success'), 201
     
 
-@groups_blueprint.route('/delete-group/<int:group_id>', methods=['DELETE'])
+@bp.route('/delete-group/<int:group_id>', methods=['DELETE'])
 def delete_group(group_id: int) -> Response:
     """
     This method deletes groups. It checks that the group is owned by the active user.

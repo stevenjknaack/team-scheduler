@@ -1,14 +1,23 @@
 """ Defines routes for the profile page """
 
-from flask import Blueprint, request, jsonify, session, Response
+from flask import request, jsonify, session, Response, redirect, render_template, url_for
 from ..extensions import db
 from ..models.availablity_block import AvailabilityBlock
+from ..profile import bp
 
-profile_blueprint = Blueprint('profile', __name__, 
-                              template_folder='../../templates', 
-                              static_folder='../../static')
+@bp.route('/profile') 
+def profile() -> str | Response:
+    """ 
+    Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
+    get_event to get the information from each event to display.
+    """
+    if 'username' not in session:
+        return redirect(url_for('main.index'))
+    username: str = session['username']
+    events = None
+    return render_template('profile.html', username=username, events=events)
 
-@profile_blueprint.route('/save_schedule', methods=['POST'])
+@bp.route('/save_schedule', methods=['POST'])
 def save_schedule() -> tuple[Response, int]:
     """
     Handles a POST request to save a user's schedule availability.
@@ -57,7 +66,7 @@ def save_schedule() -> tuple[Response, int]:
     return jsonify({'message': 'Schedule saved successfully'}), 201  #TODO: sync the change
 
 
-@profile_blueprint.route('/get_schedule', methods=['GET'])
+@bp.route('/get_schedule', methods=['GET'])
 def get_schedule() -> tuple[Response, int]:
     """
     Handles a GET request to retrieve the schedule availability of the current logged-in user.
@@ -68,8 +77,6 @@ def get_schedule() -> tuple[Response, int]:
     :author: Tony Chen
     :version: 2023.11.29
     """
-
-
     # Retrieve the user's email from the session
     user_email = session.get('email')
 

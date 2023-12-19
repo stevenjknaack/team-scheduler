@@ -1,16 +1,13 @@
 """ Defines routes for the events """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, Response
+from flask import render_template, request, redirect, url_for, session, jsonify, Response
 from ..extensions import db
 from ..models.membership import Membership
 from ..models.event import Event
 from datetime import datetime
+from ..events import bp
 
-events_blueprint: Blueprint = Blueprint('events', __name__, 
-                                        template_folder='../../templates', 
-                                        static_folder='../../static')
-
-@events_blueprint.route('/create-event/<int:group_id>', methods=['GET'])
+@bp.route('/create-event/<int:group_id>', methods=['GET'])
 def create_event(group_id) -> str | Response :
 
     if 'username' not in session :
@@ -18,7 +15,7 @@ def create_event(group_id) -> str | Response :
     event_type = request.args.get('type', 'group')
     return render_template('create_event.html', username=session['username'], event_type=event_type, group_id=group_id)
 
-@events_blueprint.route('/create-event-request/<int:group_id>', methods=['POST'])
+@bp.route('/create-event-request/<int:group_id>', methods=['POST'])
 def create_event_request(group_id: int) -> Response :
     """
     This method collects the data inputed by the creator of an event and inserts the information
@@ -63,7 +60,7 @@ def create_event_request(group_id: int) -> Response :
         if membership and membership.role == 'owner':
             edit_permission = 'group_admin'
         else:
-            return redirect(url_for('auth.home'))
+            return redirect(url_for('main.home'))
         
         # update reg_start_day and reg_end_day to be None if invalid
         if not reg_start_day or not reg_end_day :
@@ -97,7 +94,7 @@ def create_event_request(group_id: int) -> Response :
         return redirect(url_for('auth.login'))
 
 
-@events_blueprint.route('/delete-event/<int:event_id>/<int:group_id>', methods=['DELETE']) #TODO this method should not require group_id
+@bp.route('/delete-event/<int:event_id>/<int:group_id>', methods=['DELETE']) #TODO this method should not require group_id
 def delete_event(event_id: int, group_id: int) -> Response:
     """
     This method deletes events. It checks that the event is owned by the active user (created by them)

@@ -11,6 +11,43 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..groups import bp
 
+@bp.route('/<int:group_id>') 
+def group_page(group_id: int) -> Response | str :
+    """ This method is used to redirect from the home page to a group page, when the user clicks
+        on a group in their home page. The user must be a part of the group, whether a member or admin,
+        for the box to show up. It takes the groupID that matches the group, and embeds it in the URL, to identify 
+        which group it is for other actions in the future (like creating a group event).
+
+        :author: Dante Katz Andrade
+        :version: 2023.10.19
+        """
+    if 'email' not in session:
+        return redirect(url_for('main.home'))
+    user_email = session['email']
+
+    # Fetch the group and its teams with eager loading to optimize queries
+    group = db.session.query(Group).options(selectinload(Group.teams)).get(group_id)
+
+    if not group:
+        return redirect(url_for('main.home'))  # Group not found
+
+    # Check that user is a member of the group
+    is_member = db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
+    if not is_member:
+        return redirect(url_for('main.home'))  # User is not a member of the group
+
+    # Prepare team data
+    team_data = []
+    for team in group.teams:
+        members = [member.username for member in team.members]
+        team_data.append({'id': team.id, 'name': team.name, 'members': members})
+
+
+    user_events_result = db.session.scalars(select(Event).filter_by(group_id=group_id))
+    user_events = [event for event in user_events_result]
+    print(user_events)
+    return render_template('group.html', username=session.get('username'), group=group, user_events=user_events, group_id=group_id, teams=team_data)
+
 @bp.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:
     """ 
@@ -112,43 +149,6 @@ def join_group()-> Response:
         #     print(f'Error sending request, try again please')
         return redirect(url_for('main.home'))
     # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
-
-@bp.route('/<int:group_id>') 
-def group_page(group_id: int) -> Response | str :
-    """ This method is used to redirect from the home page to a group page, when the user clicks
-        on a group in their home page. The user must be a part of the group, whether a member or admin,
-        for the box to show up. It takes the groupID that matches the group, and embeds it in the URL, to identify 
-        which group it is for other actions in the future (like creating a group event).
-
-        :author: Dante Katz Andrade
-        :version: 2023.10.19
-        """
-    if 'email' not in session:
-        return redirect(url_for('main.home'))
-    user_email = session['email']
-
-    # Fetch the group and its teams with eager loading to optimize queries
-    group = db.session.query(Group).options(selectinload(Group.teams)).get(group_id)
-
-    if not group:
-        return redirect(url_for('main.home'))  # Group not found
-
-    # Check that user is a member of the group
-    is_member = db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
-    if not is_member:
-        return redirect(url_for('main.home'))  # User is not a member of the group
-
-    # Prepare team data
-    team_data = []
-    for team in group.teams:
-        members = [member.username for member in team.members]
-        team_data.append({'id': team.id, 'name': team.name, 'members': members})
-
-
-    user_events_result = db.session.scalars(select(Event).filter_by(group_id=group_id))
-    user_events = [event for event in user_events_result]
-
-    return render_template('group.html', group=group, user_events=user_events, group_id=group_id, teams=team_data)
     
 @bp.route('/delete_from_group/<int:group_id>', methods=['POST'])
 def delete_user_from_group(group_id: int) -> Response :

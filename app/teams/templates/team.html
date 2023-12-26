@@ -1,169 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ten Star User Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('groups.static', filename='css/group.css') }}" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('groups.static', filename='js/group.js') }}"></script>
-</head>
+{% block css %} 
+<link rel="stylesheet" href="{{ url_for('groups.static', filename='css/group.css') }}" />
+{% endblock %}
 
-<body>
-    
-    <div class="wrapper">
-        <!-- Nav Bar -->
-        <nav class="navbar">
-            <!-- on the left side there will be an iamge-->
-            <div class="navbar-left">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
+{% block js %} 
+<script src="{{ url_for('groups.static', filename='js/group.js') }}"></script>
+{% endblock %}
+
+{% block title %}Team Page{% endblock %}
+
+{% block nav %}
+  <!-- profile button -->
+  <button id="people-btn" class="btn btn-danger" style="display: block">
+      People
+  </button>
+  <!-- create event button -->
+  <button id="createTeamEventButton" class="btn btn-danger" style="display: block">
+      Create Team Event
+  </button>
+  <button class="btn btn-danger" style="display: block" onclick="window.location.href='/groups/{{ team.group_id }}';">
+      Back
+  </button>
+{% endblock %}
+
+{% block modals %} 
+<!-- Invite Modal -->
+<div id="inviteModal" class="modal">
+  <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2>Invite Participants</h2>
+      <div class="modal-body">
+          <span>Code:</span>
+          <input type="text" id="invitationCode" placeholder="Invitation Code" readonly />
+          <input type="email" id="invite-email" placeholder="Enter email">
+          <div id="invited-participants"></div>
+          <button class="invite-submit-btn">Send Invitation</button>
+      </div>
+  </div>
+</div>
+
+<!-- People Modal -->
+  <div id="peopleModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Manage People</h2>
+        <input type="text" id="searchEmail" placeholder="Search emails..." onkeyup="searchEmails()" />
+        <div id="emailList" class="email-list">
+            <!-- Sample Email Entry -->
+            <!-- Repeat this structure for each email dynamically -->
+            <div class="email-entry">
+                <span class="email-text">1@example.com</span>
+                <button class="promotion-btn">Promote</button>
+                <button class="demotion-btn">Demote</button>
             </div>
-            <!-- on the right side there will be buttons-->
-            <div class="navbar-right">
-                <!-- invite button -->
-                <button id="invite-btn" style="display: block">Invite</button>
-                <!-- profile button -->
-                <button id="people-btn" class="btn btn-danger" style="display: block">
-                    People
-                </button>
-                <!-- create event button -->
-                <button id="createTeamEventButton" class="btn btn-danger" style="display: block">
-                    Create Team Event
-                </button>
-                <button class="btn btn-danger" style="display: block" onclick="window.location.href='/group';">
-                    Back
-                </button>
-                </div>
+            <div class="email-entry">
+                <span class="email-text">2@example.com</span>
+                <button class="promotion-btn">Promote</button>
+                <button class="demotion-btn">Demote</button>
             </div>
-        </nav>
-
-        <div class="container">
-
-            <!-- Group Details -->
-            <div class="group-details">
-                <h1>Team Name</h1>
-                <p>Description of the team goes here. It can be a brief summary of what the group is about, its
-                    objectives, and other relevant details.</p>
+            <div class="email-entry">
+                <span class="email-text">3@example.com</span>
+                <button class="promotion-btn">Promote</button>
+                <button class="demotion-btn">Demote</button>
             </div>
-
-            <div class="team-events">
-                <h2>Events</h2>
-                <div class="event-box-container">
-                    <!-- Example Team Box -->
-                    <div class="event-box">
-                        <h3 class="event-name">Event 1</h3>
-                        <div class="event-members">
-                            <p>Code Review</p>
-                            <!-- ... other team members ... -->
-                        </div>
-                    </div>
-                    <div class="event-box">
-                        <h3 class="event-name">Event 2</h3>
-                        <div class="event-members">
-                            <p>Code Review</p>
-                            <!-- ... other team members ... -->
-                        </div>
-                    </div>
-                    <div class="event-box">
-                        <h3 class="event-name">Event 3</h3>
-                        <div class="event-members">
-                            <p>Code Review</p>
-                            <!-- ... other team members ... -->
-                        </div>
-                    </div>
-                    <!-- Repeat for other teams -->
-                </div>
+            <div class="email-entry">
+                <span class="email-text">4@example.com</span>
+                <button class="promotion-btn">Promote</button>
+                <button class="demotion-btn">Demote</button>
             </div>
+            <!-- ... other email entries ... -->
         </div>
-
-        <!-- Invite Modal -->
-        <div id="inviteModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Invite Participants</h2>
-                <div class="modal-body">
-                    <span>Code:</span>
-                    <input type="text" id="invitationCode" placeholder="Invitation Code" readonly />
-                    <input type="email" id="invite-email" placeholder="Enter email">
-                    <div id="invited-participants"></div>
-                    <button class="invite-submit-btn">Send Invitation</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- People Modal -->
-        <div id="peopleModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Manage People</h2>
-                <input type="text" id="searchEmail" placeholder="Search emails..." onkeyup="searchEmails()" />
-                <div id="emailList" class="email-list">
-                    <!-- Sample Email Entry -->
-                    <!-- Repeat this structure for each email dynamically -->
-                    <div class="email-entry">
-                        <span class="email-text">1@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">2@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">3@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">4@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">5@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">6@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">7@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">7@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">7@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">7@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    <div class="email-entry">
-                        <span class="email-text">7@example.com</span>
-                        <button class="promotion-btn">Promote</button>
-                        <button class="demotion-btn">Demote</button>
-                    </div>
-                    
-
-                    <!-- ... other email entries ... -->
-                </div>
-            </div>
-        </div>
-
     </div>
-</body>
+  </div>
+{% endblock %}
 
-</html>
+{% block content %} 
+  <!-- Group Details -->
+  <div class="group-details">
+    <h1>{{ team.name}} </h1>
+    <p>{{ team.description }}</p>
+  </div>
+
+  <div class="team-events">
+    <h2>Events</h2>
+    <div class="event-box-container">
+        <!-- Example Team Box -->
+        <div class="event-box">
+            <h3 class="event-name">Event 1</h3>
+            <div class="event-members">
+                <p>Code Review</p>
+                <!-- ... other team members ... -->
+            </div>
+        </div>
+        <div class="event-box">
+            <h3 class="event-name">Event 2</h3>
+            <div class="event-members">
+                <p>Code Review</p>
+                <!-- ... other team members ... -->
+            </div>
+        </div>
+        <div class="event-box">
+            <h3 class="event-name">Event 3</h3>
+            <div class="event-members">
+                <p>Code Review</p>
+                <!-- ... other team members ... -->
+            </div>
+        </div>
+        <!-- Repeat for other teams -->
+    </div>
+  </div>
+{% endblock %}

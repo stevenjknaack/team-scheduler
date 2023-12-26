@@ -1,6 +1,6 @@
 """ Defines routes related to teams """
 
-from flask import render_template, request, redirect, url_for, jsonify, Response
+from flask import render_template, request, redirect, url_for, jsonify, Response, session
 from ..extensions import db
 from ..models.user import User
 from ..models.team import Team
@@ -9,7 +9,8 @@ from ..teams import bp
 
 @bp.route('/<int:team_id>') #TODO finish
 def go_to_team_page(team_id: int) -> str | Response:
-    return render_template('team.html', team_id=team_id)
+    team: Team = db.session.get(Team, team_id)
+    return render_template('team.html', username=session.get('username'), team=team)
 
 @bp.route('/partition_team_page')
 def create_teams() -> Response:
@@ -18,7 +19,7 @@ def create_teams() -> Response:
     # Retrieve group_id from query parameters
     group_id = request.args.get('group_id')
     
-    return render_template('partition_teams.html', people=people, group_id=group_id)
+    return render_template('partition_teams.html', username=session.get('username'), people=people, group_id=group_id)
 
 @bp.route('/manual_create_team_page')
 def manual_create_teams():
@@ -36,7 +37,7 @@ def manual_create_teams():
     # Extract usernames and emails
     people = [{'email': user.email, 'username': user.username} for user in users]
 
-    return render_template('manual_create_team.html', people=people, group_id=group_id)
+    return render_template('manual_create_team.html', username=session.get('username'), people=people, group_id=group_id)
 
 
 @bp.route('/generate_teams', methods=['POST'])

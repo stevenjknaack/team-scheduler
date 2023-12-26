@@ -1,158 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ten Star User Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('teams.static', filename='css/partition_teams.css') }}" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('teams.static', filename='scripts/partition_teams.js') }}"></script>
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% block css %} 
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{{ url_for('teams.static', filename='css/partition_teams.css') }}" />
+{% endblock %}
 
+{% block js %} 
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{{ url_for('teams.static', filename='js/partition_teams.js') }}"></script>
+{% endblock %}
 
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
+{% block title %} Generate Teams {% endblock %}
 
-<body>
-    <div class="wrapper">
-        <!-- Nav Bar -->
-        <nav class="navbar">
-            <!-- on the left side there will be an iamge-->
-            <div class="navbar-left">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
-            </div>
-            <!-- on the right side there will be buttons-->
-            <div class="navbar-right">
-                <button class="btn btn-danger" style="display: block" onclick="window.location.href='/group/{{ group_id }}';">
-                    Back
-                </button>
-            </div>
-        </nav>
+{% block nav %} 
+  <button class="btn btn-danger" style="display: block" onclick="window.location.href='/groups/{{ group_id }}';">
+    Back
+  </button>
+{% endblock %}
 
-        <div class="container">
-            <!-- Other Sections -->
-            <!-- Expandable Member Selection Section -->
-            <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleVisibility('memberSelection')">Select Participants</span>
-                <!-- The rest of your content -->
-                <div id="memberSelection" style="display: none;">
-                    
-                    <div class="search-bar">
-                        <input type="text" id="searchPeople" placeholder="Search people..." onkeyup="searchPeople()">
-                        <button id="checkAll">Check All</button>
-                    </div>
-                    <div class="team-members" id="peopleContainer">
-                        {% for person in people %}
-                        <label class="member" for="chk{{ person }}">
-                            <input type="checkbox" id="chk{{ person }}" value="{{ person }}">
-                            <span class="checkmark"></span>
-                            {{ person }}
-                        </label>
-                        {% endfor %}
-                    </div>
-                    <!-- Confirm button -->
-                    <button onclick="confirmParticipants()" id="confirmButton">Confirm</button>
-                </div>
-                <!-- Container for showing selected participants -->
-                <div id="selectedParticipants" style="display: none;">
-                    <!-- Selected participants will be listed here -->
-                </div>
-            </div>
-            <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleVisibility('createEvent')">Create Events</span>
-                <div id="createEvent" style="display: none;">
+{% block modals %} 
+{% endblock %}
 
-                    <!-- Input for event name -->
-                    <input type="text" id="eventName" placeholder="Event Name">
+{% block content %}
+<!-- Other Sections -->
+    <!-- Expandable Member Selection Section -->
+    <div class="section" style="position: relative;">
+      <span class="section-text" onclick="toggleVisibility('memberSelection')">Select Participants</span>
+      <!-- The rest of your content -->
+      <div id="memberSelection" style="display: none;">
+          
+          <div class="search-bar">
+              <input type="text" id="searchPeople" placeholder="Search people..." onkeyup="searchPeople()">
+              <button id="checkAll">Check All</button>
+          </div>
+          <div class="team-members" id="peopleContainer">
+              {% for person in people %}
+              <label class="member" for="chk{{ person }}">
+                  <input type="checkbox" id="chk{{ person }}" value="{{ person }}">
+                  <span class="checkmark"></span>
+                  {{ person }}
+              </label>
+              {% endfor %}
+          </div>
+          <!-- Confirm button -->
+          <button onclick="confirmParticipants()" id="confirmButton">Confirm</button>
+      </div>
+      <!-- Container for showing selected participants -->
+      <div id="selectedParticipants" style="display: none;">
+          <!-- Selected participants will be listed here -->
+      </div>
+  </div>
+  <div class="section" style="position: relative;">
+      <span class="section-text" onclick="toggleVisibility('createEvent')">Create Events</span>
+      <div id="createEvent" style="display: none;">
 
-                    <!-- Input for event description -->
-                    <textarea id="eventDescription" placeholder="Event Description" style="height: 100px;"></textarea>
-                    <!-- Inputs for creating an event -->
-                    <!-- Input for event duration in minutes -->
-                    <input type="number" id="eventDuration" placeholder="Duration in minutes">
-                    <!-- Radio buttons for selecting Individual or Team event -->
-                    <select id="type">
-                        <option value="Individual">Individual</option>
-                        <option value="Team">Team</option>
-                        <!-- Add more options as needed -->
-                    </select>
+          <!-- Input for event name -->
+          <input type="text" id="eventName" placeholder="Event Name">
+
+          <!-- Input for event description -->
+          <textarea id="eventDescription" placeholder="Event Description" style="height: 100px;"></textarea>
+          <!-- Inputs for creating an event -->
+          <!-- Input for event duration in minutes -->
+          <input type="number" id="eventDuration" placeholder="Duration in minutes">
+          <!-- Radio buttons for selecting Individual or Team event -->
+          <select id="type">
+              <option value="Individual">Individual</option>
+              <option value="Team">Team</option>
+              <!-- Add more options as needed -->
+          </select>
 
 
-                    <button onclick="createCustomEvent()">Create Event</button>
+          <button onclick="createCustomEvent()">Create Event</button>
 
-                </div>
-                <div id="createdEvents" style="display: none;">
-                    <!-- Added events will be listed here -->
-                </div>
-            </div>
-            <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleVisibility('rangeSelection')">Range of People</span>
-                <div id="rangeSelection" style="display: none;">
-                    <label for="minPeople">Minimum:</label>
-                    <select id="minPeople">
-                        <!-- Options for minimum number of people -->
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <!-- ... more options as needed ... -->
-                    </select>
+      </div>
+      <div id="createdEvents" style="display: none;">
+          <!-- Added events will be listed here -->
+      </div>
+  </div>
+  <div class="section" style="position: relative;">
+      <span class="section-text" onclick="toggleVisibility('rangeSelection')">Range of People</span>
+      <div id="rangeSelection" style="display: none;">
+          <label for="minPeople">Minimum:</label>
+          <select id="minPeople">
+              <!-- Options for minimum number of people -->
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <!-- ... more options as needed ... -->
+          </select>
 
-                    <label for="maxPeople">Maximum:</label>
-                    <select id="maxPeople">
-                        <!-- Options for maximum number of people -->
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <!-- ... more options as needed ... -->
-                    </select>
+          <label for="maxPeople">Maximum:</label>
+          <select id="maxPeople">
+              <!-- Options for maximum number of people -->
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <!-- ... more options as needed ... -->
+          </select>
 
-                    <button onclick="confirmRange()">Confirm</button>
-                </div>
-                <!-- Container for showing confirmed range -->
-                <div id="confirmedRange" style="display: none;">
-                    <!-- Confirmed range will be listed here -->
-                </div>
-            </div>
+          <button onclick="confirmRange()">Confirm</button>
+      </div>
+      <!-- Container for showing confirmed range -->
+      <div id="confirmedRange" style="display: none;">
+          <!-- Confirmed range will be listed here -->
+      </div>
+  </div>
 
-            <!--
-            <div class="section" style="position: relative;">
-                <span class="section-text" onclick=" toggleVisibility('projectOptions')">Project Options</span>
-                <div id="projectOptions" style="display: none;">
-                    <div id="projectInput">
-                        <input type="text" id="projectName" placeholder="Project Name">
-                        <textarea id="projectDescription" placeholder="Project Description"></textarea>
-                        <button onclick="createProject()">Add Project</button>
-                    </div>
-                </div>
-                <div id="projectList" style="display: none;">
-                </div>
-            </div> -->
-            <div id="finalButton">
-                <button onclick="createTeams()">Create Teams</button>
-            </div>
-
-        </div>
-
-    </div>
-
-
-</body>
-
-</html>
+  <!--
+  <div class="section" style="position: relative;">
+      <span class="section-text" onclick=" toggleVisibility('projectOptions')">Project Options</span>
+      <div id="projectOptions" style="display: none;">
+          <div id="projectInput">
+              <input type="text" id="projectName" placeholder="Project Name">
+              <textarea id="projectDescription" placeholder="Project Description"></textarea>
+              <button onclick="createProject()">Add Project</button>
+          </div>
+      </div>
+      <div id="projectList" style="display: none;">
+      </div>
+  </div> -->
+  <div id="finalButton">
+      <button onclick="createTeams()">Create Teams</button>
+  </div> 
+{% endblock %}

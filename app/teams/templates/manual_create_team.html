@@ -1,79 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ten Star User Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('teams.static', filename='css/manual_create_team.css') }}" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('teams.static', filename='js/manual_create_team.js') }}"></script>
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% block css %}
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{{ url_for('teams.static', filename='css/manual_create_team.css') }}" /> 
+{% endblock %}
 
+{% block js %} 
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{{ url_for('teams.static', filename='js/manual_create_team.js') }}"></script>
+{% endblock %}
 
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
+{% block title %} Create Teams {% endblock %}
 
-<body>
-    <div class="wrapper">
-        <!-- Nav Bar -->
-        <nav class="navbar">
-            <!-- on the left side there will be an iamge-->
-            <div class="navbar-left">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
-            </div>
-            <!-- on the right side there will be buttons-->
-            <div class="navbar-right">
-                <button class="btn btn-danger" style="display: block" onclick="window.location.href='/group/{{ group_id }}';">
-                    Back
-                </button>
-            </div>
-        </nav>
+{% block nav %} 
+  <button class="btn btn-danger" style="display: block" onclick="window.location.href='/groups/{{ group_id }}';">
+    Back
+  </button>
+{% endblock %}
 
-        <div class="container">
-            <!-- Other Sections -->
-            <!-- Expandable Member Selection Section -->
-            <div class="section" style="position: relative;">
-                <span class="section-text" onclick="toggleVisibility('memberSelection')">Create Team</span>
-                <!-- The rest of your content -->
-                <div id="memberSelection" style="display: none;">
-                    <label for="teamName" class="input-label">Team Name</label>
-                    <input type="text" id="teamName" placeholder="E.g., Alpha Team" class="input-text">
+{% block modals %} 
+{% endblock %}
 
-                    <label for="teamDescription" class="input-label">Team Description</label>
-                    <textarea id="teamDescription" placeholder="Describe the team's purpose and goals" class="textarea-description"></textarea>
-                    <div class="search-bar">
-                        <input type="text" id="searchPeople" placeholder="Search people..." onkeyup="searchPeople()">
-                        <button id="checkAll">Check All</button>
-                    </div>
-                    <div class="team-members" id="peopleContainer">
-                        {% for person in people %}
-                        <label class="member" for="chk{{ person['username'] }}">
-                            <input type="checkbox" id="chk{{ person['username'] }}" value="{{ person['username'] }}" data-email="{{ person['email'] }}">
-                            <span class="checkmark"></span>
-                            {{ person['username'] }}
-                        </label>
-                        {% endfor %}
-                    </div>
-                    <!-- Confirm button -->
-                    <button onclick="confirmParticipants()" id="confirmButton">Confirm</button>
-                </div>
-                <!-- Container for showing selected participants -->
-                <div id="selectedParticipants" style="display: none;">
-                    <!-- Selected participants will be listed here -->
-                </div>
-            </div>
-            <div id="finalButton">
-                <button onclick="createTeam()">Create Teams</button>
-            </div>
+{% block content %} 
+  <!-- Other Sections -->
+  <!-- Expandable Member Selection Section -->
+  <div class="section" style="position: relative;">
+    <span class="section-text" onclick="toggleVisibility('memberSelection')">Create Team</span>
+    <!-- The rest of your content -->
+    <div id="memberSelection" style="display: none;">
+        <label for="teamName" class="input-label">Team Name</label>
+        <input type="text" id="teamName" placeholder="E.g., Alpha Team" class="input-text">
 
+        <label for="teamDescription" class="input-label">Team Description</label>
+        <textarea id="teamDescription" placeholder="Describe the team's purpose and goals" class="textarea-description"></textarea>
+        <div class="search-bar">
+            <input type="text" id="searchPeople" placeholder="Search people..." onkeyup="searchPeople()">
+            <button id="checkAll">Check All</button>
         </div>
-
+        <div class="team-members" id="peopleContainer">
+            {% for person in people %}
+            <label class="member" for="chk{{ person['username'] }}">
+                <input type="checkbox" id="chk{{ person['username'] }}" value="{{ person['username'] }}" data-email="{{ person['email'] }}">
+                <span class="checkmark"></span>
+                {{ person['username'] }}
+            </label>
+            {% endfor %}
+        </div>
+        <!-- Confirm button -->
+        <button onclick="confirmParticipants()" id="confirmButton">Confirm</button>
     </div>
-
-
-</body>
-
-</html>
+    <!-- Container for showing selected participants -->
+    <div id="selectedParticipants" style="display: none;">
+        <!-- Selected participants will be listed here -->
+    </div>
+</div>
+<div id="finalButton">
+    <button onclick="createTeam()">Create Teams</button>
+</div>
+{% endblock %}

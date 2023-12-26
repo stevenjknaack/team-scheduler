@@ -1,131 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ten Star User Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/css/home.css') }}" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
-</head>
+{% block css %} {% endblock %}
 
-<body>
-    <div class="wrapper">
-        <!-- Nav Bar -->
-        <nav class="navbar">
-            <!-- on the left side there will be an iamge-->
-            <div class="navbar-left">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
-            </div>
-            <!-- on the right side there will be buttons-->
-            <div class="navbar-right">
-                <!-- welcome button -->
-                <button id="welcomeButton" style="display: block">
-                    Welcome, {{ username }}!
-                </button>
-                <form action="{{ url_for('auth.logout') }}" method="post" id="logoutForm" style="display: none">
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>
-                <!-- profile button -->
-                <button id="editProfile" class="btn btn-danger" style="display: block">
-                    Profile
-                </button>
-                <!-- create event button -->
-                <button id="createGroupButton" class="btn btn-danger" style="display: block">
-                    Create Groups
-                </button>
-                <button id="joinGroupButton" class="btn btn-danger" style="display: block">
-                    Join Group
-                </button>
+{% block js %} 
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}
 
-                <!-- notification button -->
-                <div class="notification-container">
-                    <button class="notification-btn">Notifications</button>
-                    <!-- Notification dropdown -->
-                    <div class="notification-dropdown" style="display: none">
-                        <!-- Sample notification item -->
-                    </div>
-                </div>
-            </div>
-        </nav>
-        <div class="container">
-            <!-- Switch button to toggle between Groups and Events -->
-            <div class="switch-selector">
-                <button id="showGroups" class="active selected">Groups</button>
-                <button id="showEvents">Events</button>
-            </div>
-            <!-- Box to display the groups -->
-            {% for group in user_groups %}
-                {% for membership in group.memberships %}
-                    {% if membership.user_email == session.get('email') and membership.role != 'invitee' and membership.role != 'requester' %}
-                        <div class="group {% if membership.role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
-                            <h2>{{group.name}}</h2>
-                            <p>Members: {{ group.memberships | length }}</p>
-                            <p>group ID: {{ group.id }}</p>
-                            {% if membership.role == 'owner' %}
-                                <!-- Add the delete button with data-group-id attribute -->
-                                <button class="delete-group-btn" data-group-id="{{ group.id }}">Delete Group</button>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-            <!-- Box to display the events -->
-            {% if user_events %}
-                <ul>
-                    <div class="event-box">
-                        {% for event in user_events %}
-                            <div class="event group-event">
-                                <h3 class="event-name">{{ event.name }}</h3>
-                                <div class="event-members">
-                                    <p>{{ event.description }}</p>
-                                </div>
-                                <div class="event-dates">
-                                    <p>Start Date: {{ event.start_date }}</p>
-                                    <p>End Date: {{ event.end_date }}</p>
-                                    <p>{{event.reg_start_day}}</p>
-                                </div>
-                                <h3 class="event-name">Group Name: {{ event.group.name }}</h3>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </ul>
-            {% else %}
-                <p>No events</p>
-            {% endif %}
-        </div>
+{% block title %}Ten Star User Home Page{% endblock %}
+
+{% block nav %} 
+  <!-- profile button -->
+  <button id="editProfile" class="btn btn-danger" style="display: block">
+    Profile
+  </button>
+  <!-- create event button -->
+  <button id="createGroupButton" class="btn btn-danger" style="display: block">
+    Create Groups
+  </button>
+  <button id="joinGroupButton" class="btn btn-danger" style="display: block">
+    Join Group
+  </button>
+
+  <!-- notification button -->
+  <div class="notification-container">
+    <button class="notification-btn">Notifications</button>
+    <!-- Notification dropdown -->
+    <div class="notification-dropdown" style="display: none">
+        <!-- Sample notification item -->
     </div>
-    <!-- Create Group Modal -->
-    <div id="createGroupModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Create Group</h2>
-            <form id="createGroupForm" action="{{ url_for('groups.create_group') }}">
-                <div class="form-group">
-                    <label for="groupName">Group Name:</label>
-                    <input type="text" id="groupName" name="groupName" required />
-                </div>
-                <div class="form-group">
-                    <label for="groupDescription">Group Description:</label>
-                    <textarea id="groupDescription" name="groupDescription" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-danger btn-create-group" >Create Group</button>
-            </form>
-        </div>
-    </div>
-    <div id="joinGroupModal" class="modal">
-        <div class="modal-content">
-            <span class="jclose">&times;</span>
-            <h2>Join Group Via Code</h2>
-            <form id="joinGroupForm" action="{{ url_for('groups.join_group') }}", method="POST">
-                <div class="form-group">
-                    <input type="text" id="groupCode" name="groupCode" required />
-                </div>
-                <button id = "joinGroup" type="submit" class="btn btn-danger btn-join-group" >Join Group</button>
-            </form>
-        </div>
-    </div>
-</body>
+  </div>
+{% endblock %}
 
-</html>
+{% block modals %} 
+  <!-- Create Group Modal -->
+  <div id="createGroupModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Create Group</h2>
+        <form id="createGroupForm" action="{{ url_for('groups.create_group') }}">
+            <div class="form-group">
+                <label for="groupName">Group Name:</label>
+                <input type="text" id="groupName" name="groupName" required />
+            </div>
+            <div class="form-group">
+                <label for="groupDescription">Group Description:</label>
+                <textarea id="groupDescription" name="groupDescription" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger btn-create-group" >Create Group</button>
+        </form>
+    </div>
+  </div>
+  <div id="joinGroupModal" class="modal">
+    <div class="modal-content">
+        <span class="jclose">&times;</span>
+        <h2>Join Group Via Code</h2>
+        <form id="joinGroupForm" action="{{ url_for('groups.join_group') }}", method="POST">
+            <div class="form-group">
+                <input type="text" id="groupCode" name="groupCode" required />
+            </div>
+            <button id = "joinGroup" type="submit" class="btn btn-danger btn-join-group" >Join Group</button>
+        </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %} 
+    <!-- Switch button to toggle between Groups and Events -->
+    <div class="switch-selector">
+      <button id="showGroups" class="active selected">Groups</button>
+      <button id="showEvents">Events</button>
+  </div>
+  <!-- Box to display the groups -->
+  {% for group in user_groups %}
+      {% for membership in group.memberships %}
+          {% if membership.user_email == session.get('email') and membership.role != 'invitee' and membership.role != 'requester' %}
+              <div class="group {% if membership.role == 'owner' %}admin-group{% else %}participant-group{% endif %}" data-group-url="{{url_for('groups.group_page', group_id=group.id) }}" data-group-id="{{ group.id }}">
+                  <h2>{{group.name}}</h2>
+                  <p>Members: {{ group.memberships | length }}</p>
+                  <p>group ID: {{ group.id }}</p>
+                  {% if membership.role == 'owner' %}
+                      <!-- Add the delete button with data-group-id attribute -->
+                      <button class="delete-group-btn" data-group-id="{{ group.id }}">Delete Group</button>
+                  {% endif %}
+              </div>
+          {% endif %}
+      {% endfor %}
+  {% endfor %}
+  <!-- Box to display the events -->
+  {% if user_events %}
+      <ul>
+          <div class="event-box">
+              {% for event in user_events %}
+                  <div class="event group-event">
+                      <h3 class="event-name">{{ event.name }}</h3>
+                      <div class="event-members">
+                          <p>{{ event.description }}</p>
+                      </div>
+                      <div class="event-dates">
+                          <p>Start Date: {{ event.start_date }}</p>
+                          <p>End Date: {{ event.end_date }}</p>
+                          <p>{{event.reg_start_day}}</p>
+                      </div>
+                      <h3 class="event-name">Group Name: {{ event.group.name }}</h3>
+                  </div>
+              {% endfor %}
+          </div>
+      </ul>
+  {% else %}
+      <p>No events</p>
+  {% endif %}
+{% endblock %}

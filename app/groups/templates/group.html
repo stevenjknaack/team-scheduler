@@ -5,9 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ten Star User Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/group.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('groups.static', filename='css/group.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='scripts/group.js') }}"></script>
+    <script src="{{ url_for('groups.static', filename='js/group.js') }}"></script>
 </head>
 
 <body>
@@ -16,7 +16,7 @@
         <nav class="navbar">
             <!-- on the left side there will be an iamge-->
             <div class="navbar-left">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ten Star Logo" />
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
             </div>
             <!-- on the right side there will be buttons-->
             <div class="navbar-right">
@@ -94,7 +94,7 @@
                 <div class="team-box-container">
                     {% for team in teams %}
                     <!-- Each team has its own team-box within the same container -->
-                    <div class="team-box" data-team-url="/team/{{ team.id }}">
+                    <div class="team-box" data-team-url="../teams/{{ team.id }}">
                         <h3 class="team-name">{{ team.name }}</h3>
                         <div class="team-members">
                             {% for member in team.members %}

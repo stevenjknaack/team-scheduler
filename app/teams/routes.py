@@ -7,9 +7,9 @@ from ..models.team import Team
 from ..models.membership import Membership
 from ..teams import bp
 
-@bp.route('/team')
-def go_to_team_page() -> str | Response:
-    return render_template('team.html')
+@bp.route('/<int:team_id>') #TODO finish
+def go_to_team_page(team_id: int) -> str | Response:
+    return render_template('team.html', team_id=team_id)
 
 @bp.route('/partition_team_page')
 def create_teams() -> Response:

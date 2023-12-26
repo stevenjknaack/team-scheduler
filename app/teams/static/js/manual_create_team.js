@@ -195,14 +195,14 @@ function createTeam() {
     console.log(team)
 
     $.ajax({
-        url: '/manual_create_teams',
+        url: '../teams/manual_create_teams',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(team),
         success: function(data) {
             console.log(data); // Log the response from the server
             alert("Team created successfully.");
-            window.location.href = '/group/' + team.group_id;
+            window.location.href = '/groups/' + team.group_id;
             // You can also redirect or update the UI based on the response here
         },
         error: function(xhr, status, error) {

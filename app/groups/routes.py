@@ -113,7 +113,7 @@ def join_group()-> Response:
         return redirect(url_for('main.home'))
     # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
 
-@bp.route('/group/<int:group_id>') 
+@bp.route('/<int:group_id>') 
 def group_page(group_id: int) -> Response | str :
     """ This method is used to redirect from the home page to a group page, when the user clicks
         on a group in their home page. The user must be a part of the group, whether a member or admin,
@@ -142,7 +142,7 @@ def group_page(group_id: int) -> Response | str :
     team_data = []
     for team in group.teams:
         members = [member.username for member in team.members]
-        team_data.append({'name': team.name, 'members': members})
+        team_data.append({'id': team.id, 'name': team.name, 'members': members})
 
 
     user_events_result = db.session.scalars(select(Event).filter_by(group_id=group_id))

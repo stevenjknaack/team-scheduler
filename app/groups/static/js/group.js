@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         var currentURL = window.location.href;
 
         // extract the group ID from the URL using regex
-        var match = currentURL.match(/\/group\/(\d+)/);
+        var match = currentURL.match(/\/groups\/(\d+)/);
 
         // check if a match is found
         if (match) {
@@ -119,11 +119,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         var currentUrl = window.location.href;
         var eventId = this.getAttribute("data-event-id");
         console.log("EVENT ID: " + eventId);
-        var groupId = currentUrl.match(/\/group\/(\d+)/);
+        var groupId = currentUrl.match(/\/groups\/(\d+)/);
         console.log("GROUP ID: " + groupId[1]);
 
         // make HTTP request to the Flask backend
-        fetch(`/send-invitations/${groupId[1]}`, {
+        fetch(`../groups/send-invitations/${groupId[1]}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -244,18 +244,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
     });
     // Function to delete an event
-    function delete_event(eventId) {
+    function delete_event(eventId) { // TODO THIS IS SO FUCKING BROKEN BRO
         // Extract the group ID from the current URL
         var currentUrl = window.location.href;
         // Extract from the url 'group/id' (localhost:6969/group/id)
-        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+        var groupIdMatch = currentUrl.match(/\/groups\/(\d+)/);
         // Make sure that there is an element there and that there is an id element
+        let groupId = null;
         if (groupIdMatch && groupIdMatch[1]) {
-            var group_id = groupIdMatch[1];
+            groupId = groupIdMatch[1];
             // Redirect to create-event with the extracted group ID
         }
         // Send a request to the server to delete the event
-        fetch(`/delete-event/${eventId}/${group_id}`, {
+        fetch(`../events/delete-event/${eventId}/${groupId}`, {
             method: "DELETE",
         })
             .then(function (response) {
@@ -284,11 +285,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     partitionTeamButton.addEventListener('click', function() {
         var currentUrl = window.location.href;
-        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+        var groupIdMatch = currentUrl.match(/\/groups\/(\d+)/);
 
         if (groupIdMatch && groupIdMatch[1]) {
             var groupId = groupIdMatch[1];
-            window.location.href = '/partition_team_page?group_id=' + groupId;
+            window.location.href = '../teams/partition_team_page?group_id=' + groupId;
         } else {
             console.error('Group ID not found in the URL');
         }
@@ -297,11 +298,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     manualCreateTeamButton.addEventListener('click', function() {
         var currentUrl = window.location.href;
-        var groupIdMatch = currentUrl.match(/\/group\/(\d+)/);
+        var groupIdMatch = currentUrl.match(/\/groups\/(\d+)/);
 
         if (groupIdMatch && groupIdMatch[1]) {
             var groupId = groupIdMatch[1];
-            window.location.href = '/manual_create_team_page?group_id=' + groupId;
+            window.location.href = '../teams/manual_create_team_page?group_id=' + groupId;
         } else {
             console.error('Group ID not found in the URL');
         }

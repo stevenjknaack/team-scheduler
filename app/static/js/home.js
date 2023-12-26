@@ -189,7 +189,7 @@ $(document).ready(function () {
      * Functionality for handling delete button on groups
      */
     function deleteGroup(groupId) {
-        fetch(`/delete-group/${groupId}`, {
+        fetch(`../groups/delete-group/${groupId}`, {
             method: "DELETE",
         })
         .then(function(response) {
@@ -241,8 +241,8 @@ $(document).ready(function () {
   */
 function handleInvite(group_id, notificationItem, acceptInvite = true) {
     // decide route
-    let route = `/change_group_role/${group_id}/participant`;
-    if (!acceptInvite) route = `/delete_from_group/${group_id}`
+    let route = `/groups/change_group_role/${group_id}/participant`;
+    if (!acceptInvite) route = `/groups/delete_from_group/${group_id}`
     
     // complete POST
     fetch(route, {

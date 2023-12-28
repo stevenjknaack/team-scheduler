@@ -4,25 +4,22 @@
  0. open terminal in vs code
  1. [create/activate venv](#installing-virtual-environment-recommended) 
  (DO NOT PUSH venv FOLDER TO GIT)
- 2. install [flask related modules](#install-flask-related-modules-in-venv), 
-[cryptographic dependencies](#install-cryptographic-dependencies-in-venv), 
-[environmental variables](#install-environmental-variables-in-venv), 
-and [mypy](#install-mypy)
+ 2. install [dependencies](#install-requirments)
 
 ## to start app
  0. open local terminal, login `ssh -L <host>:<port>:<host>:<port> <username>@<cs_address>`
  1. open visual studio terminal
  2. [activate venv](#starting-venv-in-windows-with-powershellvisual-studio-terminal) if not active
  3. ensure .env is in team-scheduler folder (DO NOT PUSH THIS TO GIT)
- 4. use `flask --app backend/app run --debug` to launch backend for development
+ 4. use `flask run --debug` to launch backend for development
  5. open up `127.0.0.1:5000` in a browser
 
 ## to run the unit testing
   - `python -m unittest discover` (use python -m when you can't do "unittest discover" directly)
   - Other possible command: (for people using python3: `remove _init_.py`) `python3 -m unittest my_tests -v` (after locating at the test folder)
-  - `python -m backend.tests.test_name` (for running individual tests)
+  - `python -m tests.test_name` (for running individual tests)
 
-## to run the tests for blueprints files
+## (currently out of date) to run the tests for blueprints files
   - `pytest -m pytests backend/tests ` 
 
 ## help
@@ -48,6 +45,11 @@ and [mypy](#install-mypy)
   source myvenv/bin/activate
   ```
 
+- ### install requirments
+  ```
+  pip install -r requirements.txt
+  ```
+
 - ### install Flask related modules (in venv)
   ```
   pip install -U Flask
@@ -71,10 +73,6 @@ and [mypy](#install-mypy)
 - ### install mypy
   ```
   pip install mypy
-  ```
-- ### you can also install all at once (at the project root file)
-  ```
-  pip install -r backend/requirements.txt
   ```
 
 ## helpful links

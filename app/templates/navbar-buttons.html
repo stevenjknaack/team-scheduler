@@ -1,0 +1,34 @@
+{% extends 'navbar.html' %}
+
+{% block navbar_css %} 
+  {% block css %} {% endblock %}
+{% endblock %}
+
+{% block navbar_js %} 
+  <script src="{{ url_for('static', filename='js/navbar-buttons.js') }}"></script>
+  {% block js %} {% endblock %}
+{% endblock %}
+
+{% block navbar_title %} {% block title %} {% endblock %} {% endblock %}
+
+{% block navbar_nav %} 
+  <!-- welcome button -->
+  <button id="welcomeButton" style="display: block">
+    Welcome, {{ username }}!
+  </button>
+  <!-- logout button -->
+  <form action="{{ url_for('auth.logout') }}" method="post" id="logoutForm" style="display: none">
+    <button type="submit" class="btn btn-danger">Logout</button>
+  </form>
+  {% block nav %} {% endblock %}
+{% endblock %}
+
+{% block navbar_modals %}
+  {% block modals %} 
+  {% endblock %} 
+{% endblock %}
+
+{% block navbar_content %}
+  {% block content %}
+  {% endblock %}
+{% endblock %}

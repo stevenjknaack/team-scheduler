@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block base_css %} 
+  {% block navbar_css %} {% endblock %}
+{% endblock %}
+
+{% block base_js %} 
+  {% block navbar_js %} {% endblock %}
+{% endblock %} 
+
+{% block base_title %} {% block navbar_title %} {% endblock %} {% endblock %} 
+
+{% block base_content %} 
+  <!-- Nav Bar -->
+  <nav class="navbar">
+    <!-- on the left side there will be an iamge-->
+    <div class="navbar-left">
+        <a href="{{ url_for('main.home') }}">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo" />
+        </a>
+    </div>
+    <!-- on the right side there will be buttons-->
+    <div class="navbar-right">
+        {% block navbar_nav %} {% endblock %}
+    </div>
+  </nav>
+  <div class="container">
+    {% block navbar_content %} {% endblock %}
+  </div>
+  {% block navbar_modals %} {% endblock %}
+{% endblock %}

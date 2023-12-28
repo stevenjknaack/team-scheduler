@@ -1,32 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login Page</title>
-        <link rel="stylesheet" href="{{ url_for('auth.static', filename='css/styles.css') }}">
-        <!-- Including jQuery from a CDN -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    </head>
-    <body>
-        <div class="container">
-            <form id="loginForm">
-                <img src="{{ url_for('auth.static', filename='img/logo.png') }}" alt="Ten Star Logo">
-                <div>
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" required placeholder="Email">
-                </div>
-                <div>
-                    <label for="password">Password:</label>
-                    <input type="password" name="password" required placeholder="Password">
-                </div>
-                <div>
-                    <button type="submit">Login</button>
-                </div>
-            </form>
-            <div id="error-message" style="color: red;"></div>
-            <p>New to tenstars ? <a href="./signup">Sign Up</a></p>
-        </div>
-        <script src="{{ url_for('auth.static', filename='js/login.js') }}"></script>
-    </body>
-</html>
+{% extends 'navbar.html' %}
+
+{% block navbar_css %} 
+  <link rel="stylesheet" href="{{ url_for('auth.static', filename='css/styles.css') }}">
+{% endblock %}
+
+{% block navbar_js %} 
+  <script src="{{ url_for('auth.static', filename='js/login.js') }}"></script>
+{% endblock %}
+
+{% block navbar_title %}Login Page{% endblock %}
+
+{% block navbar_nav %} 
+{% endblock %}
+
+{% block navbar_modals %} 
+{% endblock %}
+
+{% block navbar_content %} 
+  <div class="container-box">
+    <form id="loginForm">
+      <img src="{{ url_for('auth.static', filename='img/logo.png') }}" alt="Ten Star Logo">
+      <div>
+          <label for="email">Email:</label>
+          <input type="email" name="email" required placeholder="Email">
+      </div>
+      <div>
+          <label for="password">Password:</label>
+          <input type="password" name="password" required placeholder="Password">
+      </div>
+      <div>
+          <button type="submit">Login</button>
+      </div>
+    </form>
+    <div id="error-message" style="color: red;"></div>
+    <p>New to tenstars? <a href="./signup">Sign Up</a></p>
+  </div>
+{% endblock %}

@@ -92,7 +92,7 @@ def create_team() -> str | Response:
 
         # Commit changes to the database
         db.session.commit()
-        print(f"Created team with ID {new_team.id}, Name {new_team.name}, Description {new_team.description}, Group ID {new_team.group_id}")
+        #print(f"Created team with ID {new_team.id}, Name {new_team.name}, Description {new_team.description}, Group ID {new_team.group_id}")
 
         return jsonify({"message": "Team created successfully", "team_id": new_team.id}), 201
     

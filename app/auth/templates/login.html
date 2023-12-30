@@ -1,7 +1,7 @@
 {% extends 'navbar.html' %}
 
 {% block navbar_css %} 
-  <link rel="stylesheet" href="{{ url_for('auth.static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('auth.static', filename='css/auth.css') }}">
 {% endblock %}
 
 {% block navbar_js %} 
@@ -17,18 +17,20 @@
 {% endblock %}
 
 {% block navbar_content %} 
-  <div class="container-box">
-    <form id="loginForm">
-      <img src="{{ url_for('auth.static', filename='img/logo.png') }}" alt="Ten Star Logo">
-      <div>
-          <label for="email">Email:</label>
+  <div class="auth-form-box">
+    <img class="auth-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo">
+    <form id="login-form">
+      <div class="auth-form-input-box">
+          <div class="label-box"><label for="email">Email:</label></div>
           <input type="email" name="email" required placeholder="Email">
       </div>
-      <div>
-          <label for="password">Password:</label>
+
+      <div class="auth-form-input-box">
+          <div class="label-box"><label for="password">Password:</label></div>
           <input type="password" name="password" required placeholder="Password">
       </div>
-      <div>
+      
+      <div class="auth-form-input-box">
           <button type="submit">Login</button>
       </div>
     </form>

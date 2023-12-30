@@ -1,23 +1,13 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #182135;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.container {
+.auth-form-box {
     border: 2px solid white;
     width: 350px;
     padding: 20px;
     border-radius: 8px;
+    margin: 30px auto;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+.auth-form-input-box {
+    margin-bottom: 10px;
 }
 
 input[type="username"], input[type="password"], input[type="email"] { /*fix selectors? simplify, use classes? or just input*/
@@ -56,8 +46,13 @@ a {
     text-decoration: none;
 }
 
-img {
+.auth-logo {
     display: block;
-    margin: 0 auto;
-    width: 200px;  /* adjust this value based on the size you want for the image */
+    margin: 0 auto 10px auto;
+    width: 200px;  
+}
+
+.label-box {
+    width: 100%;
+    text-align: left;
 }

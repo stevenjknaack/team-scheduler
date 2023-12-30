@@ -1,7 +1,7 @@
 'use strict';
 
 // Handle form submission
-$('#loginForm').submit(function(event) {
+$('#login-form').submit(function(event) {
     event.preventDefault(); // Prevent the form from submitting the default way (no args provided)
 
     const formData = {

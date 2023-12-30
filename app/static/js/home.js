@@ -205,6 +205,22 @@ $(document).ready(function () {
             }
         });
     });
+
+    // TODO fix the below, I just copied and pasted for now, all groups should be done at once
+    // Get all admin group divs
+    var participantGroups = document.querySelectorAll('.participant-group');
+
+    // Add click event listener to each admin group div
+    participantGroups.forEach(function (group) {
+        group.addEventListener('click', function (event) {
+            // Check if the clicked element is the delete button
+            if (!event.target.classList.contains('delete-group-btn')) {
+                // Redirect to the group's page
+                var groupUrl = group.getAttribute('data-group-url');
+                window.location.href = groupUrl;
+            }
+        });
+    });
 });
 
 /**

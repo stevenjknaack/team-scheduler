@@ -17,23 +17,26 @@
   <button id="people-btn" class="btn btn-danger" style="display: block">
       People
   </button>
-  <!-- create event button -->
-  <div class="create-team-dropdown">
-      <!-- Create Teams Button -->
-      <button id="createTeamButton" class="btn btn-danger">
-          Create Teams
-      </button>
 
-      <!-- Dropdown for Create Team Options -->
-      <div id="createTeamOptions" class="create-team-options" style="display: none;">
-          <button id="partitionTeamButton" class="btn btn-info">Partition Team</button>
-          <button id="manualCreateTeamButton" class="btn btn-info">Manual Create Team</button>
-      </div>
-  </div>
+  {% if admin_access %}
+    <!-- create team button -->
+    <div class="create-team-dropdown">
+        <!-- Create Teams Button -->
+        <button id="createTeamButton" class="btn btn-danger">
+            Create Teams
+        </button>
 
-  <button id="createEventButton" class="btn btn-danger" style="display: block">
-      Create Event
-  </button>
+        <!-- Dropdown for Create Team Options -->
+        <div id="createTeamOptions" class="create-team-options" style="display: none;">
+            <button id="partitionTeamButton" class="btn btn-info">Partition Team</button>
+            <button id="manualCreateTeamButton" class="btn btn-info">Manual Create Team</button>
+        </div>
+    </div>
+    <!-- create event button -->
+    <button id="createEventButton" class="btn btn-danger" style="display: block">
+        Create Event
+    </button>
+  {% endif %}
   <button class="btn btn-danger" style="display: block" onclick="window.location.href='/home';">
       Back
   </button>
@@ -48,9 +51,11 @@
       <div class="modal-body">
           <span>Code:</span>
           <input type="text" id="invitationCode" placeholder="Invitation Code" readonly />
-          <input type="email" id="invite-email" placeholder="Enter email">
-          <div id="invited-participants"></div>
-          <button class="invite-submit-btn">Send Invitation</button>
+          {% if admin_access %}
+            <input type="email" id="invite-email" placeholder="Enter email">
+            <div id="invited-participants"></div>
+            <button class="invite-submit-btn">Send Invitation</button>
+           {% endif %}
       </div>
   </div>
 </div>
@@ -66,25 +71,17 @@
           <!-- Repeat this structure for each email dynamically -->
           <div class="email-entry">
               <span class="email-text">1@example.com</span>
-              <button class="promotion-btn">Promote</button>
-              <button class="demotion-btn">Demote</button>
+            {% if admin_access %}
+                <button class="promotion-btn">Promote</button>
+                <button class="demotion-btn">Demote</button>
+            {% endif %}
           </div>
-          <div class="email-entry">
-              <span class="email-text">2@example.com</span>
-              <button class="promotion-btn">Promote</button>
-              <button class="demotion-btn">Demote</button>
-          </div>
-          <div class="email-entry">
-              <span class="email-text">3@example.com</span>
-              <button class="promotion-btn">Promote</button>
-              <button class="demotion-btn">Demote</button>
-          </div> 
           <!-- ... other email entries ... -->
       </div>
   </div>
 </div>
-
 </div>
+{% if admin_access %}
 <div id="createEventModal" class="modal">
 <div class="modal-content">
   <span class="close-btn">&times;</span>
@@ -145,6 +142,7 @@
           <button type="submit" id="save" class="btn btn-danger">Save Event</button>
       </div>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block content %} 

@@ -12,9 +12,8 @@
 
 input[type="username"], input[type="password"], input[type="email"] { /*fix selectors? simplify, use classes? or just input*/
     width: 100%;
-    /*padding: 12px;*/
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     margin: 8px 0;
     border: none;
     border-bottom: 2px solid white;

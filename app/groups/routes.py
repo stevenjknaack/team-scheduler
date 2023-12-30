@@ -32,8 +32,8 @@ def group_page(group_id: int) -> Response | str :
         return redirect(url_for('main.home'))  # Group not found
 
     # Check that user is a member of the group
-    is_member = db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
-    if not is_member:
+    membership = db.session.execute(select(Membership).filter_by(user_email=user_email, group_id=group_id)).scalar()
+    if not membership:
         return redirect(url_for('main.home'))  # User is not a member of the group
 
     # Prepare team data
@@ -46,7 +46,12 @@ def group_page(group_id: int) -> Response | str :
     user_events_result = db.session.scalars(select(Event).filter_by(group_id=group_id))
     user_events = [event for event in user_events_result]
     print(user_events)
-    return render_template('group.html', username=session.get('username'), group=group, user_events=user_events, group_id=group_id, teams=team_data)
+
+    user_role = membership.role
+    admin_access = user_role == 'admin' or user_role == 'owner'
+
+    return render_template('group.html', username=session.get('username'), admin_access=admin_access, 
+                           group=group, user_events=user_events, group_id=group_id, teams=team_data)
 
 @bp.route('/create_group', methods=['GET', 'POST'])
 def create_group() -> Response:

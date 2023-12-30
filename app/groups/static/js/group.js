@@ -92,16 +92,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
      * Appends entered emails to the 'invited-participants' element.
      * @param {object} event - an KeyBoardEvent
      */
-    emailInput.addEventListener("keyup", function (event) {
-        if (event.key === "Enter") {
-            if (emailInput.value.trim()) {
-                const emailDiv = document.createElement("div");
-                emailDiv.innerText = emailInput.value;
-                invitedParticipants.appendChild(emailDiv);
-                emailInput.value = '';
+    if (emailInput) {
+        emailInput.addEventListener("keyup", function (event) {
+            if (event.key === "Enter") {
+                if (emailInput.value.trim()) {
+                    const emailDiv = document.createElement("div");
+                    emailDiv.innerText = emailInput.value;
+                    invitedParticipants.appendChild(emailDiv);
+                    emailInput.value = '';
+                }
             }
-        }
-    });
+        }); 
+    }
 
     /**
      * Handle 4
@@ -110,36 +112,38 @@ document.addEventListener('DOMContentLoaded', (event) => {
      * 
      * @author Kyle
      */
-    inviteSubmitBtn.addEventListener("click", function () {
-        const emails = [];
-        for (let i = 0; i < invitedParticipants.children.length; i++) {
-            emails.push(invitedParticipants.children[i].innerText);
-        }
+    if (inviteSubmitBtn) {
+        inviteSubmitBtn.addEventListener("click", function () {
+            const emails = [];
+            for (let i = 0; i < invitedParticipants.children.length; i++) {
+                emails.push(invitedParticipants.children[i].innerText);
+            }
 
-        var currentUrl = window.location.href;
-        var eventId = this.getAttribute("data-event-id");
-        console.log("EVENT ID: " + eventId);
-        var groupId = currentUrl.match(/\/groups\/(\d+)/);
-        console.log("GROUP ID: " + groupId[1]);
+            var currentUrl = window.location.href;
+            var eventId = this.getAttribute("data-event-id");
+            console.log("EVENT ID: " + eventId);
+            var groupId = currentUrl.match(/\/groups\/(\d+)/);
+            console.log("GROUP ID: " + groupId[1]);
 
-        // make HTTP request to the Flask backend
-        fetch(`../groups/send-invitations/${groupId[1]}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ emails: emails }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data); // return JSON response
+            // make HTTP request to the Flask backend
+            fetch(`../groups/send-invitations/${groupId[1]}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ emails: emails }),
             })
-            .catch(error => {
-                console.error('Error: ', error); // if error, print out error
-            });
-        // console.log(emails);
-        inviteModal.style.display = "none"; // close the invite modal
-    });
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // return JSON response
+                })
+                .catch(error => {
+                    console.error('Error: ', error); // if error, print out error
+                });
+            // console.log(emails);
+            inviteModal.style.display = "none"; // close the invite modal
+        });
+    }
 
 
     /**
@@ -271,12 +275,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 console.error("Error:", error);
             });
     }
-
+    
+    
     var createTeamButton = document.getElementById('createTeamButton');
     var createTeamOptions = document.getElementById('createTeamOptions');
     var partitionTeamButton = document.getElementById('partitionTeamButton');
     var manualCreateTeamButton = document.getElementById('manualCreateTeamButton');
-
+    if (createTeamButton && createTeamOptions && partitionTeamButton && manualCreateTeamButton) {
     createTeamButton.addEventListener('click', function(event) {
         // Toggle the dropdown display
         createTeamOptions.style.display = createTeamOptions.style.display === 'block' ? 'none' : 'block';
@@ -315,6 +320,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             createTeamOptions.style.display = 'none';
         }
     });
+}
 
     // TODO: Add functionality for promote and demote buttons
     /*

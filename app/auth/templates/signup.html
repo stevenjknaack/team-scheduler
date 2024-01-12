@@ -8,7 +8,7 @@
   <script src="{{ url_for('auth.static', filename='js/signup.js') }}"></script>
 {% endblock %}
 
-{% block navbar_title %} Ten Star Sign Up {% endblock %}
+{% block navbar_title %} TenStars Sign Up {% endblock %}
 
 {% block navbar_nav %} 
 {% endblock %}
@@ -18,21 +18,21 @@
 
 {% block navbar_content %} 
   <div class="auth-form-box">
-    <img class="auth-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="Ten Star Logo">
-    <form id="signup-form"> <!-- add required keyword to forms; maybe use classes instead of other attributes-->
+    <img class="auth-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="TenStars' Logo">
+    <form id="signup-form"> 
       <div class="auth-form-input-box">
         <div class="label-box"><label for="username">Name:</label></div>
-        <input type="username" id="username" name="username" placeholder="Name" required>
+        <input type="username" id="username" name="username" placeholder="Name" class="auth-form-input" required>
       </div>
 
       <div class="auth-form-input-box">
         <div class="label-box"><label for="email">Email:</label></div>
-        <input type="email" id="email" name="email" placeholder="Email" required>
+        <input type="email" id="email" name="email" placeholder="Email" class="auth-form-input" required>
       </div>
 
       <div class="auth-form-input-box">
         <div class="label-box"><label for="password">Password:</label></div>
-        <input type="password" id="password" name="password" placeholder="Password" required>
+        <input type="password" id="password" name="password" placeholder="Password" class="auth-form-input" required>
       </div>
 
       <button>Sign up</button>

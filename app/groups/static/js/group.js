@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     var inviteModal = document.getElementById('inviteModal');
     var btn = document.getElementById('invite-btn');
-    var span = document.getElementsByClassName('close-btn')[0];
+    var span = document.getElementsByClassName('close')[0];
     var invitationCodeInput = document.getElementById('invitationCode');
 
     /**
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // People modal handling
     var peopleModal = document.getElementById('peopleModal');
     var peopleBtn = document.getElementById('people-btn');
-    var spanClosePeople = peopleModal.getElementsByClassName('close-btn')[0];
+    var spanClosePeople = peopleModal.getElementsByClassName('close')[0];
 
     /**
      * Handle 1
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     // Close create event modal
-    $(".close-btn").click(function () {
+    $(".close").click(function () {
         $("#createEventModal").css("display", "none");
     });
 

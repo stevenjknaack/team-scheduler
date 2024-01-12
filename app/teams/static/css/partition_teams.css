@@ -1,59 +1,5 @@
-
-body {
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #182135;
-}
-
-.wrapper {
-    width: 100%;
-    text-align: center;
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    /* This will push logo to the left and button to the right */
-    align-items: center;
-    padding: 10px 5%;
-    background-color: #182135;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
-}
-
-.navbar-right {
-    /* ... existing styles ... */
-    display: flex;
-    /* Ensures horizontal alignment of children */
-    align-items: center;
-    /* Vertically aligns children in the middle */
-    gap: 10px;
-    /* Creates spacing between each child item */
-}
-
-.navbar-left img {
-    width: 200px;
-    /* Adjust based on your logo's size */
-}
-
-.navbar-right button {
-    background-color: #555;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.navbar-right button:hover {
-    background-color: #777;
-}
-
 /* Container and Sections */
-.container {
-    width: 60%;
+.container { /*override navbar*/
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -76,8 +22,6 @@ body {
     align-items: flex-start;
     transition: all 0.3s ease; /* For smooth height transition */
 }
-
-
 
 .section-text {
     /* Existing styles, and add cursor to indicate it's clickable */

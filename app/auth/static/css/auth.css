@@ -10,7 +10,7 @@
     margin-bottom: 10px;
 }
 
-input[type="username"], input[type="password"], input[type="email"] { /*fix selectors? simplify, use classes? or just input*/
+.auth-form-input {
     width: 100%;
     padding-top: 6px;
     padding-bottom: 6px;

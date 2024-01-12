@@ -46,7 +46,7 @@
 <!-- Invite Modal -->
 <div id="inviteModal" class="modal">
   <div class="modal-content">
-      <span class="close-btn">&times;</span>
+      <span class="close">&times;</span>
       <h2>Invite Participants</h2>
       <div class="modal-body">
           <span>Code:</span>
@@ -63,7 +63,7 @@
 <!-- People Modal -->
 <div id="peopleModal" class="modal">
   <div class="modal-content">
-      <span class="close-btn">&times;</span>
+      <span class="close">&times;</span>
       <h2>Manage People</h2>
       <input type="text" id="searchEmail" placeholder="Search emails..." onkeyup="searchEmails()" />
       <div id="emailList" class="email-list">
@@ -84,7 +84,7 @@
 {% if admin_access %}
 <div id="createEventModal" class="modal">
 <div class="modal-content">
-  <span class="close-btn">&times;</span>
+  <span class="close">&times;</span>
   <h2>Create Event</h2>
   <form action="{{ url_for('events.create_event_request', group_id=group_id) }}" method="post">
       <div class="form-group">

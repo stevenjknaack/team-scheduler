@@ -1,67 +1,10 @@
-body {
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #182135;
+body { /*override from base*/
     flex-direction: column;
     align-items: center;
 }
 
-.wrapper {
-    width: 100%;
-    text-align: center;
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    /* This will push logo to the left and button to the right */
-    align-items: center;
-    padding: 10px 5%;
-    background-color: #182135;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
-}
-
-.navbar-right {
-    /* ... existing styles ... */
-    display: flex;
-    /* Ensures horizontal alignment of children */
-    align-items: center;
-    /* Vertically aligns children in the middle */
-    gap: 10px;
-    /* Creates spacing between each child item */
-}
-
-.navbar-left img {
-    width: 200px;
-    /* Adjust based on your logo's size */
-}
-
-.navbar-right button {
-    background-color: #555;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.navbar-right button:hover {
-    background-color: #777;
-}
-
-.container {
+.container {  /*override base*/
     width: 95%;
-    text-align: center;
-    margin: 0 auto;
-    /* This will center the container horizontally */
-}
-
-.logo img {
-    display: block;
-    margin: 0 auto;
-    width: 150px;
 }
 
 #schedule-container {
@@ -134,53 +77,15 @@ body {
 
 /* ... (previous styles remain unchanged) ... */
 
-/* The Modal (background) */
-.modal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    /* Stay in place */
-    z-index: 100;
-    /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    /* Full width */
-    height: 100%;
-    /* Full height */
-    overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
-}
 
 /* Modal Content/Box */
-.modal-content {
+.modal-content { /*override base*/
     background-color: #fefefe;
     margin: 15% auto;
     /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
     width: 30%;
-    /* Could be more or less, depending on screen size */
 }
 
-/* The Close Button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 /* Style the submit button */
 input[type="submit"] {

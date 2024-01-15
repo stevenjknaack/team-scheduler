@@ -4,20 +4,21 @@ from flask import request, jsonify, session, Response, redirect, render_template
 from ..extensions import db
 from ..models.availablity_block import AvailabilityBlock
 from ..profile import bp
+from ..auth.decorators import login_required
 
 @bp.route('/') 
+@login_required
 def profile() -> str | Response:
     """ 
     Gets events onwned by user (see get_user_events method) and returns to JS, which then executes
     get_event to get the information from each event to display.
     """
-    if 'username' not in session:
-        return redirect(url_for('main.index'))
     username: str = session['username']
     events = None
     return render_template('profile.html', username=username, events=events)
 
 @bp.route('/save_schedule', methods=['POST'])
+@login_required
 def save_schedule() -> tuple[Response, int]:
     """
     Handles a POST request to save a user's schedule availability.
@@ -67,6 +68,7 @@ def save_schedule() -> tuple[Response, int]:
 
 
 @bp.route('/get_schedule', methods=['GET'])
+@login_required
 def get_schedule() -> tuple[Response, int]:
     """
     Handles a GET request to retrieve the schedule availability of the current logged-in user.

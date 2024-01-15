@@ -86,7 +86,7 @@
 <div class="modal-content">
   <span class="close">&times;</span>
   <h2>Create Event</h2>
-  <form action="{{ url_for('events.create_event_request', group_id=group_id) }}" method="post">
+  <form action="{{ url_for('events.create_event', group_id=group_id) }}" method="post">
       <div class="form-group">
           <label for="event_name">Event Name:</label>
           <input type="text" id="event_name" name="event_name" placeholder="Enter event name" required>

@@ -10,8 +10,10 @@ from flask_mail import Message
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..groups import bp
+from ..auth.decorators import login_required
 
 @bp.route('/<int:group_id>') 
+@login_required
 def group_page(group_id: int) -> Response | str :
     """ This method is used to redirect from the home page to a group page, when the user clicks
         on a group in their home page. The user must be a part of the group, whether a member or admin,
@@ -21,8 +23,6 @@ def group_page(group_id: int) -> Response | str :
         :author: Dante Katz Andrade
         :version: 2023.10.19
         """
-    if 'email' not in session:
-        return redirect(url_for('main.home'))
     user_email = session['email']
 
     # Fetch the group and its teams with eager loading to optimize queries
@@ -53,7 +53,8 @@ def group_page(group_id: int) -> Response | str :
     return render_template('group.html', username=session.get('username'), admin_access=admin_access, 
                            group=group, user_events=user_events, group_id=group_id, teams=team_data)
 
-@bp.route('/create_group', methods=['GET', 'POST'])
+@bp.route('/create_group', methods=['POST'])
+@login_required
 def create_group() -> Response:
     """ 
     This method will be made for creating groups. It'll allow for someone to make a group such as 
@@ -78,6 +79,7 @@ def create_group() -> Response:
     return redirect(url_for('main.home'))
 
 @bp.route('/send-invitations/<int:group_id>', methods=['POST'])
+@login_required
 def send_invitations(group_id: int) -> Response :
    """ Sends group invitations to users via email using Flask-Mail API """
    # Get JSON data (list of emails), sent from the frontend
@@ -115,7 +117,8 @@ def send_invitations(group_id: int) -> Response :
 
    return jsonify(status='success', message='Invitations sent successfully!'), 201
         
-@bp.route('/join_group/', methods = ['GET', 'POST'])
+@bp.route('/join_group/', methods = ['POST'])
+@login_required
 def join_group()-> Response:
     """ This method is being written to handle the functionality of joining a group from a members side, by inputting
         a valid group ID. The user will still need to be allowed in by the owner/admins of the group, and we assume the
@@ -156,6 +159,7 @@ def join_group()-> Response:
     # step 3: if step 1 and 2 were completed regularly, close modal, reload home page.
     
 @bp.route('/delete_from_group/<int:group_id>', methods=['POST'])
+@login_required
 def delete_user_from_group(group_id: int) -> Response :
     """
     Deletes the current user from a specified group
@@ -178,7 +182,8 @@ def delete_user_from_group(group_id: int) -> Response :
     return jsonify(status='success'), 201
 
 @bp.route('/change_group_role/<int:group_id>/<string:role>', methods=['POST'])
-def change_user_group_role(group_id: int, role: str) -> Response :
+@login_required
+def change_user_group_role(group_id: int, role: str) -> Response : #TODO validate role
     """
     Update a user's role in a group
 
@@ -202,6 +207,7 @@ def change_user_group_role(group_id: int, role: str) -> Response :
     
 
 @bp.route('/delete-group/<int:group_id>', methods=['DELETE'])
+@login_required
 def delete_group(group_id: int) -> Response:
     """
     This method deletes groups. It checks that the group is owned by the active user.

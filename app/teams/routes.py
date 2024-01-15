@@ -6,15 +6,21 @@ from ..models.user import User
 from ..models.team import Team
 from ..models.membership import Membership
 from ..teams import bp
+from ..auth.decorators import login_required
 
 @bp.route('/<int:team_id>') #TODO finish
+@login_required
 def go_to_team_page(team_id: int) -> str | Response:
     team: Team = db.session.get(Team, team_id)
     return render_template('team.html', username=session.get('username'), team=team)
 
 @bp.route('/partition_team_page')
+@login_required #TODO implement this
 def create_teams() -> Response:
-    people = ["Tony", "Steven", "Georgia", "Dante", "Anwita", "Kyle", "Tony1", "Tony2", "Steve3n", "Geo42rgia", "Dan34te", "Anw34ita", "Kyl34e", "T34ony"]  # List of people
+    people = ["Tony", "Steven", "Georgia", "Dante", 
+              "Anwita", "Kyle", "Tony1", "Tony2", 
+              "Steve3n", "Geo42rgia", "Dan34te", 
+              "Anw34ita", "Kyl34e", "T34ony"] 
     
     # Retrieve group_id from query parameters
     group_id = request.args.get('group_id')
@@ -22,13 +28,14 @@ def create_teams() -> Response:
     return render_template('partition_teams.html', username=session.get('username'), people=people, group_id=group_id)
 
 @bp.route('/manual_create_team_page')
+@login_required
 def manual_create_teams():
     group_id = request.args.get('group_id')
 
     # Ensure group_id is provided
     if not group_id:
         # Handle the case where group_id is not provided
-        return redirect(url_for('some_default_route'))  # Redirect to a default route or error page
+        return redirect(url_for('some_default_route'))  # TODO Redirect to a default route or error page 
 
     # Query for all users in the specified group
     users_query = db.session.query(User).join(Membership).filter(Membership.group_id == group_id)
@@ -41,6 +48,7 @@ def manual_create_teams():
 
 
 @bp.route('/generate_teams', methods=['POST'])
+@login_required
 def generate_teams() -> Response :
     """
     This method will use an algorithm to generate teams within a group, such as T_1->T_10 part of 
@@ -55,9 +63,10 @@ def generate_teams() -> Response :
     # Send invite to all users in group to their respective teams 
 
     # return succesful Jquery 
-    return Response(status=501) # not implemented
+    return Response(status=501) # TODO not implemented
 
 @bp.route('/manual_create_teams', methods=['POST'])
+@login_required
 def create_team() -> str | Response:
     """
     Create a team manually and add participants.

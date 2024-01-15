@@ -8,30 +8,16 @@ from ..models.event import Event
 from ..models.group import Group
 from typing import List
 from app.main import bp
+from ..auth.decorators import login_required
 
 @bp.route('/')
-def index() -> Response:
-    """
-    Home page
-
-    Currently redirects to 
-        -login page if not logged in
-        -user home page if logged in
-
-    :returns: Redirecting Response
-    """
-    if 'username' in session :
-        return redirect(url_for('main.home'))
-    return redirect(url_for('auth.login'))
-
 @bp.route('/home')
+@login_required
 def home() -> Response:
     """
     Gets groups and events owned by user (use get_user_events and get_user_groups) 
     and return to JS, which then executes
     """
-    if 'username' not in session:
-        return redirect(url_for('main.index'))
     email: str = session.get('email')
     
     # Use the SQLAlchemy query attribute for Membership
@@ -53,9 +39,10 @@ def home() -> Response:
         # Render home.html with username from session, groups and events the user participates in.
         return render_template('home.html', username=session.get('username'), user_groups=user_groups, user_events=user_events)
     else: 
-        return render_template('home.html', username=session['username'])
+        return render_template('home.html', username=session['username']) #TODO fix this double method call
 
 @bp.route('/get-notifications',  methods=['GET'])
+@login_required
 def get_user_notifications() -> Response :
     """ 
     Returns all the notifications associated with the current user.
@@ -63,10 +50,6 @@ def get_user_notifications() -> Response :
     """
     # get the user's email from session
     user_email: str | None = session.get('email')
-
-    # check if user_email exists
-    if not user_email :
-        return jsonify(status='failure'), 500
     
     # get and validate user
     user: User | None = db.session.get(User, user_email)

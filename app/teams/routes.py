@@ -1,6 +1,6 @@
 """ Defines routes related to teams """
 
-from flask import render_template, request, redirect, url_for, jsonify, Response, session
+from flask import Response, render_template, redirect, url_for, jsonify, session, request 
 from ..extensions import db
 from ..models.user import User
 from ..models.team import Team

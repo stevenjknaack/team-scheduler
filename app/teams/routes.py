@@ -12,7 +12,7 @@ from ..auth.decorators import login_required
 @login_required
 def go_to_team_page(team_id: int) -> str | Response:
     team: Team = db.session.get(Team, team_id)
-    return render_template('team.html', username=session.get('username'), team=team)
+    return render_template('teams/team.html', username=session.get('username'), team=team)
 
 @bp.route('/partition_team_page')
 @login_required #TODO implement this
@@ -25,7 +25,7 @@ def create_teams() -> Response:
     # Retrieve group_id from query parameters
     group_id = request.args.get('group_id')
     
-    return render_template('partition_teams.html', username=session.get('username'), people=people, group_id=group_id)
+    return render_template('teams/partition_teams.html', username=session.get('username'), people=people, group_id=group_id)
 
 @bp.route('/manual_create_team_page')
 @login_required
@@ -44,7 +44,7 @@ def manual_create_teams():
     # Extract usernames and emails
     people = [{'email': user.email, 'username': user.username} for user in users]
 
-    return render_template('manual_create_team.html', username=session.get('username'), people=people, group_id=group_id)
+    return render_template('teams/manual_create_team.html', username=session.get('username'), people=people, group_id=group_id)
 
 
 @bp.route('/generate_teams', methods=['POST'])

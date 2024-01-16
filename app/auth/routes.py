@@ -22,7 +22,7 @@ def login() -> Union[str , Response]:
     """
     if request.method == 'GET':
         # Render the login form template if not logged in
-        return render_template('login.html')
+        return render_template('auth/login.html')
     elif request.method == 'POST':
         email: str = request.form.get('email')
         password: str = request.form.get('password')
@@ -56,7 +56,7 @@ def signup() -> str | Response :
         successful signup or status='error' if failed
     """
     if request.method == 'GET' :
-        return render_template('signup.html')
+        return render_template('auth/signup.html')
     elif request.method == 'POST' :
         email: str = request.form.get('email')
         username: str = request.form.get('username')

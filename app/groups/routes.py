@@ -50,7 +50,7 @@ def group_page(group_id: int) -> Response | str :
     user_role = membership.role
     admin_access = user_role == 'admin' or user_role == 'owner'
 
-    return render_template('group.html', username=session.get('username'), admin_access=admin_access, 
+    return render_template('groups/group.html', username=session.get('username'), admin_access=admin_access, 
                            group=group, user_events=user_events, group_id=group_id, teams=team_data)
 
 @bp.route('/create_group', methods=['POST'])

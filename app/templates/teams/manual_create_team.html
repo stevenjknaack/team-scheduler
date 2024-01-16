@@ -3,13 +3,13 @@
 {% block css %}
 <!-- Flatpickr CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="{{ url_for('teams.static', filename='css/manual_create_team.css') }}" /> 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teams/manual_create_team.css') }}" /> 
 {% endblock %}
 
 {% block js %} 
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="{{ url_for('teams.static', filename='js/manual_create_team.js') }}"></script>
+<script src="{{ url_for('static', filename='js/teams/manual_create_team.js') }}"></script>
 {% endblock %}
 
 {% block title %} Create Teams {% endblock %}

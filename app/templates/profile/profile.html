@@ -1,11 +1,11 @@
 {% extends 'navbar-buttons.html' %}
 
 {% block css %} 
-  <link rel="stylesheet" href="{{ url_for('profile.static', filename='css/profile.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile/profile.css') }}" />
 {% endblock %}
 
 {% block js %} 
-  <script src="{{ url_for('profile.static', filename='js/profile.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/profile/profile.js') }}"></script>
 {% endblock %}
 
 {% block title %}User Weekly Schedule{% endblock %}

@@ -15,7 +15,7 @@ def profile() -> str | Response:
     """
     username: str = session['username']
     events = None
-    return render_template('profile.html', username=username, events=events)
+    return render_template('profile/profile.html', username=username, events=events)
 
 @bp.route('/save_schedule', methods=['POST'])
 @login_required

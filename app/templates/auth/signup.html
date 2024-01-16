@@ -1,11 +1,11 @@
 {% extends 'navbar.html' %}
 
 {% block navbar_css %} 
-  <link rel="stylesheet" href="{{ url_for('auth.static', filename='css/auth.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth/auth.css') }}">
 {% endblock %}
 
 {% block navbar_js %} 
-  <script src="{{ url_for('auth.static', filename='js/signup.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/auth/signup.js') }}"></script>
 {% endblock %}
 
 {% block navbar_title %} TenStars Sign Up {% endblock %}

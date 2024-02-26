@@ -11,21 +11,21 @@ from ..auth.decorators import login_required
 @bp.route('/<int:team_id>') #TODO finish
 @login_required
 def go_to_team_page(team_id: int) -> str | Response:
-    team: Team = db.session.get(Team, team_id)
-    return render_template('teams/team.html', username=session.get('username'), team=team)
+    team_: Team = db.session.get(Team, team_id)
+    return render_template('teams/team.html', username=session.get('username'), team=team_)
 
 @bp.route('/partition_team_page')
 @login_required #TODO implement this
 def create_teams() -> Response:
-    people = ["Tony", "Steven", "Georgia", "Dante", 
+    people_ = ["Tony", "Steven", "Georgia", "Dante", 
               "Anwita", "Kyle", "Tony1", "Tony2", 
               "Steve3n", "Geo42rgia", "Dan34te", 
               "Anw34ita", "Kyl34e", "T34ony"] 
     
     # Retrieve group_id from query parameters
-    group_id = request.args.get('group_id')
+    group_id_ = request.args.get('group_id')
     
-    return render_template('teams/partition_teams.html', username=session.get('username'), people=people, group_id=group_id)
+    return render_template('teams/partition_teams.html', username=session.get('username'), people=people_, group_id=group_id_)
 
 @bp.route('/manual_create_team_page')
 @login_required

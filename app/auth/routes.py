@@ -2,9 +2,9 @@
 
 from flask import render_template, request, redirect, url_for, session, jsonify, Response
 import bcrypt
+from typing import Union
 from ..extensions import db
 from ..models.user import User
-from typing import Union
 from ..auth import bp
 from .decorators import logout_required, login_required
 
@@ -21,9 +21,9 @@ def login() -> Union[str , Response]:
     :returns: Response object specifing if successful login or not
     """
     if request.method == 'GET':
-        # Render the login form template if not logged in
         return render_template('auth/login.html')
     elif request.method == 'POST':
+        # get args from form
         email: str = request.form.get('email')
         password: str = request.form.get('password')
 
